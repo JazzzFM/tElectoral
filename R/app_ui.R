@@ -2,15 +2,47 @@
 #' 
 #' @param request Internal parameter for `{shiny}`. 
 #'     DO NOT REMOVE.
-#' @import shiny
+#' @import shiny bs4Dash
 #' @noRd
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
-    # List the first level UI elements here 
-    fluidPage(
-      h1("tElectoral")
+    # Dashboard
+    dashboardPage(title = h1("Tablero electoral"),
+                  navbar = dashboardHeader(),
+                  sidebar = dashboardSidebar(
+                    # Sidebar #####
+                    sidebarMenu(
+                      menuItem("Inicio",
+                               tabName = "inicio", 
+                               icon = icon("dashboard")),
+                      menuItem("Investigación",
+                               tabName = "investigacion", 
+                               icon = icon("dashboard")),
+                      menuItem("Comunicación",
+                               tabName = "comunicacion", 
+                               icon = icon("dashboard")),
+                      menuItem("Gira", 
+                               tabName = "gira",
+                               icon = icon("th")),
+                      menuItem("Finanzas",
+                               tabName = "finanzas", 
+                               icon = icon("dashboard")),
+                      menuItem("Legal", 
+                               tabName = "legal",
+                               icon = icon("th")),
+                      menuItem("Organización",
+                               tabName = "organizacion", 
+                               icon = icon("dashboard")),
+                      menuItem("Estructura", 
+                               tabName = "estructura",
+                               icon = icon("th"))),
+                    # Cuerpo #######
+                  ),
+                  body = dashboardBody(
+                    
+                  )
     )
   )
 }

@@ -16,6 +16,7 @@
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
 usethis::use_package( "thinkr" )
+# no se instaló bs4Dash a propósito, para ver que pasa
 
 ## Add modules ----
 ## Create a module infrastructure in R/
