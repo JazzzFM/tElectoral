@@ -40,8 +40,14 @@ app_ui <- function(request) {
                                icon = icon("th"))),
                     # Cuerpo #######
                   ),
-                  body = dashboardBody(
-                    
+                  body =dashboardBody(
+                    tabItems(
+                      tabItem(tabName = "inicio", 
+                              mod_portada_ui("portada_ui_1")),
+                      tabItem(tabName = "investigacion",
+                              mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1"))
+                      
+                    )
                   )
     )
   )
