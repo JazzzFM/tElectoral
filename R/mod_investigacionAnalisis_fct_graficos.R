@@ -20,28 +20,10 @@ tema_intCred <- function(){
   
 }
 
-tema_probGanar <- function(){
-  fuente <- "Georgia"   
-  # Tema base
-  theme_minimal() %+replace%  
-    theme(
-      # Ratio
-      aspect.ratio = 1,
-      # Fondo
-      # Texto
-      plot.title = element_text(family = fuente,hjust = .5),
-      # Retícula
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      # Ejes
-      axis.text.y = element_blank(),
-      axis.title = element_blank()
-    )
-  
-}
 
 
-# Probabilidad de triunfo
+
+# Probabilidad de gabar
 probGanar <- function(bd, candidato){
   pCand <- bd %>% 
     filter(cand==candidato) %>% 
@@ -66,12 +48,26 @@ probGanar <- function(bd, candidato){
   
 }
 
-# 
-nCand <- 3+rpois(1,2)
-cand <- tibble(prob=abs(rnorm(n = nCand,18, 25))) %>% 
-  mutate(prob=round(100*prob/sum(prob)), 
-         rw=row_number(),
-         cand=paste("Candidato", rw))
-cand %>% probGanar(candidato = "Candidato 2")
+tema_probGanar <- function(){
+  fuente <- "Georgia"   
+  # Tema base
+  theme_minimal() %+replace%  
+    theme(
+      # Ratio
+      aspect.ratio = 1,
+      # Fondo
+      # Texto
+      plot.title = element_text(family = fuente,hjust = .5),
+      # Retícula
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      # Ejes
+      axis.text.y = element_blank(),
+      axis.title = element_blank()
+    )
+  
+}
+
+
 
   
