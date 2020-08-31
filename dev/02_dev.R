@@ -23,7 +23,8 @@ usethis::use_package( "thinkr" )
 # Portada
 golem::add_module( name = "portada" ) # Name of the module
 # Investigación
-golem::add_module( name = "investigacionAnalisis" ) # Name of the module
+golem::add_module( name = "investigacionAnalisis",
+                   fct = "graficos") # Name of the module
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
