@@ -11,7 +11,7 @@ app_ui <- function(request) {
     # Dashboard
     dashboardPage(title = h1("Tablero electoral"),
                   navbar = dashboardHeader(),
-                  sidebar = dashboardSidebar(
+                  sidebar = dashboardSidebar(expand_on_hover = F,
                     # Sidebar #####
                     sidebarMenu(
                       menuItem("Inicio",
