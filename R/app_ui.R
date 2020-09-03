@@ -10,6 +10,11 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Dashboard
     dashboardPage(title = h1("Tablero electoral"),
+                  tags$head(
+                    includeCSS(app_sys("app/www/tElectoral.css")),
+                    tags$link(href="https://fonts.googleapis.com/css?family=Muli:400,600,700&display=swap", rel = "stylesheet"),
+                    tags$script(async = TRUE, src = "https://platform.twitter.com/widgets.js")
+                  ),
                   navbar = dashboardHeader(),
                   sidebar = dashboardSidebar(
                     # Sidebar #####

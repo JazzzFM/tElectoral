@@ -16,6 +16,8 @@
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
 usethis::use_package( "thinkr" )
+usethis::use_package("shinymanager")
+usethis::use_package("tibble")
 # no se instaló bs4Dash a propósito, para ver que pasa
 
 ## Add modules ----
@@ -34,7 +36,11 @@ golem::add_utils( "helpers" )
 ## Creates .js and .css files at inst/app/www
 golem::add_js_file( "script" )
 golem::add_js_handler( "handlers" )
+golem::add_js_file( "panelE" )
+golem::add_js_file( "login" )
 golem::add_css_file( "panelE")
+golem::add_css_file( "tElectoral")
+golem::add_css_file( "login")
 
 ## Add internal datasets ----
 ## If you have data in your package

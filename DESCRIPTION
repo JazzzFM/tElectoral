@@ -12,7 +12,9 @@ Imports:
     attempt,
     DT,
     glue,
-    htmltools
+    htmltools,
+    shinymanager,
+    tibble
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
