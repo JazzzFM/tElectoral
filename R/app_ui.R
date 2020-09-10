@@ -16,7 +16,7 @@ app_ui <- function(request) {
                     tags$script(async = TRUE, src = "https://platform.twitter.com/widgets.js")
                   ),
                   navbar = dashboardHeader(),
-                  sidebar = dashboardSidebar(
+                  sidebar = dashboardSidebar(expand_on_hover = F,
                     # Sidebar #####
                     sidebarMenu(
                       menuItem("Inicio",
