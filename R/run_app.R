@@ -12,14 +12,6 @@ run_app <- function(
     app = shinyApp(
       ui = shinymanager::secure_app(
         tags_top = div(class="headLogin",
-                       div(
-                         class = "bg-container-svg",
-                         imageOutput("fsi"),
-                         imageOutput("fii"),
-                         imageOutput("fc"),
-                         imageOutput("fid"),
-                         imageOutput("fsd")
-                       ),
                        tags$head(
                          includeCSS(app_sys("app/www/login.css")),
                          tags$link(href="https://fonts.googleapis.com/css?family=Muli:400,600,700&display=swap", rel = "stylesheet")

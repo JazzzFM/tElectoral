@@ -27,7 +27,10 @@
   --cbar-green: #00b963;
   --cbar-blue: #00cdff;
 }
-
+.btn-primary:active:hover, .btn-primary.active:hover, .open>.dropdown-toggle.btn-primary:hover, .btn-primary:active:focus, .btn-primary.active:focus, .open>.dropdown-toggle.btn-primary:focus, .btn-primary:active.focus, .btn-primary.active.focus, .open>.dropdown-toggle.btn-primary.focus{
+      background-color: var(--m-red-color) !important;
+      color: #fff !important;
+    }
 /* General */
 .panel-auth{
   background-color: var(--white);
@@ -151,7 +154,7 @@ body{
 
 /* Button */
 .panel-auth button[type="button"]{
-    background-color: var(--white);
+    background-color: var(--white) !important;
     color: var(--m-red-color);
     width: 100%;
     padding: 10px;
@@ -180,43 +183,53 @@ body{
   top: 0;
   z-index: -1;
 }
-.bg-container-svg .shiny-image-output{
+.bg-container-svg div{
   position: absolute !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
-.bg-container-svg img{
+.bg-container-svg div{
   width: 100%;
 }
-.bg-container-svg .shiny-image-output:nth-of-type(1){
+.bg-container-svg div:nth-of-type(1){
   left: 0;
   top: 0;
   width: 130px !important;
   height: 130px !important;
+  background-image: url('www/img/login-forma-superior-izquierda.svg');
+  background-position: left;
 }
-.bg-container-svg .shiny-image-output:nth-of-type(2){
+.bg-container-svg div:nth-of-type(2){
   left: 0;
   bottom: 0;
   width: 25% !important;
   height: 50% !important;
   z-index: -1;
+  background-image: url('www/img/login-forma-inferior-izquierda.svg');
 }
-.bg-container-svg .shiny-image-output:nth-of-type(3){
+.bg-container-svg div:nth-of-type(3){
   left: 150px;
   bottom: 150px;
   width: 45% !important;
   height: 45% !important;
   z-index: -2;
+  background-image: url('www/img/login-forma-centro.svg');
 }
-.bg-container-svg .shiny-image-output:nth-of-type(4){
+.bg-container-svg div:nth-of-type(4){
   right: 0;
   bottom: 0;
   width: 10% !important;
   height: 30% !important;
+  background-image: url('www/img/login-forma-inferior-derecho.svg');
+  background-position: right;
 }
-.bg-container-svg .shiny-image-output:nth-of-type(5){
+.bg-container-svg div:nth-of-type(5){
   right: 0;
   top: 0;
   width: 5% !important;
   height: 20% !important;
+  background-image: url('www/img/login-puntos-superior-derecho.svg');
 }
 /* End bg-svg-container */
 
