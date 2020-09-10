@@ -1,13 +1,4 @@
-library(tidyverse)
-# Intervalo de credibilidad
-diaD <- as.POSIXct("2021-07-02")
-bd <- fakir::fake_base_clients(n = 10)
-bd %>% 
-ggplot(aes(x=entry_date, y=age)) +
-  geom_point() +
-  geom_vline(xintercept = diaD, color="red") +
-  xlim(c(min(bd$entry_date), diaD)) +
-  tema_intCred()
+# Tema
 
 tema_intCred <- function(){
   fuente <- "Georgia"   
