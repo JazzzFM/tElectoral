@@ -5,69 +5,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="css/all.css">
-    <link rel="stylesheet" href="css/panelE.css">
+    <link rel="stylesheet" href="www/panelE.css">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,600,700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <main>
-        <section class="hexSection">
-            <h3>Giras y Agenda</h3>
+        <section class="hexSection hexFlexCenter">
             <div class="hexContainer hexFlexCenter">
                 <div class="hexRow hexFlexCenter">
                     <div class="hexColumn">
-                        <a href="#shiny-tab-investigacion" data-toggle="tab" data-value="investigacion">
-                            <div class="hexItem">
-                                <img src="www/img/1.png" alt="">
+                        <div class="hexItem color-panel-1" data-title="Título de módulo 1" modal-hex-ref="1" href="tab-investigacion">
+                                <img src="www/img/icon-1.svg" alt="">
                             </div>
-                        </a>
                     </div>
                     <div class="hexColumn">
-                        <a href="#">
-                            <div class="hexItem">
-                                <img src="www/img/2.png" alt="">
+                            
+                        
+                            <div class="hexItem color-panel-2" data-title="Título de módulo 2" modal-hex-ref="2">
+                                <img src="www/img/icon-2.svg" alt="">
                             </div>
-                        </a>
-                        <a href="#">
-                            <div class="hexItem">
-                                <img src="www/img/3.png" alt="">
+                         
+                        <div class="hexItem color-panel-3" data-title="Título de módulo 3" modal-hex-ref="3">
+                                <img src="www/img/icon-3.svg" alt="">
                             </div>
-                        </a>
+                         
+                        
+                            <div class="hexItem color-panel-4" data-title="Título de módulo 4" modal-hex-ref="4">
+                                <img src="www/img/icon-4.svg" alt="">
+                            </div>
                     </div>
                     <div class="hexColumn">
-                        <a href="#">
-                            <div class="hexItem">
-                                <img src="www/img/4.png" alt="">
+                        
+                            <div class="hexItem color-panel-5" data-title="Título de módulo 5" modal-hex-ref="5">
+                                <img src="www/img/icon-5.svg" alt="">
                             </div>
-                        </a>
+                            <div class="hexItem color-panel-6" data-title="Título de módulo 6" modal-hex-ref="6">
+                                <img src="www/img/icon-6.svg" alt="">
+                            </div>
+                         
                     </div>
                     <div class="hexColumn">
-                        <a href="#">
-                            <div class="hexItem">
-                                <img src="www/img/5.png" alt="">
+                        
+                            
+                         
+                        
+                            <div class="hexItem color-panel-7" data-title="Título de módulo 7" modal-hex-ref="7">
+                                <img src="www/img/icon-7.svg" alt="">
                             </div>
-                        </a>
-                        <a href="#">
-                            <div class="hexItem">
-                                <img src="www/img/6.png" alt="">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="hexColumn">
-                        <a href="#"></a>
-                        <div class="hexItem">
-                            <img src="www/img/7.png" alt="">
-                        </div>
-                        </a>
+                         
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- Modal section -->
+        <div class="HexModalContainer">
+            <div class="HexModal" modal-hex-ref="1">
+                <div class="title color-panel-1">
+                    <h1>Gira título de prueba no. 1</h1>
+                </div>
+                <div class="info">
+                    <div class="infoPanel">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio minima deserunt itaque perferendis, explicabo rerum corrupti, cupiditate consequuntur animi mollitia, libero pariatur! Accusamus reprehenderit sed aliquam praesentium quas ut minima?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="HexModal" modal-hex-ref="2">
+                <div class="title color-panel-2">
+                    <h1>Título módulo 2</h1>
+                </div>
+                <div class="info">
+                    <div class="infoPanel">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio minima deserunt itaque perferendis, explicabo rerum corrupti, cupiditate consequuntur animi mollitia, libero pariatur! Accusamus reprehenderit sed aliquam praesentium quas ut minima?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="HexModal" modal-hex-ref="3">
+                <div class="title color-panel-3">
+                    <h1>Título módulo 3</h1>
+                </div>
+                <div class="info">
+                    <div class="infoPanel">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio minima deserunt itaque perferendis, explicabo rerum corrupti, cupiditate consequuntur animi mollitia, libero pariatur! Accusamus reprehenderit sed aliquam praesentium quas ut minima?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="HexModal" modal-hex-ref="4">
+                <div class="title color-panel-4">
+                    <h1>Título módulo 4</h1>
+                </div>
+                <div class="info">
+                    <div class="infoPanel">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio minima deserunt itaque perferendis, explicabo rerum corrupti, cupiditate consequuntur animi mollitia, libero pariatur! Accusamus reprehenderit sed aliquam praesentium quas ut minima?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="HexModal" modal-hex-ref="5">
+                <div class="title color-panel-5">
+                    <h1>Título módulo 5</h1>
+                </div>
+                <div class="info">
+                    <div class="infoPanel">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio minima deserunt itaque perferendis, explicabo rerum corrupti, cupiditate consequuntur animi mollitia, libero pariatur! Accusamus reprehenderit sed aliquam praesentium quas ut minima?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="HexModal" modal-hex-ref="6">
+                <div class="title color-panel-6">
+                    <h1>Título módulo 6</h1>
+                </div>
+                <div class="info">
+                    <div class="infoPanel">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio minima deserunt itaque perferendis, explicabo rerum corrupti, cupiditate consequuntur animi mollitia, libero pariatur! Accusamus reprehenderit sed aliquam praesentium quas ut minima?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="HexModal" modal-hex-ref="7">
+                <div class="title color-panel-7">
+                    <h1>Título módulo 7</h1>
+                </div>
+                <div class="info">
+                    <div class="infoPanel">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio minima deserunt itaque perferendis, explicabo rerum corrupti, cupiditate consequuntur animi mollitia, libero pariatur! Accusamus reprehenderit sed aliquam praesentium quas ut minima?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End modal section -->
     </main>
-    <script src="js/jquery.js"></script>
-    <script src="js/all.js"></script>
-    <script src="js/panelE.js"></script>
+    <script src="www/panelE.js"></script>
 </body>
 
 </html>
