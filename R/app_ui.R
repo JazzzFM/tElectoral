@@ -25,7 +25,7 @@ app_ui <- function(request) {
                       menuItem("Investigación",
                                tabName = "investigacion", 
                                icon = icon("dashboard")),
-                      menuItem("Comunicación",
+                      menuItem("Protocolo de cuestionarios",
                                tabName = "comunicacion", 
                                icon = icon("dashboard")),
                       menuItem("Gira", 
@@ -50,7 +50,9 @@ app_ui <- function(request) {
                       tabItem(tabName = "inicio", 
                               mod_portada_ui("portada_ui_1")),
                       tabItem(tabName = "investigacion",
-                              mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1"))
+                              mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1")),
+                      tabItem(tabName = "comunicacion",
+                              mod_comunicacion_ui("comunicacion_ui_1"))
                       
                     )
                   )

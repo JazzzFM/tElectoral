@@ -184,3 +184,44 @@ $(".hexItem").hover(function(){
 });
 
 /* End hover control */
+
+/* Control de ayudas */
+var ayudasContainer;
+$('.sidebar .nav-link').on("click", SetAyudas);
+function SetAyudas(){
+    if($("button.showInfo").length == 0){
+     setTimeout(function() {
+        ayudasContainer = $(".AyudasContainer");
+        ayudasContainer.append("<button>Cerrar ayuda</button>")
+        var referencias = [];
+        // Asignamos ids a referencias
+        $.each(ayudasContainer.find("p"), function(){
+           referencias.push($(this).attr("ref-id"));
+        });
+        // Asignamos ids al dom
+        referencias.forEach(item => {
+            var element = $(`[id="${item}"]`);
+            if(!element.hasClass("form-group"))
+                element = element.parents(".form-group");
+            element.find(".control-label").prepend(`
+                <button type="button" ref-id="${item}" class="showInfo"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+            `);
+        })
+    console.log(referencias);
+    }, 500);   
+    }
+}
+
+$(document).on("click",".showInfo",function(){
+    var element = $(this);
+    ayudasContainer.addClass('show');
+    ayudasContainer.find(`p`).removeClass('show');
+    ayudasContainer.find(`p[ref-id="${element.attr("ref-id")}"]`).addClass('show');
+})
+$(document).on("click",".AyudasContainer button",function(){
+    $(".AyudasContainer").removeClass("show");
+    setTimeout(function() {
+        $(".AyudasContainer p").removeClass("show");
+    }, 1000);
+})
+/* End control de ayudas */

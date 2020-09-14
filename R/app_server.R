@@ -16,6 +16,6 @@ app_server <- function( input, output, session ) {
   callModule(mod_portada_server, "portada_ui_1")
   # Investigación
   callModule(mod_investigacionAnalisis_server, "investigacionAnalisis_ui_1")
-  
-
+  # Protocolo de cuestionarios
+  callModule(mod_comunicacion_server, "comunicacion_ui_1")
 }
