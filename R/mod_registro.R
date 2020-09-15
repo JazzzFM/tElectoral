@@ -26,8 +26,10 @@ mod_registro_ui <- function(id){
     fluidRow(
       column(12,
              dateInput(inputId = ns("fecha"),label = "Fecha",value = lubridate::today(),format = "d M yy",language = "es"),
-             timeInput(inputId = ns("inicio"),label = "Hora inicial",seconds = F,minute.steps = 15),
-             timeInput(inputId = ns("fin"),label = "Hora final", seconds = F,minute.steps = 15)
+             timeInput(inputId = ns("inicio"),label = "Hora inicial",seconds = F,minute.steps = 15, 
+                       value = NA),
+             timeInput(inputId = ns("fin"),label = "Hora final", seconds = F,minute.steps = 15,
+                       value = NA)
       )
     ),
     fluidRow(
@@ -71,14 +73,15 @@ mod_registro_server <- function(input, output, session){
   
   observeEvent(input$guardarEvento,{
     check <- c("gira", "responsable", "lugar", "descripcion") %>% mandatory(input = input, .)
-    if(check){
-      updatePickerInput(session = ssession,inputId = "gira",selected = "")
-      updatePickerInput(session = ssession,inputId = "responsable",selected = "")
-      updatePickerInput(session = ssession,inputId = "lugar",selected = "")
+    check2 <- c("inicio","fin") %>% mandatoryTime(input = input, .)
+    if(check & check2){
+      updatePickerInput(session = session,inputId = "gira",selected = "")
+      updatePickerInput(session = session,inputId = "responsable",selected = "")
+      updatePickerInput(session = session,inputId = "lugar",selected = "")
       updateTextAreaInput(session = session, inputId = "descripcion", value = "")
-      updateDateInput(session = session, inputId = "fecha", value = lubridate::today(),language = "es")
-      updateTimeInput(session = session, inputId = "inicio",value = 0)
-      updateTimeInput(session = session, inputId = "fin",value = 0)
+      updateDateInput(session = session, inputId = "fecha", value = lubridate::today())
+      updateTimeInput(session = session, inputId = "inicio",value = NA)
+      updateTimeInput(session = session, inputId = "fin",value = NA)
     } else{
       shinyalert::shinyalert(title = "Registro incompleto", text = "Favor de llenar por completo el formulario.")
     }
