@@ -20,6 +20,9 @@ app_ui <- function(request) {
       sidebar = dashboardSidebar(#expand_on_hover = F,
         # Sidebar #####
         sidebarMenu(
+          menuItem("Registro",
+                   tabName = "registro",
+                   icon = icon("pen")),
           menuItem("Inicio",
                    tabName = "inicio", 
                    icon = icon("dashboard")
@@ -51,6 +54,9 @@ app_ui <- function(request) {
       ),
       body =dashboardBody(
         tabItems(
+          tabItem(tabName = "registro",
+                  mod_registro_ui("registro_ui_1")
+          ),
           tabItem(tabName = "inicio", 
                   mod_portada_ui("portada_ui_1")),
           tabItem(tabName = "investigacion",

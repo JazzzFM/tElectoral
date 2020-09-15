@@ -18,4 +18,6 @@ app_server <- function( input, output, session ) {
   callModule(mod_investigacionAnalisis_server, "investigacionAnalisis_ui_1")
   # Protocolo de cuestionarios
   callModule(mod_comunicacion_server, "comunicacion_ui_1")
+  # Registro
+  callModule(mod_registro_server, "registro_ui_1")
 }

@@ -34,6 +34,8 @@ golem::add_module( name = "investigacionAnalisis",
                    fct = "graficos") # Name of the module
 # Comunicación
 golem::add_module( name = "comunicacion" )
+# Registro
+golem::add_module( name = "registro" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
