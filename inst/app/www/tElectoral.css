@@ -11,15 +11,24 @@
   --twitter-black-secondary: #263a5b;
   --bg-primary: #f2f5fa;
   
-  /* Colores tElectoral */
+  /* Colores pan */
+  /*--m-black-color: #2a2c2b;
+  --m-red-color: #1e50a9;
+  --m-green-color: #0c231e;
+  --m-semibrown-color: #ececec;
+  --m-red-black-color: #1b2f9f;*/
+  
+  /* Colores pri */
   
   --m-black-color: #2a2c2b;
-  --m-red-color: #6e1b33;
+  --m-red-color: #c00301;
   --m-green-color: #0c231e;
-  --m-semibrown-color: #e3c294;
+  --m-semibrown-color: #ececec;
+  --m-red-black-color: #005734;
+  
+  
   --m-white-primary-color: #f2f2f2;
   --m-white-secondary-color: #e0e0e0;
-  --m-red-black-color: #5b0a1c;
   
   /* Colores de barras */
   --cbar-red: #e44e44;
@@ -304,12 +313,14 @@ span.input-group-addon:empty{
     align-items: center;
     box-shadow: 2px 2px 2px 0px rgba(0,0,0,.3);
 }
-.skin-blue .main-header .navbar,
-.skin-blue .main-header .logo{
+.skin-blue .main-header .navbar{
   background-color: var(--m-green-color);
 }
+.skin-blue .main-header .logo{
+  background-color: var(--m-red-color);
+}
 .skin-blue .main-header .logo:hover{
-  background-color: var(--m-green-color);
+  background-color: var(--m-red-black-color);
 }
 .skin-blue .main-header .navbar .sidebar-toggle{
   width: 45px;

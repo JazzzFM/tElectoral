@@ -76,9 +76,7 @@ mod_comunicacion_ui <- function(id){
     h3("Bloques del cuestionario / Conceptos básicos"),
     tags$hr(),
     fluidRow(
-      column(width = 12, 
-             textInput(inputId = "AliasCB", placeholder = "Ingrese un alias", label = "Alias")
-      ),
+      
       column(
         width = 6,
         pickerInput(label = "Orden de los bloques", choices = c("Seleccione un orden" = '', "Apropiado","Poco apropiado","Poco desapropiado","Desapropiado"), inputId = "OrdenBloques"),
@@ -98,9 +96,6 @@ mod_comunicacion_ui <- function(id){
     h3("Solicitud de respuesta"),
     tags$hr(),
     fluidRow(
-      column(width = 12, 
-             textInput(inputId = "SolicitudRespuesta", placeholder = "Título de la solicitud", label = "Solicitud")
-      ),
       column(
         width = 6,
         prettyRadioButtons(label = "Deseabilidad social", choices = c("No hay", "Ligera", "Mucha"), inputId = "DeseabilidadSocial")
@@ -258,7 +253,7 @@ mod_comunicacion_server <- function(input, output, session){
         if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
           column(
             width = 6,
-            numericInput(label = "Número de enunciados en la solicitud de respuesta", min = 1, value = 1, inputId = "NEnunciadosRespuesta")
+            numericInput(label = "Número de categorías", min = 1, value = 1, inputId = "NCategorias")
           )
         },
         if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
@@ -267,19 +262,19 @@ mod_comunicacion_server <- function(input, output, session){
             prettyRadioButtons(label = "Categorías mutuamente excluyente", choices = c("Presente", "No presente"), inputId = ns("CatExcluyentes"))
           )
         },
-        if(input$CategoriaRespuesta == "Numérica" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
+        if(input$CategoriaRespuesta == "Numéricas" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
           column(
             width = 6,
             prettyRadioButtons(label = "Categoría neutral", choices = c("Presente", "No presente"), inputId = ns("CatNeutral"))
           )
         },
-        if(input$CategoriaRespuesta == "Numérica" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
+        if(input$CategoriaRespuesta == "Numéricas" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
           column(
             width = 6,
             prettyRadioButtons(label = "Equilibrio entre las categorías", choices = c("Presente", "No presente"), inputId = ns("EquilibrioCat"))
           )
         },
-        if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia" || input$CategoriaRespuesta == "Numérica"){
+        if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia" || input$CategoriaRespuesta == "Numéricas"){
           column(
             width = 6,
             prettyRadioButtons(label = "No sabe/No contesta", choices = c("Presente", "No presente"), inputId = ns("NoSabeNoContest"))
