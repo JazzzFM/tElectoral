@@ -2,6 +2,8 @@
 
 export(run_app)
 import(bs4Dash)
+import(dplyr)
+import(ggplot2)
 import(shiny)
 importFrom(config,get)
 importFrom(golem,activate_js)
