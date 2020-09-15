@@ -2,7 +2,7 @@
 #' 
 #' @param request Internal parameter for `{shiny}`. 
 #'     DO NOT REMOVE.
-#' @import shiny bs4Dash
+#' @import shiny shinydashboard
 #' @noRd
 #' @ggplot2
 app_ui <- function(request) {
