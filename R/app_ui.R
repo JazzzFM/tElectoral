@@ -11,6 +11,11 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Dashboard
     dashboardPage(title = h1("Tablero electoral"),
+                  tags$head(
+                    includeCSS(app_sys("app/www/tElectoral.css")),
+                    tags$link(href="https://fonts.googleapis.com/css?family=Muli:400,600,700&display=swap", rel = "stylesheet"),
+                    tags$script(async = TRUE, src = "https://platform.twitter.com/widgets.js")
+                  ),
                   navbar = dashboardHeader(),
                   sidebar = dashboardSidebar(expand_on_hover = F,
                     # Sidebar #####
@@ -21,7 +26,7 @@ app_ui <- function(request) {
                       menuItem("Investigación",
                                tabName = "investigacion", 
                                icon = icon("dashboard")),
-                      menuItem("Comunicación",
+                      menuItem("Protocolo de cuestionarios",
                                tabName = "comunicacion", 
                                icon = icon("dashboard")),
                       menuItem("Gira", 
@@ -46,7 +51,9 @@ app_ui <- function(request) {
                       tabItem(tabName = "inicio", 
                               mod_portada_ui("portada_ui_1")),
                       tabItem(tabName = "investigacion",
-                              mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1"))
+                              mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1")),
+                      tabItem(tabName = "comunicacion",
+                              mod_comunicacion_ui("comunicacion_ui_1"))
                       
                     )
                   )

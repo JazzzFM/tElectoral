@@ -1,13 +1,12 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+body{
+    background-color: #fffff7;
 }
 section.hexSection{
-    min-height: 100vh;
-    padding-top: 35px;
-    background-color: #fffff7;
+    min-height: 70vh;
+    width: 60%;
+    padding: 2px;
+    overflow: hidden;
+    justify-content: start;
 }
 section.hexSection h3{
     text-transform: uppercase;
@@ -35,13 +34,213 @@ a{
 .hexContainer .hexRow .hexColumn img{
     display: block;
     margin: auto;
+    position: absolute;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    top: -25px;
+    bottom: 0;
+    right: 0;
+    left: -35px;
 }
+
+/* Hex Item */
 .hexContainer .hexRow .hexColumn .hexItem{
     transition: ease all .4s;
+    position: relative;
+    width: 183px;
+    height: 183px;
+    background-image: url(img/h-shape.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
 }
-.hexContainer .hexRow .hexColumn .hexItem:hover{
+.hexContainer .hexRow .hexColumn .hexItem.hover{
     transform: scale(1.2);
     cursor: pointer;
 }
+.hexContainer .hexRow .hexColumn .hexItem.hover span{
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
 
+/* Item's color */
+
+.color-panel-1{
+    color: #8059ad;
+    stroke: #8059ad;
+}
+.color-panel-2{
+    color: #00acac;
+    stroke: #00acac;
+}
+.color-panel-3{
+    color: #a01346;
+    stroke: #a01346;
+}
+.color-panel-4{
+    color: #77cbf8;
+    stroke: #77cbf8;
+}
+.color-panel-5{
+    color: #2983bd;
+    stroke: #2983bd;
+}
+.color-panel-6{
+    color: #fd4557;
+    stroke: #fd4557;
+}
+.color-panel-7{
+    color: #f69b30;
+    stroke: #8059ad;
+}
+
+/* End item's color */
+
+.hexContainer .hexRow .hexColumn .hexItem svg.bg-hexagon{
+    position: absolute;
+    left: 0;
+    top: 0;
+    fill: #fff;
+    stroke: #ccc;
+    filter: drop-shadow( 2px 2px 2px rgba(0, 0, 0, .3));
+    stroke-dashoffset: 50px;
+    stroke-dasharray: 80px;
+    transition: ease stroke-dasharray .8s;
+    overflow: visible;
+}
+.hexContainer .hexRow .hexColumn .hexItem svg polyline{
+    fill: none;
+    transform: scale(0);
+    transition: ease transform .3s
+}
+.hexContainer .hexRow .hexColumn .hexItem svg text{
+    fill: currentColor;
+    stroke: none;
+    font-size: 13px;
+    transform: scale(0);
+    transition: ease transform .3s
+}
+.hexContainer .hexRow .hexColumn .hexItem.hover{
+    z-index: 1;
+}
+.hexContainer .hexRow .hexColumn .hexItem.hover svg.bg-hexagon{
+    stroke-dasharray: 150px;
+    stroke: currentColor;
+    stroke-width: 3px;
+}
+.hexContainer .hexRow .hexColumn .hexItem.hover svg polyline,
+.hexContainer .hexRow .hexColumn .hexItem.hover svg text{
+    transform: scale(1);
+}
+/* Hex item */
+.hexContainer .hexRow .hexColumn .hexItem.selectedHex{
+    animation: zoomItem 1s ease-in-out forwards;
+}
+.hexContainer .hexRow .hexColumn .hexItem.hideHex{
+    animation: hideItem .5s linear forwards;
+}
+
+@keyframes hideItem{
+    from{
+        transform: scale(1);
+    }
+    to{
+        transform: scale(0);
+    }
+}
+
+@keyframes zoomItem{
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.5);
+    }
+    100%{
+        transform: scale(0);
+    }
+}
 /* End hex container*/
+
+/*  Modal hex container*/
+
+.HexModalContainer{
+    min-height: 100vh;
+    position: fixed;
+    width: 35%;
+    top: 0;
+    right: 0;
+    /* box-shadow: -4px -4px 4px 4px rgba(254, 254, 240, 1); */
+    transition: ease all .4s;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(50px);
+}
+.HexModalContainer .HexModal{
+    visibility: hidden;
+    opacity: 0;
+    transition: ease all .3s;
+    position: absolute;
+    width: 100%;
+    margin-top: 30vh;
+    transform: translateY(15px);
+}
+.HexModalContainer.active{
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0px);
+}
+.HexModalContainer .HexModal.active{
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+    transform: translateY(0px);
+}
+.HexModalContainer .HexModal .icon img{
+    width: 30%;
+    display: block;
+    margin: 40px auto;
+}
+.HexModalContainer .HexModal .title{
+    font-size: .8em;
+    text-align: center;
+    margin: 20px 0;
+}
+.HexModalContainer .HexModal .title h1{
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #fff;
+    padding: 20px 0;
+    border: 1px solid #ccc;
+}
+.HexModalContainer .HexModal .title p{
+    color: #333;
+}
+.HexModalContainer .HexModal .info p{
+    color: #333;
+    font-size: .8em;
+}
+.HexModalContainer .HexModal .info .infoPanel h3{
+    color: #333;
+}
+.HexModalContainer .HexModal .info .infoPanel{
+    margin: 35px 0;
+    padding: 10px;
+}
+
+/* End modal hex container */
+
+@media only screen and (max-width: 1400px) and (min-width: 950px){
+    .HexModalContainer{
+        width: 30%;
+    }
+}
+@media only screen and (max-width: 949px) and (min-width: 580px){
+    .HexModalContainer{
+        width: 35%;
+    }
+}
