@@ -23,6 +23,10 @@ usethis::use_package( "shinyWidgets" )
 usethis::use_package( "htmltools" )
 usethis::use_package( "shinydashboardPlus" )
 usethis::use_package( "shinyjs" )
+usethis::use_package("purrr")
+usethis::use_package("sf")
+usethis::use_package("httr")
+
 # no se instaló bs4Dash a propósito, para ver que pasa
 
 ## Add modules ----
