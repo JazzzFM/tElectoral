@@ -37,6 +37,8 @@ golem::add_module( name = "comunicacion" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
+# Inegi
+golem::add_fct(name = "inegi" )
 golem::add_fct( "helpers" ) 
 golem::add_utils( "helpers" )
 
