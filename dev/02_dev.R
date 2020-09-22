@@ -69,7 +69,7 @@ golem::add_css_file( "login")
 
 ## Add internal datasets ----
 ## If you have data in your package
-usethis::use_data_raw( name = "my_dataset", open = FALSE ) 
+usethis::use_data_raw( name = "DB_Mich", open = TRUE ) 
 
 ## Tests ----
 ## Add one line by test you want to create
