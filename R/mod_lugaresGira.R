@@ -32,7 +32,8 @@ mod_lugaresGira_ui <- function(id){
              class = "col-lg-6",
              leafletOutput(ns("mapa")),
       ),
-      column(width = 6,
+      column(width = 12,
+             tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {background-color: #93b961 !important;}')),
              DT::DTOutput(ns("recomendaciones")))
     )
   )
@@ -69,7 +70,11 @@ mod_lugaresGira_server <- function(input, output, session){
         length(input$recomendaciones_rows_selected)>1,
         message = "Favor de seleccionar al menos dos cabeceras municipales de la tabla.")
     )
-    a()[[2]] %>% paste(collapse = "\n")
+    div(class="masonryContent",
+        a()[[2]] %>% map(function(x){
+          htmltools::HTML("<p>",x,"</p>")
+        })
+        )
   })
   
   # Tabla de recomendaciones
