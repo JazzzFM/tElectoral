@@ -36,7 +36,7 @@ usethis::use_package( "purrr" )
 usethis::use_package( "stringr" )
 usethis::use_package( "lubridate" )
 usethis::use_package( "htmltools" )
-
+usethis::use_package("DT")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -57,6 +57,7 @@ golem::add_module( name = "pregunta_guardada" )
 # Registro
 golem::add_module( name = "registro" )
 golem::add_module( name = "registroGira" )
+golem::add_module( name = "lugaresGira" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*

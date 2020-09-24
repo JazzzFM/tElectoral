@@ -21,4 +21,6 @@ app_server <- function( input, output, session ) {
   # End cuestionario
   # Registro
   callModule(mod_registro_server, "registro_ui_1")
+  # Lugares gira
+  callModule(mod_lugaresGira_server, "lugaresGira_ui_1")
 }
