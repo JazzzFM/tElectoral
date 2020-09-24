@@ -2,7 +2,7 @@
 #' 
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
-#' @import shiny tibble
+#' @import shiny tibble purrr
 #' @noRd
 app_server <- function( input, output, session ) {
   # List the first level callModules here
@@ -19,4 +19,6 @@ app_server <- function( input, output, session ) {
   # Protocolo de cuestionarios
   callModule(mod_comunicacion_server, "comunicacion_ui_1")
   # End cuestionario
+  # Registro
+  callModule(mod_registro_server, "registro_ui_1")
 }

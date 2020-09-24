@@ -27,7 +27,16 @@ usethis::use_package( "shinyjs" )
 usethis::use_package( "purrr" )
 usethis::use_package( "stringr" )
 usethis::use_package( "shinyalert" )
-# no se instaló bs4Dash a propósito, para ver que pasa
+usethis::use_package("sf")
+usethis::use_package("httr")
+usethis::use_package("leaflet")
+usethis::use_package( "shinyTime" )
+usethis::use_package( "shinyalert" )
+usethis::use_package( "purrr" )
+usethis::use_package( "stringr" )
+usethis::use_package( "lubridate" )
+usethis::use_package( "htmltools" )
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -38,17 +47,27 @@ golem::add_module( name = "investigacionAnalisis",
                    fct = "graficos") # Name of the module
 # Comunicación
 golem::add_module( name = "comunicacion" )
+
 # Cuestionario
 golem::add_module( name = "cuestionario_paso_1" )
 golem::add_module( name = "cuestionario_paso_2" )
 golem::add_module( name = "cuestionario_pregunta" )
 golem::add_module( name = "pregunta_guardada" )
 # End Cuestionario
+# Registro
+golem::add_module( name = "registro" )
+golem::add_module( name = "registroGira" )
+
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
+# Inegi
+golem::add_fct(name = "inegi" )
 golem::add_fct( "helpers" ) 
 golem::add_utils( "helpers" )
 golem::add_fct( "mandatory" ) 
+golem::add_utils( "mandatorio" )
+golem::add_utils( "alinear" )
+
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
@@ -62,7 +81,7 @@ golem::add_css_file( "login")
 
 ## Add internal datasets ----
 ## If you have data in your package
-usethis::use_data_raw( name = "my_dataset", open = FALSE ) 
+usethis::use_data_raw( name = "DB_Mich", open = TRUE ) 
 
 ## Tests ----
 ## Add one line by test you want to create
