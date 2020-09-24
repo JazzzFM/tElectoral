@@ -19,6 +19,9 @@ Imports:
     shinyWidgets,
     shinydashboardPlus,
     shinyjs,
+    magrittr,
+    purrr,
+    stringr,
     shinyTime,
     shinyalert
 Encoding: UTF-8
