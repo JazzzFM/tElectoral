@@ -7,18 +7,17 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-#' @import leaflet
+#' @import leaflet tidyr TSP
 mod_lugaresGira_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
       column(width = 3,
-             "Info de la gira"
+             uiOutput(ns("info"))
+             
       ),
       column(width = 9,
-             "Mapa",
              leafletOutput(ns("mapa")),
-             "Recomendaciones",
              DT::DTOutput(ns("recomendaciones")))
     )
   )
@@ -29,16 +28,25 @@ mod_lugaresGira_ui <- function(id){
 #' @noRd 
 mod_lugaresGira_server <- function(input, output, session){
   ns <- session$ns
+  # Temporal seleccion de municipios al azar
+  mun_sel <- DB_Mich2$CABECERA_MUNICIPAL %>% sample(size = 3)
+  a <- camino_mas_corto(municipios_seleccionados = mun_sel,
+                        info=munRPAP,
+                        municipios = DB_Mich2)
   # Mapa de gira
   output$mapa <- renderLeaflet({
-    leaflet() %>% 
-      addTiles()
+    a[[1]]
   }
   )
   
   # Tabla de sugerencias
   output$recomendaciones <- DT::renderDT({
     DB_Mich2 %>% select(MUNICIPIO, TOTAL_VOTOS)
+  })
+  
+  # Info de la gira
+  output$info <- renderUI({
+    a[[2]] %>% paste(collapse = "\n")
   })
 }
     

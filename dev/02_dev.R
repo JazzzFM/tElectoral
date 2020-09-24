@@ -37,6 +37,7 @@ usethis::use_package( "stringr" )
 usethis::use_package( "lubridate" )
 usethis::use_package( "htmltools" )
 usethis::use_package("DT")
+usethis::use_package("TSP")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
