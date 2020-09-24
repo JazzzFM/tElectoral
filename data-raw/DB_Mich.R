@@ -117,7 +117,7 @@ DB_MICH <- DB_MICH %>%
   summarise(across(c(where(is.numeric),-ID, -CABECERA_MUNICIPAL), sum, .names ="{col}", na.rm=TRUE)) %>% 
   ungroup()
 
-DB_MICH <- cabecera_mun %>% 
+DB_Mich <- cabecera_mun %>% 
   full_join(y=DB_MICH,by="MUNICIPIO" )
 
-usethis::use_data(DB_MICH, overwrite = TRUE)
+usethis::use_data(DB_Mich, overwrite = TRUE)
