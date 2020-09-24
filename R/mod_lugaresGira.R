@@ -33,7 +33,7 @@ mod_lugaresGira_ui <- function(id){
              leafletOutput(ns("mapa")),
       ),
       column(width = 12,
-             tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {background-color: var(--m-red-color) !important;}')),
+             tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {background-color: var(--m-tr-selected) !important;}')),
              DT::DTOutput(ns("recomendaciones")))
     )
   )
