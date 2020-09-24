@@ -44,7 +44,7 @@ mod_giraPaso1_ui <- function(id){
 #' @noRd 
 mod_giraPaso1_server <- function(input, output, session){
   ns <- session$ns
- 
+  return (reactive(tibble::tibble(Responsable = input$Responsable, Descripcion = input$Descripcion, LugarInicio = input$LugarInicio, HorarioInicio = input$HorarioInicio, LugarFinal = input$LugarFinal, HorarioFinal = input$HorarioFinal)))
 }
     
 ## To be copied in the UI
