@@ -21,19 +21,29 @@ mod_giraPaso1_ui <- function(id){
              textAreaInput(inputId = ns("Descripcion"), label = "Descripcion" , placeholder = "...", rows = 5))
     ),
     fluidRow(
-      column(width = 8,
+      column(width = 7,
              selectizeInput(inputId = ns("LugarInicio"), label = "Lugar de inicio", choices = c("Seleccione un lugar" = "", "Lugar 1", "Lugar 2") )
       ),
-      column(width = 4,
-             timeInput(inputId = ns("HorarioInicio"), label = "Hora de inicio", value =  Sys.time(), seconds = F)
+      column(width = 5,
+             selectizeInput(inputId = ns("HorarioInicio"), label = "Hora de inicio", choices =  c("Seleccione hora" = "", seq(
+               from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
+               to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
+               by="hour"
+             ) %>% format(.,"%R"))
+            )
       )
     ),
     fluidRow(
-      column(width = 8,
+      column(width = 7,
              selectizeInput(inputId = ns("LugarFinal"), label = "Lugar de destino", choices = c("Seleccione un lugar" = "", "Lugar 1", "Lugar 2") )
       ),
-      column(width = 4,
-             timeInput(inputId = ns("HorarioFinal"), label = "Hora de finalización", value =  Sys.time(), seconds = F)
+      column(width = 5,
+             selectizeInput(inputId = ns("HorarioFinal"), label = "Hora de finalización", choices = c("Seleccione hora" = "", seq(
+               from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
+               to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
+               by="hour"
+             ) %>% format(.,"%R"))
+             )
       )
     ),
     actionButton(inputId = ns("guardar"), "Guardar")
