@@ -52,7 +52,8 @@ golem::add_module( name = "registroGira" )
 ## Creates ftc_* and utils_*
 # Inegi
 golem::add_fct(name = "inegi" )
-golem::add_fct( "criterio_participacion") 
+golem::add_fct("criterio_participacion")
+golem::add_fct("criterio_participacion_partido")
 golem::add_utils( "helpers" )
 golem::add_utils( "mandatorio" )
 golem::add_utils( "alinear" )
