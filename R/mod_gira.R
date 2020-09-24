@@ -14,6 +14,9 @@ mod_gira_ui <- function(id){
       tabPanel(title = "Paso 1",
                mod_giraPaso1_ui(ns("giraPaso1_ui_1"))
       ),
+      tabPanel(title = "Paso 2",
+               mod_lugaresGira_ui(ns("lugaresGira_ui_1"))
+      ),
       tabPanel(title = "Paso 3",
                mod_giraPaso3_ui(ns("giraPaso3_ui_1"))
       )
@@ -29,7 +32,8 @@ mod_gira_server <- function(input, output, session){
   
   # Paso 1
   paso1 <- callModule(mod_giraPaso1_server, "giraPaso1_ui_1")
-  
+  # Lugares gira
+  callModule(mod_lugaresGira_server, "lugaresGira_ui_1")
   # Paso 3
   callModule(mod_giraPaso3_server, "giraPaso3_ui_1")
 }
