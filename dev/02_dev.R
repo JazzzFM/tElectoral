@@ -18,11 +18,15 @@
 usethis::use_package( "thinkr" )
 usethis::use_package("shinymanager")
 usethis::use_package("tibble")
+usethis::use_package("magrittr")
 usethis::use_package( "shinydashboard" )
 usethis::use_package( "shinyWidgets" )
 usethis::use_package( "htmltools" )
 usethis::use_package( "shinydashboardPlus" )
 usethis::use_package( "shinyjs" )
+usethis::use_package( "purrr" )
+usethis::use_package( "stringr" )
+usethis::use_package( "shinyalert" )
 # no se instaló bs4Dash a propósito, para ver que pasa
 
 ## Add modules ----
@@ -34,11 +38,17 @@ golem::add_module( name = "investigacionAnalisis",
                    fct = "graficos") # Name of the module
 # Comunicación
 golem::add_module( name = "comunicacion" )
-
+# Cuestionario
+golem::add_module( name = "cuestionario_paso_1" )
+golem::add_module( name = "cuestionario_paso_2" )
+golem::add_module( name = "cuestionario_pregunta" )
+golem::add_module( name = "pregunta_guardada" )
+# End Cuestionario
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
 golem::add_fct( "helpers" ) 
 golem::add_utils( "helpers" )
+golem::add_fct( "mandatory" ) 
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

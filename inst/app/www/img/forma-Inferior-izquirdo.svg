@@ -1,11 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 222 496"><defs><style>
 /* PAN */
-.cls-1{fill:#ececec;}
-.cls-2{fill:#1e50a9;}
+/*.cls-1{fill:#ececec;}
+.cls-2{fill:#1e50a9;}*/
 
 /* PRI */
 /*.cls-1{fill:#ececec;}
 .cls-2{fill:#c00301;}*/
+
+/* MOVIMIENTO */
+.cls-1{fill:#ff8201;}
+.cls-2{fill:#ececec;}
+
+/* MORENA */
+/*.cls-1{fill:#ececec;}
+.cls-2{fill:#b92207;}*/
 
 .cls-1,.cls-2{fill-rule:evenodd;}
 

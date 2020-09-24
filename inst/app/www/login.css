@@ -28,11 +28,21 @@
   
   /* Colores pri */
   
-  --m-black-color: #2a2c2b;
+  /*--m-black-color: #2a2c2b;
   --m-red-color: #c00301;
   --m-green-color: #0c231e;
   --m-semibrown-color: #ececec;
-  --m-red-black-color: #005734;
+  --m-red-black-color: #005734;*/
+  
+  /* Colores movimiento */
+  --m-black-color: #2a2c2b;
+  --m-red-color: #ff8201;
+  --m-red-black-color: #cc6900;
+  
+  /* Colores morena */
+  /*--m-black-color: #2a2c2b;
+  --m-red-color: #b92207;
+  --m-red-black-color: #a01d06;*/
   
   
   --m-white-primary-color: #f2f2f2;

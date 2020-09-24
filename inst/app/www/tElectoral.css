@@ -14,19 +14,26 @@
   /* Colores pan */
   /*--m-black-color: #2a2c2b;
   --m-red-color: #1e50a9;
-  --m-green-color: #0c231e;
-  --m-semibrown-color: #ececec;
   --m-red-black-color: #1b2f9f;*/
   
   /* Colores pri */
   
-  --m-black-color: #2a2c2b;
+ /* --m-black-color: #2a2c2b;
   --m-red-color: #c00301;
+  --m-red-black-color: #005734;*/
+  
+  /* Colores movimiento */
+  --m-black-color: #2a2c2b;
+  --m-red-color: #ff8201;
+  --m-red-black-color: #cc6900;
+  
+  /* Colores morena */
+  /*--m-black-color: #2a2c2b;
+  --m-red-color: #b92207;
+  --m-red-black-color: #a01d06;*/
+  
   --m-green-color: #0c231e;
   --m-semibrown-color: #ececec;
-  --m-red-black-color: #005734;
-  
-  
   --m-white-primary-color: #f2f2f2;
   --m-white-secondary-color: #e0e0e0;
   
@@ -47,7 +54,10 @@
   src: url('webfonts/DIN Condensed Bold.ttf'); /* IE9 Compat Modes */
   src: url('webfonts/DIN Condensed Bold.ttf')  format('truetype'); /* Safari, Android, iOS */
 }
-
+.row{
+  display: flex;
+  flex-wrap: wrap;
+}
 body{
   font-family: "DIN A1", sans-serif;
 }
@@ -74,6 +84,16 @@ body{
 .FlexColumn{
   display: flex;
   align-items: center;
+}
+.FlexColumn .input-group{
+  display: flex;
+}
+.FlexColumn .input-group-addon, .FlexColumn .input-group-btn{
+  width: auto !important;
+  white-space: normal !important;
+}
+.FlexColumn .input-group-addon .btn, .FlexColumn .input-group-btn .btn{
+  white-space: normal !important;
 }
 .FlexColumn > *{
   margin: 0 5px;
@@ -132,6 +152,9 @@ body{
 .btn.btn-primary:focus{
   color: #fff;
 }
+a{
+  color: #333;
+}
 .btn-default,
 .btn-primary,
 .btn-secondary,
@@ -164,8 +187,9 @@ body{
 .btn-secondary{
   background-color: var(--m-red-black-color) !important;
 }
-.btn-danger{
-  background-color: #e44e44;
+.btn-danger, .btn-danger:hover{
+  background-color: #e44e44 !important;
+  color: #fff !important;
 }
 .btn-success{
   background-color: #00b963;
@@ -184,7 +208,9 @@ body{
   background-color: #eaeaea;
   color: #333;
 }
-.btn-default:hover,
+.btn-default:hover{
+  color: #333;
+}
 .btn-primary:hover{
   background-color: var(--m-red-black-color);
   color: #fff;
@@ -1157,3 +1183,25 @@ z-index: 1;
   padding-right: 30px;
 }
 /* End ayudas */
+
+/* Tabs */
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+  color: var(--m-red-color);
+}
+.tabbable .tabbable {
+    margin-top: 15px;
+}
+
+/* Preguntas guardadas */
+.ButtonWDeleteAddon {
+position: relative;
+margin: 10px;
+}
+.ButtonWDeleteAddon button:first-child {
+position: absolute;
+z-index: 1;
+}
+.ButtonWDeleteAddon button:nth-of-type(2) {
+position: relative;
+min-width: 150px;
+}
