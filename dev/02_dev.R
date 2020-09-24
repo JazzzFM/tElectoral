@@ -58,7 +58,11 @@ golem::add_module( name = "pregunta_guardada" )
 # Registro
 golem::add_module( name = "registro" )
 golem::add_module( name = "registroGira" )
+golem::add_module( name = "gira" )
+golem::add_module( name = "giraPaso1" )
 golem::add_module( name = "lugaresGira" )
+golem::add_module( name = "giraPaso3" )
+
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*

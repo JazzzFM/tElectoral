@@ -895,7 +895,7 @@ table tbody tr [role="texto"]{
   display: flex;
 }
 
-.selectize-input.full{
+.custom .selectize-input.full{
   padding: 15px 10px;
   text-align: center;
   font-size: 1.5em;
