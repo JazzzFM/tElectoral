@@ -21,12 +21,12 @@ criterio_participacion <- function(DB_ESTADO, DB_VISITAS){
     replace_na(list(FREC_R_VIS=0))
    
   # Con mutate CP vistas (relativas - total_votos)^2
-  #  
+    
   DB_AUX <- select(DB_AUX, c(MUNICIPIO, TOTAL_VOTOS, FREC_R_VIS )) %>%
     mutate(CRITERIOP = (FREC_R_VIS - TOTAL_VOTOS)^2)
-  #  
+   
   # # # Arrange CP visitas
-  # 
+
   DB_AUX <- DB_AUX %>% arrange(desc(CRITERIOP))
   DB_ORDENADA <- select(DB_AUX, c(MUNICIPIO, TOTAL_VOTOS, CRITERIOP))
    
