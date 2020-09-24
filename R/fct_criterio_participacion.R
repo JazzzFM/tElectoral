@@ -1,36 +1,36 @@
 load("data/DB_Mich.rda")
 DB_Mich
-# Base de datos temporal: Informacion falsa
-# Extraer una muestra aleatoria de tamano 10 de nombres de municipio
 
-fake_visitas <-tibble(NOMBRE_MUNICIPIO=sample(size=10, DB_Mich$NOMBRE_MUNICIPIO))
+# Se crea una base de datos temporal: Informacion falsa (la intención es que se actualice con datos reales)
+# Extraer una muestra aleatoria de tamaño 10 de nombres de municipio
 # Vector de visitas=simulaciones de una poisson
-fake_visitas<-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
 
-
-###################################################
-votos_nulos <- select(DB_Mich, contains("NULOS"))
-var_nulos <- c(variable.names(votos_nulos)) 
-
-prom_votos <- DB_Mich %>% 
-  unite("Promedio de votos", c(variable.names(DB_Mich), -NOMBRE_MUNICIPIO, -var_nulos), mean) 
-
-
-###################################################
-
-promedio <- DB_Mich %>%
-            mutate(PROM = rowMeans(c(variable.names(DB_Mich), -NOMBRE_MUNICIPIO, -var_nulos)))
-
-
-criterio_participacion <- function(DB_ESTADO, DB_Frec_Vis) {
-  # Primero se debe obtener el promedio de votos por municipio
-  # Luego, la relevancia del partido
-  # Esta funcion nos calcula la diferencia entre la frecuencia relativa 
-  # es decir la frecuencia con la que se ha visitado el municipio y el "peso electoral" 
-  # Esta función debe ordenar a los municipios en una estructura de manera ordenada
-  # Para este primer acercamiento se usa una muestra aleatoria de vectores de poisson
+fake_visitas <-tibble(MUNICIPIO=sample(size=10, DB_Mich$MUNICIPIO))
+fake_visitas <-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
   
+criterio_participacion <- function(DB_ESTADO, DB_VISITAS){
+  # Calcular la frecuencia relativa de las visitas c
+  # DB_VISITAS debe tener mínimo una columna de MUNICIPIO y otra de VISITAS
+  # DB_ESTADO debe tener mínimo una columna de MUNICIPIO y otra de TOTAL_VOTOS
   
-  return DB_Ordenada
+  VISITAS <- select(DB_VISITAS, c(MUNICIPIO, VISITAS)) %>% 
+    mutate(FREC_R_VIS = VISITAS / sum(VISITAS, na.rm = TRUE))
   
+  # Unir con full join DB_VISITAS y DB_ESTADO, NA->0
+  DB_AUX <- DB_ESTADO %>% full_join(y=VISITAS, by="MUNICIPIO") %>% 
+    replace_na(list(FREC_R_VIS=0))
+   
+  # Con mutate CP vistas (relativas - total_votos)^2
+  #  
+  DB_AUX <- select(DB_AUX, c(MUNICIPIO, TOTAL_VOTOS, FREC_R_VIS )) %>%
+    mutate(CRITERIOP = (FREC_R_VIS - TOTAL_VOTOS)^2)
+  #  
+  # # # Arrange CP visitas
+  # 
+  DB_AUX <- DB_AUX %>% arrange(desc(CRITERIOP))
+  DB_ORDENADA <- select(DB_AUX, c(MUNICIPIO, TOTAL_VOTOS, CRITERIOP))
+   
+  return(DB_AUX)
 }
+
+R<-criterio_participacion(DB_Mich, fake_visitas)
