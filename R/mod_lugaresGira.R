@@ -25,13 +25,13 @@ mod_lugaresGira_ui <- function(id){
                column(width = 6, p("Lugar de destino: Lugar 2"), p("Hora de finalización: 13:56"))
              ),
              h4("Información extra"),
-             p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur bibendum molestie. Pellentesque eu ligula augue. Ut eu nisl fermentum, placerat tellus a, viverra ipsum. Nullam maximus vel eros sed efficitur. Mauris aliquam ultrices vulputate. Nullam nisl ligula, eleifend vitae velit eget, venenatis venenatis nibh. Nulla faucibus arcu faucibu")
-             #uiOutput(ns("info"))
+             # p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur bibendum molestie. Pellentesque eu ligula augue. Ut eu nisl fermentum, placerat tellus a, viverra ipsum. Nullam maximus vel eros sed efficitur. Mauris aliquam ultrices vulputate. Nullam nisl ligula, eleifend vitae velit eget, venenatis venenatis nibh. Nulla faucibus arcu faucibu")
+             uiOutput(ns("info"))
       ),
       column(width = 12,
              class = "col-lg-6",
              leafletOutput(ns("mapa")),
-             ),
+      ),
       column(width = 6,
              DT::DTOutput(ns("recomendaciones")))
     )
@@ -54,12 +54,22 @@ mod_lugaresGira_server <- function(input, output, session){
   })
   # Mapa de gira
   output$mapa <- renderLeaflet({
-    req(a()[[1]])
+    validate(
+      need(
+        length(input$recomendaciones_rows_selected)>1,
+        message = "Favor de seleccionar al menos dos cabeceras municipales de la tabla.")
+    )
+    a()[[1]]
   })
   
   # Info de la gira
   output$info <- renderUI({
-    req(a()[[2]]) %>% paste(collapse = "\n")
+    validate(
+      need(
+        length(input$recomendaciones_rows_selected)>1,
+        message = "Favor de seleccionar al menos dos cabeceras municipales de la tabla.")
+    )
+    a()[[2]] %>% paste(collapse = "\n")
   })
   
   # Tabla de recomendaciones
