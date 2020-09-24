@@ -110,4 +110,14 @@ DB_Mich <- DB_Mich %>% select(-contains("_TOTAL_")) %>%
 DB_Mich <- cabecera_mun %>% 
   full_join(y=DB_Mich,by=c("MUNICIPIO" = "NOMBRE_MUNICIPIO"))
 
-usethis::use_data(DB_Mich, overwrite = TRUE)
+DB_MICH <- read.csv("/home/devel/NON_REPET.csv")
+
+DB_MICH <- DB_MICH %>% 
+  group_by(MUNICIPIO) %>% 
+  summarise(across(c(where(is.numeric),-ID, -CABECERA_MUNICIPAL), sum, .names ="{col}", na.rm=TRUE)) %>% 
+  ungroup()
+
+DB_MICH <- cabecera_mun %>% 
+  full_join(y=DB_MICH,by="MUNICIPIO" )
+
+usethis::use_data(DB_MICH, overwrite = TRUE)
