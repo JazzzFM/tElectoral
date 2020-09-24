@@ -47,7 +47,8 @@ mod_lugaresGira_server <- function(input, output, session){
     DB_Mich2 %>% select(CABECERA_MUNICIPAL, TOTAL_VOTOS)
   })
   a <- reactive({
-    camino_mas_corto(municipios_seleccionados = muns()%>% slice(input$recomendaciones_rows_selected) %>% 
+    camino_mas_corto(municipios_seleccionados = muns()%>% 
+                       slice(input$recomendaciones_rows_selected) %>% 
                        pull(CABECERA_MUNICIPAL),
                      info=munRPAP,
                      municipios = DB_Mich2)
@@ -69,12 +70,14 @@ mod_lugaresGira_server <- function(input, output, session){
         length(input$recomendaciones_rows_selected)>1,
         message = "Favor de seleccionar al menos dos cabeceras municipales de la tabla.")
     )
-    a()[[2]] %>% paste(collapse = "\n")
+    a()[[2]] %>% paste(collapse = "<br>")
   })
   
   # Tabla de recomendaciones
   output$recomendaciones <- DT::renderDT({
-    muns()
+    fake_visitas <-tibble(CABECERA_MUNICIPAL=sample(size=10, DB_Mich2$CABECERA_MUNICIPAL))
+    fake_visitas <-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
+    muns() %>% criterio_participacion(DB_VISITAS = fake_visitas)
   })
   
   
