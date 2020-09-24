@@ -35,10 +35,12 @@ golem::add_module( name = "investigacionAnalisis",
 # Comunicación
 golem::add_module( name = "comunicacion" )
 
+
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
 golem::add_fct( "helpers" ) 
 golem::add_utils( "helpers" )
+golem::add_fct("pIntervalo")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
