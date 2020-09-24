@@ -39,15 +39,17 @@ mod_lugaresGira_server <- function(input, output, session){
   }
   )
   
-  # Tabla de sugerencias
-  output$recomendaciones <- DT::renderDT({
-    DB_Mich2 %>% select(MUNICIPIO, TOTAL_VOTOS)
-  })
-  
   # Info de la gira
   output$info <- renderUI({
     a[[2]] %>% paste(collapse = "\n")
   })
+  
+  # Tabla de recomendaciones
+  output$recomendaciones <- DT::renderDT({
+    DB_Mich2 %>% select(CABECERA_MUNICIPAL, TOTAL_VOTOS)
+  })
+  
+
 }
     
 ## To be copied in the UI
