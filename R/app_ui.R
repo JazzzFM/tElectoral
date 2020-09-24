@@ -62,7 +62,10 @@ app_ui <- function(request) {
           tabItem(tabName = "investigacion",
                   mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1")),
           tabItem(tabName = "comunicacion",
-                  mod_comunicacion_ui("comunicacion_ui_1"))
+                  mod_comunicacion_ui("comunicacion_ui_1")),
+          tabItem(tabName = "gira",
+                  mod_gira_ui("gira_ui_1")
+                  )
           
         )
       )
