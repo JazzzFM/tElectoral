@@ -14,23 +14,27 @@
   /* Colores pan */
   /*--m-black-color: #2a2c2b;
   --m-red-color: #1e50a9;
-  --m-red-black-color: #1b2f9f;*/
+  --m-red-black-color: #1b2f9f;
+  --m-tr-selected: #1e50a9;*/
   
   /* Colores pri */
   
  /* --m-black-color: #2a2c2b;
   --m-red-color: #c00301;
-  --m-red-black-color: #005734;*/
+  --m-red-black-color: #005734;
+  --m-tr-selected: #005734;*/
   
   /* Colores movimiento */
   --m-black-color: #2a2c2b;
   --m-red-color: #ff8201;
   --m-red-black-color: #cc6900;
+  --m-tr-selected: rgba(1, 111, 184,.4);
   
   /* Colores morena */
   /*--m-black-color: #2a2c2b;
   --m-red-color: #b92207;
-  --m-red-black-color: #a01d06;*/
+  --m-red-black-color: #a01d06;
+  --m-tr-selected: #b92207;*/
   
   --m-green-color: #0c231e;
   --m-semibrown-color: #ececec;
@@ -809,8 +813,11 @@ table.dataTable tr.selected td, table.dataTable td.selected{
 }
 .dataTables_wrapper table tbody tr:hover td{
     cursor: pointer;
-    background-color: #eaeaea !important;
     transform: translateY(2px)
+}
+table.dataTable tr.selected td, table.dataTable td.selected{
+  background-color: var(--m-semibrown-color) !important;
+  
 }
 .dataTables_wrapper table tbody tr td:first-child{
     border-top-left-radius: 5px !important;
@@ -1205,3 +1212,18 @@ z-index: 1;
 position: relative;
 min-width: 150px;
 }
+
+/* Masonry effect */
+.masonryContent {
+display: flex;
+flex-wrap: wrap;
+}
+.masonryContent > * {
+width: calc(50% - 25px);
+margin-right: 25px;
+padding: 10px 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+box-shadow: 2px 2px 2px 0px rgba(0,0,0,.1);
+}
+/* End masonry effect */
