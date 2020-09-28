@@ -82,7 +82,11 @@ mod_lugaresGira_server <- function(input, output, session){
   output$recomendaciones <- DT::renderDT({
     fake_visitas <-tibble(CABECERA_MUNICIPAL=sample(size=10, DB_Mich2$CABECERA_MUNICIPAL))
     fake_visitas <-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
-    muns() %>% criterio_participacion(DB_VISITAS = fake_visitas)
+    # nvisitas <-    length(input$recomendaciones_rows_selected)+1
+    # browser()
+    muns() %>%
+      criterio_participacion(DB_VISITAS = fake_visitas, n=5)
+
   })
   
   
