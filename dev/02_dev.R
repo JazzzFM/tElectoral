@@ -63,7 +63,6 @@ golem::add_module( name = "registroGira" )
 # Inegi
 golem::add_fct(name = "inegi" )
 golem::add_fct("criterio_participacion")
-golem::add_fct("criterio_participacion_partido")
 golem::add_utils( "helpers" )
 golem::add_fct( "mandatory" ) 
 golem::add_utils( "mandatorio" )
