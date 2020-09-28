@@ -59,7 +59,6 @@ mod_giraPaso1_server <- function(input, output, session){
   gira <- reactiveVal()
   
   observeEvent(input$guardar,{
-    browser()
     check <- c("Responsable","Descripcion","LugarInicio","HorarioInicio","LugarFinal","HorarioFinal") %>%
       mandatory(input = input, .)
     if(check){
