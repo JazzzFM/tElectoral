@@ -38,6 +38,10 @@ usethis::use_package( "lubridate" )
 usethis::use_package( "htmltools" )
 usethis::use_package("DT")
 usethis::use_package("TSP")
+usethis::use_package("dplyr")
+usethis::use_package("ggplot2")
+usethis::use_package("leaflet")
+usethis::use_package("tidyr")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
