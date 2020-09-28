@@ -29,7 +29,6 @@ mod_pregunta_guardada_server <- function(input, output, session, slotPregunta = 
     pregunta <-input$Pregunta
     bloque <- slotPregunta$bloque
     print(modulo)
-    browser()
     showModal(modalDialog(
       title = paste0(pregunta, " - Bloque: ", bloque),
       pregunta,

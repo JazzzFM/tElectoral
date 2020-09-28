@@ -53,7 +53,6 @@ mod_cuestionario_paso_2_server <- function(input, output, session, tituloBloques
   })
   observeEvent(input$GuardarPregunta,{
     #slotPregunta$preguntas[1] <- slotPregunta$modulo
-    browser()
     var()
     insertUI(selector = paste0(".tab-pane[data-value='",slotPregunta$bloque,"']"), where = "beforeEnd", session = session,
              ui = mod_pregunta_guardada_ui(ns(paste0("pregunta_guardada_ui_1-",slotPregunta$pregunta)), slotPregunta$pregunta, slotPregunta$bloque))
