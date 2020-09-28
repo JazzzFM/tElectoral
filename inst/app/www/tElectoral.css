@@ -77,6 +77,9 @@ body{
 .wrapper .content-wrapper{
   background-color: #fff ;
 }
+.skin-blue .left-side, .skin-blue .main-sidebar, .skin-blue .wrapper{
+  background-color: #fff;
+}
 .content-wrapper>.content{
   position: relative;
   z-index: 1;
@@ -1227,3 +1230,9 @@ border-radius: 5px;
 box-shadow: 2px 2px 2px 0px rgba(0,0,0,.1);
 }
 /* End masonry effect */
+
+/* Box */
+.box:last-child{
+  margin-bottom: 100px;
+}
+/* End box */
