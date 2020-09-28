@@ -11,43 +11,48 @@
 mod_lugaresGira_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinydashboardPlus::boxPlus(
-      collapsible = T,
-      width = 12,
-      fluidRow(
-        column(width = 12,
-               class = "col-lg-6",
-               tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {background-color: var(--m-tr-selected) !important;}')),
-               DT::DTOutput(ns("recomendaciones"))
-        ),
-        column(width = 12,
-               class = "col-lg-6 text-justify",
-               h3("Información de gira"),
-               h4("Responsable"),
-               p("Jesús Selvas"),
-               h4("Descripción"),
-               p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur bibendum molestie. Pellentesque eu ligula augue. Ut eu nisl fermentum, placerat tellus a, viverra ipsum. Nullam maximus vel eros sed efficitur. Mauris aliquam ultrices vulputate. Nullam nisl ligula, eleifend vitae velit eget, venenatis venenatis nibh. Nulla faucibus arcu faucibu"),
-               h4("Información de ruta"),
-               fluidRow(
-                 column(width = 6, p("Lugar de inicio: Lugar 1"), p("Hora de inicio: 03:35")),
-                 column(width = 6, p("Lugar de destino: Lugar 2"), p("Hora de finalización: 13:56"))
-               )
-        )
-      )
-    ),
-    shinydashboardPlus::boxPlus(
-      collapsible = T,
-      width = 12,
-      fluidRow(
-        column(width = 12,
-               class = "col-lg-6",
-               h4("Información extra"),
-               uiOutput(ns("info"))
-               ),
-        column(
+    fluidRow(
+      class = "mt-25",
+      column(width = 12,
+             class = "col-lg-6",
+             tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {background-color: var(--m-tr-selected) !important;}')),
+             DT::DTOutput(ns("recomendaciones"))
+      ),
+      column(
+        width = 12,
+        class = "col-lg-6",
+        shinydashboardPlus::boxPlus(
+          collapsible = T,
           width = 12,
-          class = "col-lg-6",
-          leafletOutput(ns("mapa")),
+          fluidRow(
+            column(
+              width = 12,
+              leafletOutput(ns("mapa")),
+            ),
+          )
+        ),
+        shinydashboardPlus::boxPlus(
+          collapsible = T,
+          width = 12,
+          fluidRow(
+            column(width = 12,
+                   class = "text-justify",
+                   h3("Información de gira"),
+                   h4("Responsable"),
+                   p("Jesús Selvas"),
+                   h4("Descripción"),
+                   p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur bibendum molestie. Pellentesque eu ligula augue. Ut eu nisl fermentum, placerat tellus a, viverra ipsum. Nullam maximus vel eros sed efficitur. Mauris aliquam ultrices vulputate. Nullam nisl ligula, eleifend vitae velit eget, venenatis venenatis nibh. Nulla faucibus arcu faucibu"),
+                   h4("Información de ruta"),
+                   fluidRow(
+                     column(width = 6, p("Lugar de inicio: Lugar 1"), p("Hora de inicio: 03:35")),
+                     column(width = 6, p("Lugar de destino: Lugar 2"), p("Hora de finalización: 13:56"))
+                   )
+            ),
+            column(width = 12,
+                   h4("Información extra"),
+                   uiOutput(ns("info"))
+            )
+          )
         )
       )
     )
