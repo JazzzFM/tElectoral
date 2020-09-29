@@ -46,7 +46,7 @@ mod_giraPaso1_ui <- function(id){
              )
       )
     ),
-    actionButton(inputId = ns("guardar"), "Guardar")
+    actionButton(inputId = ns("guardar"), "Guardar", class = "btn-primary")
   )
 }
 
