@@ -39,13 +39,13 @@ mod_lugaresGira_ui <- function(id){
                    class = "text-justify",
                    h3("Información de gira"),
                    h4("Responsable"),
-                   p("Jesús Selvas"),
+                   textOutput(ns("responsable")),
                    h4("Descripción"),
-                   p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur bibendum molestie. Pellentesque eu ligula augue. Ut eu nisl fermentum, placerat tellus a, viverra ipsum. Nullam maximus vel eros sed efficitur. Mauris aliquam ultrices vulputate. Nullam nisl ligula, eleifend vitae velit eget, venenatis venenatis nibh. Nulla faucibus arcu faucibu"),
+                   textOutput(ns("descripcion")),
                    h4("Información de ruta"),
                    fluidRow(
-                     column(width = 6, p("Lugar de inicio: Lugar 1"), p("Hora de inicio: 03:35")),
-                     column(width = 6, p("Lugar de destino: Lugar 2"), p("Hora de finalización: 13:56"))
+                     column(width = 6, p(paste0("Lugar de inicio: "), textOutput(ns("lugarInicio"))), p(paste0("Hora de inicio: "), textOutput(ns("horaInicio")))),
+                     column(width = 6, p(paste0("Lugar de destino: "), textOutput(ns("lugarFinal"))), p(paste0("Hora de finalización: "), textOutput(ns("horaFinal")))),
                    )
             ),
             column(width = 12,
@@ -53,7 +53,8 @@ mod_lugaresGira_ui <- function(id){
                    uiOutput(ns("info"))
             )
           )
-        )
+        ),
+        actionButton(ns("GuardarPaso2"), "Guardar", class = "btn-primary")
       )
     )
   )
@@ -62,8 +63,14 @@ mod_lugaresGira_ui <- function(id){
 #' lugaresGira Server Function
 #'
 #' @noRd 
-mod_lugaresGira_server <- function(input, output, session){
+mod_lugaresGira_server <- function(input, output, session, gira = NULL){
   ns <- session$ns
+  output$responsable <- renderText({gira$paso1$Responsable})
+  output$descripcion <- renderText({gira$paso1$Descripcion})
+  output$lugarInicio <- renderText({gira$paso1$LugarInicio})
+  output$horaInicio <- renderText({gira$paso1$HorarioInicio})
+  output$lugarFinal <- renderText({gira$paso1$LugarFinal})
+  output$horaFinal <- renderText({gira$paso1$HorarioFinal})
   muns <- reactive({
     DB_Mich2 %>% select(CABECERA_MUNICIPAL, TOTAL_VOTOS)
   })
@@ -95,6 +102,13 @@ mod_lugaresGira_server <- function(input, output, session){
           htmltools::HTML("<p>",x,"</p>")
         })
         )
+  })
+  observeEvent(input$GuardarPaso2,{
+    if(length(input$recomendaciones_rows_selected)>1){
+      gira$paso2 <- a()[[2]]
+    }else{
+      shinyalert::shinyalert(title = "Debe seleccionar al menos un origen y un destino")
+    }
   })
   
   # Tabla de recomendaciones

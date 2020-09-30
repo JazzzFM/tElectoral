@@ -22,5 +22,5 @@ app_server <- function( input, output, session ) {
   # Registro
   callModule(mod_registro_server, "registro_ui_1")
   # Gira
-  callModule(mod_gira_server, "gira_ui_1")
+  callModule(mod_gira_server, "gira_ui_1", session)
 }

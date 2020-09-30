@@ -28,7 +28,7 @@ mod_giraPaso1_ui <- function(id){
              selectizeInput(inputId = ns("HorarioInicio"), label = "Hora de inicio", choices =  c("Seleccione hora" = "", seq(
                from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
                to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
-               by="hour"
+               by="30 min"
              ) %>% format(.,"%R"))
             )
       )
@@ -41,7 +41,7 @@ mod_giraPaso1_ui <- function(id){
              selectizeInput(inputId = ns("HorarioFinal"), label = "Hora de finalización", choices = c("Seleccione hora" = "", seq(
                from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
                to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
-               by="hour"
+               by="30 min"
              ) %>% format(.,"%R"))
              )
       )
@@ -53,27 +53,29 @@ mod_giraPaso1_ui <- function(id){
 #' giraPaso1 Server Function
 #'
 #' @noRd 
-mod_giraPaso1_server <- function(input, output, session){
+mod_giraPaso1_server <- function(input, output, session, gira = NULL){
   ns <- session$ns
-  
-  gira <- reactiveVal()
   
   observeEvent(input$guardar,{
     check <- c("Responsable","Descripcion","LugarInicio","HorarioInicio","LugarFinal","HorarioFinal") %>%
       mandatory(input = input, .)
     if(check){
-      gira <- tibble::tibble(
-        Responsable = input$Responsable, 
-        Descripcion = input$Descripcion, LugarInicio = input$LugarInicio, 
-        HorarioInicio = input$HorarioInicio, LugarFinal = input$LugarFinal, 
-        HorarioFinal = input$HorarioFinal
-      ) 
+      if(input$LugarInicio != input$LugarFinal){
+        gira$paso1 <- tibble::tibble(
+          Responsable = input$Responsable, 
+          Descripcion = input$Descripcion, 
+          LugarInicio = input$LugarInicio, 
+          HorarioInicio = input$HorarioInicio, 
+          LugarFinal = input$LugarFinal, 
+          HorarioFinal = input$HorarioFinal
+        )
+      }else{
+        shinyalert::shinyalert(title = "El origen y destino deben ser diferentes")  
+      }
     } else{
       shinyalert::shinyalert(title = "Formato incompleto")
     }
   })
-  
-  return(gira)
 }
 
 ## To be copied in the UI
