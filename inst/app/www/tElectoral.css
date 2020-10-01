@@ -1237,4 +1237,8 @@ box-shadow: 2px 2px 2px 0px rgba(0,0,0,.1);
 .mt-25{
   margin-top: 25px;
 }
+.box-header .box-title, .box-header>.fa, .box-header>.glyphicon, .box-header>.ion{
+  font-size: 15px;
+  padding-right: 55px;
+}
 /* End box */

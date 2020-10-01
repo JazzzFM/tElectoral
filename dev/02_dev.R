@@ -66,6 +66,7 @@ golem::add_module( name = "gira" )
 golem::add_module( name = "giraPaso1" )
 golem::add_module( name = "lugaresGira" )
 golem::add_module( name = "giraPaso3" )
+golem::add_module( name = "evento" )
 
 
 ## Add helper functions ----
