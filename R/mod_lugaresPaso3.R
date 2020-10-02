@@ -52,13 +52,10 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar){
     uiCount(uiCount()+1)
   })
   
-  # observe({
-  #   req(eventos[["1"]]())
-  #   
-  # })
   ev <- reactive({
     seq_len(uiCount()-1) %>% map(~eventos[[as.character(.x)]]() %>% mutate(lugar = lugar)) %>% do.call(rbind,.)
   })
+  
   return(ev)
 }
     
