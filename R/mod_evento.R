@@ -12,13 +12,13 @@ mod_evento_ui <- function(id){
   tagList(
     fluidRow(
       column(width = 12,
-             textInput(label = "Nombre del evento", placeholder = "...", inputId = ns("Nombre"))),
+             textInput(label = "Nombre del evento", placeholder = "...", inputId = ns("nombre"))),
       column(width = 12,
-             textAreaInput(label = "Descripción del evento", inputId = "Descripcion")),
+             textAreaInput(label = "Descripción del evento", inputId = ns("descripcion"))),
       column(width = 6,
-             textInput(label = "Contacto", placeholder = "Correo, teléfono, etc.", inputId = "Contacto")),
+             textInput(label = "Contacto", placeholder = "Correo, teléfono, etc.", inputId = ns("contacto"))),
       column(width = 6,
-             selectizeInput(inputId = ns("Duracion"), label = "Duración", choices =  c("Seleccione hora" = "", seq(
+             selectizeInput(inputId = ns("duracion"), label = "Duración", choices =  c("Seleccione hora" = "", seq(
                from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
                to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
                by="30 min"
@@ -33,12 +33,14 @@ mod_evento_ui <- function(id){
 #' @noRd 
 mod_evento_server <- function(input, output, session){
   ns <- session$ns
- 
+ out <- reactive({
+   tibble(nombre = input$nombre, descripcion = input$descripcion, contacto = input$contacto, duracion = input$duracion)
+ })
 }
     
 ## To be copied in the UI
-# mod_evento_ui("evento_ui_1")
+# 
     
 ## To be copied in the server
-# callModule(mod_evento_server, "evento_ui_1")
+# 
  
