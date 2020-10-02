@@ -105,7 +105,8 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
   })
   observeEvent(input$GuardarPaso2,{
     if(length(input$recomendaciones_rows_selected)>1){
-      gira$paso2 <- tibble(lugares = a()[[2]])
+      gira$paso2 <- tibble(lugares = muns()%>% slice(input$recomendaciones_rows_selected) %>% 
+                             pull(CABECERA_MUNICIPAL))
     }else{
       shinyalert::shinyalert(title = "Debe seleccionar al menos un origen y un destino")
     }
