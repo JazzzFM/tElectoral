@@ -34,8 +34,8 @@ mod_lugaresGira_ui <- function(id){
                    textOutput(ns("descripcion")),
                    h4("Información de ruta"),
                    fluidRow(
-                     column(width = 6, p(paste0("Lugar de inicio: "), textOutput(ns("lugarInicio"))), p(paste0("Hora de inicio: "), textOutput(ns("horaInicio")))),
-                     column(width = 6, p(paste0("Lugar de destino: "), textOutput(ns("lugarFinal"))), p(paste0("Hora de finalización: "), textOutput(ns("horaFinal")))),
+                     column(width = 6, p(paste0("Lugar de inicio: "), textOutput(ns("lugarInicio"))), p(paste0("Fecha de inicio: "), textOutput(ns("fechaInicio"))), p(paste0("Hora de inicio: "), textOutput(ns("horaInicio")))),
+                     column(width = 6, p(paste0("Lugar de destino: "), textOutput(ns("lugarFinal"))), p(paste0("Fecha de finalización: "), textOutput(ns("fechaFinal"))), p(paste0("Hora de finalización: "), textOutput(ns("horaFinal")))),
                    )
             ),
             column(width = 12,
@@ -71,6 +71,8 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
   output$horaInicio <- renderText({gira$paso1$HorarioInicio})
   output$lugarFinal <- renderText({gira$paso1$LugarFinal})
   output$horaFinal <- renderText({gira$paso1$HorarioFinal})
+  output$fechaInicio <- renderText({as.character(gira$paso1$FechaInicio)})
+  output$fechaFinal <- renderText({as.character(gira$paso1$FechaFinal)})
   muns <- reactive({
     DB_Mich2 %>% select(CABECERA_MUNICIPAL, TOTAL_VOTOS)
   })
@@ -105,8 +107,8 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
   })
   observeEvent(input$GuardarPaso2,{
     if(length(input$recomendaciones_rows_selected)>1){
-      gira$paso2 <- tibble(lugares = muns()%>% slice(input$recomendaciones_rows_selected) %>% 
-                             pull(CABECERA_MUNICIPAL))
+      gira$paso2 <- tibble(lugares = sort(muns()%>% slice(input$recomendaciones_rows_selected) %>% 
+                                            pull(CABECERA_MUNICIPAL)))
     }else{
       shinyalert::shinyalert(title = "Debe seleccionar al menos un origen y un destino")
     }

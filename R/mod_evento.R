@@ -15,8 +15,11 @@ mod_evento_ui <- function(id){
              textInput(label = "Nombre del evento", placeholder = "...", inputId = ns("nombre"))),
       column(width = 12,
              textAreaInput(label = "Descripción del evento", inputId = ns("descripcion"))),
-      column(width = 6,
+      column(width = 12,
              textInput(label = "Contacto", placeholder = "Correo, teléfono, etc.", inputId = ns("contacto"))),
+      column(width = 6,
+             dateInput(inputId = ns("fechaEvento"), label = "Fecha de evento", format = "dd/mm/yyyy", language = "es", value = Sys.Date(), min = Sys.Date() )
+      ),
       column(width = 6,
              selectizeInput(inputId = ns("duracion"), label = "Duración", choices =  c("Seleccione hora" = "", seq(
                from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
@@ -34,7 +37,7 @@ mod_evento_ui <- function(id){
 mod_evento_server <- function(input, output, session, valores = NULL, parent_session = NULL){
   ns <- session$ns
  out <- reactive({
-   tibble(nombre = input$nombre, descripcion = input$descripcion, contacto = input$contacto, duracion = input$duracion)
+   tibble(nombre = input$nombre, descripcion = input$descripcion, contacto = input$contacto, fechaEvento = input$fechaEvento, duracion = input$duracion)
  })
  
  observeEvent(valores,{
@@ -42,6 +45,7 @@ mod_evento_server <- function(input, output, session, valores = NULL, parent_ses
      updateTextInput(session = parent_session, inputId = ns("nombre"), value = valores$nombre)
      updateTextAreaInput(session = parent_session, inputId = ns("descripcion"), value = valores$descripcion)
      updateTextInput(session = parent_session, inputId = ns("contacto"), value = valores$contacto)
+     updateDateInput(session = parent_session, inputId = ns("fechaEvento"), value = valores$fechaEvento)
      updateSelectizeInput(session = parent_session, inputId = ns("duracion"), selected = valores$duracion)
    }
  })

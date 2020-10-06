@@ -67,7 +67,6 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL){
       mandatory(input = input, .)
     if(check){
       if(input$LugarInicio != input$LugarFinal){
-        browser()
         gira$paso1 <- tibble::tibble(
           Responsable = input$Responsable, 
           Descripcion = input$Descripcion, 
@@ -78,6 +77,7 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL){
           FechaFinal = input$FechaFinal,
           HorarioFinal = input$HorarioFinal
         )
+        browser()
       }else{
         shinyalert::shinyalert(title = "El origen y destino deben ser diferentes")  
       }
