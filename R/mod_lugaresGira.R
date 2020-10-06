@@ -25,16 +25,6 @@ mod_lugaresGira_ui <- function(id){
           collapsible = T,
           width = 12,
           fluidRow(
-            column(
-              width = 12,
-              leafletOutput(ns("mapa")),
-            ),
-          )
-        ),
-        shinydashboardPlus::boxPlus(
-          collapsible = T,
-          width = 12,
-          fluidRow(
             column(width = 12,
                    class = "text-justify",
                    h3("Información de gira"),
@@ -54,9 +44,19 @@ mod_lugaresGira_ui <- function(id){
             )
           )
         ),
-        actionButton(ns("GuardarPaso2"), "Guardar", class = "btn-primary")
+        shinydashboardPlus::boxPlus(
+          collapsible = T,
+          width = 12,
+          fluidRow(
+            column(
+              width = 12,
+              leafletOutput(ns("mapa")),
+            ),
+          )
+        )
       )
-    )
+    ),
+    actionButton(ns("GuardarPaso2"), "Guardar", class = "btn-primary")
   )
 }
 

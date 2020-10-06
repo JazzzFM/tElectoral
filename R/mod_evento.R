@@ -31,11 +31,22 @@ mod_evento_ui <- function(id){
 #' evento Server Function
 #'
 #' @noRd 
-mod_evento_server <- function(input, output, session){
+mod_evento_server <- function(input, output, session, valores = NULL, parent_session = NULL){
   ns <- session$ns
  out <- reactive({
    tibble(nombre = input$nombre, descripcion = input$descripcion, contacto = input$contacto, duracion = input$duracion)
  })
+ 
+ observeEvent(valores,{
+   if(!is.null(valores)){
+     updateTextInput(session = parent_session, inputId = ns("nombre"), value = valores$nombre)
+     updateTextAreaInput(session = parent_session, inputId = ns("descripcion"), value = valores$descripcion)
+     updateTextInput(session = parent_session, inputId = ns("contacto"), value = valores$contacto)
+     updateSelectizeInput(session = parent_session, inputId = ns("duracion"), selected = valores$duracion)
+   }
+ })
+ 
+ return (out)
 }
     
 ## To be copied in the UI

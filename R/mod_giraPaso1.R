@@ -21,10 +21,13 @@ mod_giraPaso1_ui <- function(id){
              textAreaInput(inputId = ns("Descripcion"), label = "Descripcion" , placeholder = "...", rows = 5))
     ),
     fluidRow(
-      column(width = 7,
+      column(width = 4,
              selectizeInput(inputId = ns("LugarInicio"), label = "Lugar de inicio", choices = c("Seleccione un lugar" = "", "Lugar 1", "Lugar 2") )
       ),
-      column(width = 5,
+      column(width = 4,
+             dateInput(inputId = ns("FechaInicio"), label = "Fecha de inicio", format = "dd/mm/yyyy", language = "es", value = Sys.Date(), min = Sys.Date() )
+      ),
+      column(width = 4,
              selectizeInput(inputId = ns("HorarioInicio"), label = "Hora de inicio", choices =  c("Seleccione hora" = "", seq(
                from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
                to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
@@ -34,10 +37,13 @@ mod_giraPaso1_ui <- function(id){
       )
     ),
     fluidRow(
-      column(width = 7,
+      column(width = 4,
              selectizeInput(inputId = ns("LugarFinal"), label = "Lugar de destino", choices = c("Seleccione un lugar" = "", "Lugar 1", "Lugar 2") )
       ),
-      column(width = 5,
+      column(width = 4,
+             dateInput(inputId = ns("FechaFinal"), label = "Fecha de finalización", format = "dd/mm/yyyy", language = "es", value = Sys.Date(), min = Sys.Date() )
+      ),
+      column(width = 4,
              selectizeInput(inputId = ns("HorarioFinal"), label = "Hora de finalización", choices = c("Seleccione hora" = "", seq(
                from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
                to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
@@ -57,16 +63,19 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL){
   ns <- session$ns
   
   observeEvent(input$guardar,{
-    check <- c("Responsable","Descripcion","LugarInicio","HorarioInicio","LugarFinal","HorarioFinal") %>%
+    check <- c("Responsable","Descripcion","LugarInicio","HorarioInicio","LugarFinal","HorarioFinal", "FechaInicio", "FechaFinal") %>%
       mandatory(input = input, .)
     if(check){
       if(input$LugarInicio != input$LugarFinal){
+        browser()
         gira$paso1 <- tibble::tibble(
           Responsable = input$Responsable, 
           Descripcion = input$Descripcion, 
           LugarInicio = input$LugarInicio, 
+          FechaInicio = input$FechaInicio,
           HorarioInicio = input$HorarioInicio, 
-          LugarFinal = input$LugarFinal, 
+          LugarFinal = input$LugarFinal,
+          FechaFinal = input$FechaFinal,
           HorarioFinal = input$HorarioFinal
         )
       }else{

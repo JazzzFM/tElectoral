@@ -41,7 +41,7 @@ mod_gira_server <- function(input, output, session, parent_session){
   # Lugares gira
   callModule(mod_lugaresGira_server, "lugaresGira_ui_1", gira)
   # Paso 3
-  callModule(mod_giraPaso3_server, "giraPaso3_ui_1", gira)
+  callModule(mod_giraPaso3_server, "giraPaso3_ui_1", gira, parent_session)
   observe({
     if(!is.null(gira$paso1)){
       shinyjs::show(selector = paste0("#", ns("Paso2")))

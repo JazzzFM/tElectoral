@@ -23,7 +23,7 @@ mod_giraPaso3_ui <- function(id){
 #'
 #' @noRd 
 
-mod_giraPaso3_server <- function(input, output, session, gira = NULL){
+mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_session = NULL){
   ns <- session$ns
   
   listaEventos <- reactiveValues(eventos = NULL)
@@ -40,11 +40,21 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL){
   observe({
     listaEventos$eventos <- seq_along(gira$paso2$lugares) %>% map(~callModule(mod_lugaresPaso3_server,
                                                                       glue::glue("lugaresPaso3_ui_{.x}"),
-                                                                      lugar = gira$paso2$lugares[.x]))
+                                                                      lugar = gira$paso2$lugares[.x],
+                                                                      parent_session = parent_session))
   })
 
   observeEvent(input$guardar, {
-    seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.)
+    browser()
+    if(is.null(seq_along(listaEventos$eventos) %>% detect(~is.null(listaEventos$eventos[[.x]]())))){
+      if(is.null(seq_along(listaEventos$eventos) %>% detect(~nrow(listaEventos$eventos[[.x]]()) == 0))){
+        seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.)  
+      }else{
+        shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")  
+      } 
+    }else{
+      shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")  
+    }
   })
 }
 
