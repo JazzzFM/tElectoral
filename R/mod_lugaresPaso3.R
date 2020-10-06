@@ -111,10 +111,6 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, parent_sessio
                              removeUI(selector = paste0("#evento-",input$eliminar))
                            })
   })
-  # observe({
-  #   req(eventos[["1"]]())
-  #   
-  # })
   ev <- reactive({
     seq_len(uiCount$val-1) %>% map(~eventos[[as.character(.x)]]() %>% mutate(lugar = lugar)) %>% do.call(rbind,.) %>% na.omit()
   })
