@@ -13,7 +13,7 @@ mod_cuestionario_paso_1_ui <- function(id){
   tagList(
     fluidRow(
       column(width = 12, 
-             textInput(inputId = "NombreCuestionario", placeholder = "Ingrese un nombre", label = "Nombre del cuestionario")
+             textInput(inputId = ns("NombreCuestionario"), placeholder = "Ingrese un nombre", label = "Nombre del cuestionario", value = "Cuestionario 1")
       ),
     ),
     #Objetivo de investigación
@@ -23,24 +23,24 @@ mod_cuestionario_paso_1_ui <- function(id){
       class="RowInvestigacion",
       column(
         width = 6,
-        prettyRadioButtons(label = "Nivel de generalidad y especifidad", selected = 0, choices = c("Presente", "No presente"), inputId = ns("NvlGeneralidadEspecifidad"))
+        prettyRadioButtons(label = "Nivel de generalidad y especifidad", choices = c("Presente", "No presente"), inputId = ns("NvlGeneralidadEspecifidad"))
       ),
       column(
         width = 6,
-        prettyRadioButtons(selected = 0, label = "Tipo de investigación", choices = c("Descriptiva", "Explicativa", "Ambas"), inputId = ns("TipoInvestigacion"))
+        prettyRadioButtons(label = "Tipo de investigación", choices = c("Descriptiva", "Explicativa", "Ambas"), inputId = ns("TipoInvestigacion"))
       ),
       column(
         width = 6,
-        prettyRadioButtons(selected = 0, label = "Uso de verbos en infinitivo", choices = c("Presente", "No presente"), inputId = ns("UsoVerbosInf"))
+        prettyRadioButtons(  label = "Uso de verbos en infinitivo", choices = c("Presente", "No presente"), inputId = ns("UsoVerbosInf"))
       ),
       column(
         width = 6,
-        pickerInput(label = "Nivel de claridad", choices = c("Seleccione" = '',"No hay","Bajo","Intermedio","Alto"), inputId = ns("NvlClaridad")),
+        pickerInput(label = "Nivel de claridad", choices = c("Seleccione" = '',"No hay","Bajo","Intermedio","Alto"), inputId = ns("NvlClaridad"), selected = "No hay"),
       ),
       column(
         width = 6,
         selectizeInput(inputId = ns("ConBasicos"), label = "Conceptos básicos", choices = c("Evaluación de autoridades", "Percepción de imagen", "Intención de voto", "Servicios públicos", "Políticas públicas", "Conocimiento de candidatos", "Simpatía electoral
-", "Identidad partidista", "Otro"), multiple = TRUE, options = list(placeholder = "Seleccione conceptos"))
+", "Identidad partidista", "Otro"), multiple = TRUE, options = list(placeholder = "Seleccione conceptos"), selected = "Evaluación de autoridades")
       )
     ),
     #End objetivo de investigación
@@ -51,23 +51,23 @@ mod_cuestionario_paso_1_ui <- function(id){
     fluidRow(
       column(
         width = 6,
-        prettyRadioButtons(selected = 0, label = "Población objetivo", choices = c("Presente", "No presente"), inputId = "PoblacionObjetivo")
+        prettyRadioButtons(  label = "Población objetivo", choices = c("Presente", "No presente"), inputId = ns("PoblacionObjetivo"))
       ),
       column(
         width = 6,
-        prettyRadioButtons(selected = 0, label = "Filtro edad", choices = c("Presente", "No presente"), inputId = "FiltroEdad")
+        prettyRadioButtons(  label = "Filtro edad", choices = c("Presente", "No presente"), inputId = ns("FiltroEdad"))
       ),
       column(
         width = 6,
-        prettyRadioButtons(selected = 0, label = "Filtro lugar de residencia", choices = c("Presente", "No presente"), inputId = "FiltroLugarResidencia")
+        prettyRadioButtons(  label = "Filtro lugar de residencia", choices = c("Presente", "No presente"), inputId = ns("FiltroLugarResidencia"))
       ),
       column(
         width = 6,
-        prettyRadioButtons(selected = 0, label = "Ubicación con GPS", choices = c("Presente", "No presente"), inputId = "GPS")
+        prettyRadioButtons(  label = "Ubicación con GPS", choices = c("Presente", "No presente"), inputId = ns("GPS"))
       ),
       column(
         width = 6,
-        prettyRadioButtons(selected = 0, label = "Filtro de sección", choices = c("Presente", "No presente"), inputId = "FiltroSección")
+        prettyRadioButtons(  label = "Filtro de sección", choices = c("Presente", "No presente"), inputId = ns("FiltroSeccion"))
       )
     ),
     #End Población objetivo
@@ -94,15 +94,15 @@ mod_cuestionario_paso_1_ui <- function(id){
     fluidRow(
       column(
         width = 6,
-        pickerInput(label = "Orden de los bloques", choices = c("Seleccione un orden" = '', "Apropiado","Poco apropiado","Poco desapropiado","Desapropiado"), inputId = "OrdenBloques"),
+        pickerInput(selected = "Apropiado",label = "Orden de los bloques", choices = c("Seleccione un orden" = '', "Apropiado","Poco apropiado","Poco desapropiado","Desapropiado"), inputId = ns("OrdenBloques")),
       ),
       column(
         width = 6,
-        prettyRadioButtons(selected = 0, label = "Claridad en la operacionalización", choices = c("No hay", "Ligera", "Mucha"), inputId = "Operacionalizacion")
+        prettyRadioButtons(  label = "Claridad en la operacionalización", choices = c("No hay", "Ligera", "Mucha"), inputId = ns("Operacionalizacion"))
       ),
       column(
         width = 6,
-        prettyRadioButtons(selected = 0, label = "Relación entre los conceptos y los objetivos", choices = c("No hay", "Ligera", "Mucha"), inputId = "ConceptosObjetivos")
+        prettyRadioButtons(  label = "Relación entre los conceptos y los objetivos", choices = c("No hay", "Ligera", "Mucha"), inputId = ns("ConceptosObjetivos"))
       )
     ),
     actionButton(inputId = ns("GuardarPaso1"), "Guardar", class = "btn-primary"),
@@ -113,7 +113,7 @@ mod_cuestionario_paso_1_ui <- function(id){
 #' cuestionario_paso_1 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_1_server <- function(input, output, session, tituloBloques = c()){
+mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario = c()){
   ns <- session$ns
   observeEvent(input$ConBasicos,{
     removeUI(
@@ -148,16 +148,39 @@ mod_cuestionario_paso_1_server <- function(input, output, session, tituloBloques
   
   observeEvent(input$GuardarPaso1, {
     shinyjs::disable(input$GuardarPaso1)
-    check <- c("UsoVerbosInf", "NvlClaridad") %>% mandatory(input = input)
+    check <- c("NombreCuestionario", "NvlGeneralidadEspecifidad",  "TipoInvestigacion",  "UsoVerbosInf",  "NvlClaridad",  "ConBasicos",  "PoblacionObjetivo",  "FiltroEdad",  "FiltroLugarResidencia",  "GPS",  "FiltroSeccion",  "CantidadBloques",  "OrdenBloques",  "Operacionalizacion", "ConceptosObjetivos") %>% mandatory(input = input)
     if(!check){
       shinyalert::shinyalert("Incompleto", "Favor de llenar todas las entradas.")
     }else{
-      temp <- c("Seleccione...")
+      
+      # Guardar títulos
+      temp <- c()
       value <- input$CantidadBloques
       for (i in 1:value) {
-        temp[sum(i,1)] <- input[[(paste0("NombreBloque-", i))]]
+        temp[i] <- input[[(paste0("NombreBloque-", i))]]
       }
-      tituloBloques$titulos <- temp
+      cuestionario$titulos <- temp
+      # End guardar títulos
+      
+      # Tibble
+      
+      cuestionario$paso1 <- tibble::tibble(
+        Nombre = input$NombreCuestionario,
+        NvlGeneralidadEspecifidad = input$NvlGeneralidadEspecifidad,
+        TipoInvestigacion = input$TipoInvestigacion,
+        UsoVerbosInf = input$UsoVerbosInf,
+        NvlClaridad = input$NvlClaridad,
+        ConBasicos = input$ConBasicos,
+        PoblacionObjetivo = input$PoblacionObjetivo,
+        FiltroEdad = input$FiltroEdad,
+        FiltroLugarResidencia = input$FiltroLugarResidencia,
+        GPS = input$GPS,
+        FiltroSeccion = input$FiltroSeccion,
+        CantidadBloques = input$CantidadBloques,
+        OrdenBloques = input$OrdenBloques,
+        Operacionalizacion = input$Operacionalizacion,
+        ConceptosObjetivos = input$ConceptosObjetivos
+      )
     }
     shinyjs::enable(input$GuardarPaso1)
   })

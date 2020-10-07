@@ -57,7 +57,7 @@ golem::add_module( name = "comunicacion" )
 golem::add_module( name = "cuestionario_paso_1" )
 golem::add_module( name = "cuestionario_paso_2" )
 golem::add_module( name = "cuestionario_pregunta" )
-golem::add_module( name = "pregunta_guardada" )
+golem::add_module( name = "cuestionario_bloques" )
 # End Cuestionario
 # Registro
 golem::add_module( name = "registro" )

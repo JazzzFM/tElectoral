@@ -7,6 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' @import lubridate
 mod_giraPaso1_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -67,17 +68,47 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL){
       mandatory(input = input, .)
     if(check){
       if(input$LugarInicio != input$LugarFinal){
-        gira$paso1 <- tibble::tibble(
-          Responsable = input$Responsable, 
-          Descripcion = input$Descripcion, 
-          LugarInicio = input$LugarInicio, 
-          FechaInicio = input$FechaInicio,
-          HorarioInicio = input$HorarioInicio, 
-          LugarFinal = input$LugarFinal,
-          FechaFinal = input$FechaFinal,
-          HorarioFinal = input$HorarioFinal
-        )
-        browser()
+        if(input$FechaInicio != input$FechaFinal){
+          gira$paso1 <- tibble::tibble(
+            Responsable = input$Responsable, 
+            Descripcion = input$Descripcion, 
+            LugarInicio = input$LugarInicio, 
+            FechaInicio = input$FechaInicio,
+            HorarioInicio = input$HorarioInicio, 
+            LugarFinal = input$LugarFinal,
+            FechaFinal = input$FechaFinal,
+            HorarioFinal = input$HorarioFinal
+          )
+        }else{
+          if(input$HorarioInicio == input$HorarioFinal){
+            shinyalert::shinyalert(title = "Los horarios de inicio y fin no deben coincidir en el mismo día")  
+          }else{
+            i <- input$HorarioInicio
+            f <- input$HorarioFinal
+            res <- function(i,f){
+              if(hm(i) < hm(f))
+                return (hm(f) - hm(i))
+              else
+                return (hm(i) - hm(f))
+            }
+            shinyalert::shinyalert(title = "Advertencia", 
+                                   text = glue::glue("¿Está seguro que desea iniciar una gira con solo {res(i,f)} de duración?"),
+                                   showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
+                                   confirmButtonText = "Sí", 
+                                   callbackR = function(x) if(x) {
+                                     gira$paso1 <- tibble::tibble(
+                                       Responsable = input$Responsable, 
+                                       Descripcion = input$Descripcion, 
+                                       LugarInicio = input$LugarInicio, 
+                                       FechaInicio = input$FechaInicio,
+                                       HorarioInicio = input$HorarioInicio, 
+                                       LugarFinal = input$LugarFinal,
+                                       FechaFinal = input$FechaFinal,
+                                       HorarioFinal = input$HorarioFinal
+                                     )
+                                   })
+          }
+        }
       }else{
         shinyalert::shinyalert(title = "El origen y destino deben ser diferentes")  
       }

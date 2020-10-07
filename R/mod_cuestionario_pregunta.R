@@ -11,6 +11,12 @@
 mod_cuestionario_pregunta_ui <- function(id){
   ns <- NS(id)
   tagList(
+    fluidRow(
+      column(
+        width = 12,
+        textInput(inputId = ns("Pregunta"), label = "Pregunta", placeholder = "...")
+      )
+    ),
     h3("Solicitud de respuesta"),
     tags$hr(),
     fluidRow(
@@ -109,8 +115,32 @@ No aplica: Cuando las respuestas son unipolares.', `ref-id` = "BalanceSRespuesta
 #' cuestionario_pregunta Server Function
 #'
 #' @noRd 
-mod_cuestionario_pregunta_server <- function(input, output, session){
+mod_cuestionario_pregunta_server <- function(input, output, session, valores = NULL, parent_session = NULL){
   ns <- session$ns
+  out <- reactive({
+    tibble(
+      Pregunta = input$Pregunta,
+      DeseabilidadSocial = input$DeseabilidadSocial,
+      Centralidad = input$Centralidad,
+      EnfasisSRespuesta = input$EnfasisSRespuesta,
+      BalanceSRespuesta = input$BalanceSRespuesta,
+      SolicitudesImplicitos = input$SolicitudesImplicitos,
+      DobleBarril = input$DobleBarril,
+      NEnunciadosRespuesta = input$NEnunciadosRespuesta,
+      CategoriaRespuesta = input$CategoriaRespuesta,
+      NCategorias = input$NCategorias,
+      CatExcluyentes = input$CatExcluyentes,
+      CatNeutral = input$CatNeutral,
+      EquilibrioCat = input$EquilibrioCat,
+      NoSabeNoContest = input$NoSabeNoContest,
+      CatOtro = input$CatOtro,
+      InfExtra = input$InfExtra,
+      material = input$material,
+      SuperposicionCategoriaEtiquetaEscala = input$SuperposicionCategoriaEtiquetaEscala,
+      InicioFraseRespuesta = input$InicioFraseRespuesta,
+      ImagenApoyo = input$ImagenApoyo
+      )
+  })
   observeEvent(input$material,{
     if(input$material == "Presente"){
       insertUI(
@@ -120,15 +150,15 @@ mod_cuestionario_pregunta_server <- function(input, output, session){
           class="RowExtrasImplemented",
           column(
             width = 6,
-            pickerInput(label = "Superposición de categorías y etiquetas de escala", choices = c("Superposición presente", "Texto conectado correctamente con su categoría"), inputId = "SuperposicionCategoriaEtiquetaEscala")
+            pickerInput(label = "Superposición de categorías y etiquetas de escala", choices = c("Superposición presente", "Texto conectado correctamente con su categoría"), inputId = ns("SuperposicionCategoriaEtiquetaEscala"))
           ),
           column(
             width = 6,
-            prettyRadioButtons(selected = 0, label = "Inicio de la frase de respuesta en la ayuda visual", choices = c("Presente", "No presente"), inputId = "InicioFraseRespuesta")
+            prettyRadioButtons(selected = 0, label = "Inicio de la frase de respuesta en la ayuda visual", choices = c("Presente", "No presente"), inputId = ns("InicioFraseRespuesta"))
           ),
           column(
             width = 6,
-            prettyRadioButtons(selected = 0, label = "Imagen dentro del apoyo visual", choices = c("Presente", "No presente"), inputId = "ImagenApoyo")
+            prettyRadioButtons(selected = 0, label = "Imagen dentro del apoyo visual", choices = c("Presente", "No presente"), inputId = ns("ImagenApoyo"))
           )
         )
       )
@@ -151,7 +181,7 @@ mod_cuestionario_pregunta_server <- function(input, output, session){
         if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
           column(
             width = 6,
-            numericInput(label = "Número de categorías", min = 1, value = 1, inputId = "NCategorias")
+            numericInput(label = "Número de categorías", min = 1, value = 1, inputId = ns("NCategorias"))
           )
         },
         if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
@@ -187,7 +217,35 @@ mod_cuestionario_pregunta_server <- function(input, output, session){
       )
     )
   })
-  return (reactive(tibble::tibble(DobleBarril = input$DobleBarril, InfExtra = input$InfExtra)))
+  
+  observeEvent(valores,{
+    if(!is.null(valores)){
+      updateTextInput(session = parent_session, inputId = ns("Pregunta"), value = valores$Pregunta)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("DeseabilidadSocial"), selected = valores$DeseabilidadSocial)
+      updatePickerInput(session = parent_session, inputId = ns("Centralidad"), selected = valores$Centralidad)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("EnfasisSRespuesta"), selected = valores$EnfasisSRespuesta)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("BalanceSRespuesta"), selected = valores$BalanceSRespuesta)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("SolicitudesImplicitos"), selected = valores$SolicitudesImplicitos)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("DobleBarril"), selected = valores$DobleBarril)
+      updateNumericInput(session = parent_session, inputId = ns("NEnunciadosRespuesta"), value = valores$NEnunciadosRespuesta)
+      
+      updatePickerInput(session = parent_session, inputId = ns("CategoriaRespuesta"), selected = valores$CategoriaRespuesta)
+      updateNumericInput(session = parent_session, inputId = ns("NCategorias"), value = valores$NCategorias)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("CatExcluyentes"), selected = valores$CatExcluyentes)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("CatNeutral"), selected = valores$CatNeutral)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("EquilibrioCat"), selected = valores$EquilibrioCat)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("NoSabeNoContest"), selected = valores$NoSabeNoContest)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("CatOtro"), selected = valores$CatOtro)
+      
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("InfExtra"), selected = valores$InfExtra)
+      updatePickerInput(session = parent_session, inputId = ns("SuperposicionCategoriaEtiquetaEscala"), selected = valores$SuperposicionCategoriaEtiquetaEscala)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("InicioFraseRespuesta"), selected = valores$InicioFraseRespuesta)
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("ImagenApoyo"), selected = valores$ImagenApoyo)
+      
+      updatePrettyRadioButtons(session = parent_session, inputId = ns("material"), selected = valores$material)
+    }
+  })
+  return (out)
 }
     
 ## To be copied in the UI
