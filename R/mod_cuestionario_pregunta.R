@@ -61,6 +61,39 @@ mod_cuestionario_pregunta_ui <- function(id){
         pickerInput(label = "Categorías de respuesta", choices = c("Seleccione una" = '', "Libre", "Nominal","Ordinal","Dicotómicas","Numéricas", "Cuantificadores vagos","Dibujo de línea", "Orden de importancia"), inputId = ns("CategoriaRespuesta")),
       )
     ),
+    fluidRow(
+      class = "RowCategoriaImplemented",
+      shinyjs::hidden(column(
+        id = ns("C_NCategorias"),
+        width = 6,
+        numericInput(label = "Número de categorías", min = 1, value = 1, inputId = ns("NCategorias"))
+      )),
+      shinyjs::hidden(column(
+        id = ns("C_CatExcluyentes"),
+        width = 6,
+        prettyRadioButtons(selected = 0, label = "Categorías mutuamente excluyente", choices = c("Presente", "No presente"), inputId = ns("CatExcluyentes"))
+      )),
+      shinyjs::hidden(column(
+        id = ns("C_CatNeutral"),
+        width = 6,
+        prettyRadioButtons(selected = 0, label = "Categoría neutral", choices = c("Presente", "No presente"), inputId = ns("CatNeutral"))
+      )),
+      shinyjs::hidden(column(
+        id = ns("C_EquilibrioCat"),
+        width = 6,
+        prettyRadioButtons(selected = 0, label = "Equilibrio entre las categorías", choices = c("Presente", "No presente"), inputId = ns("EquilibrioCat"))
+      )),
+      shinyjs::hidden(column(
+        id = ns("C_NoSabeNoContest"),
+        width = 6,
+        prettyRadioButtons(selected = 0, label = "No sabe/No contesta", choices = c("Presente", "No presente"), inputId = ns("NoSabeNoContest"))
+      )),
+      shinyjs::hidden(column(
+        id = ns("C_CatOtro"),
+        width = 6,
+        prettyRadioButtons(selected = 0, label = "Otro", choices = c("Presente", "No presente"), inputId = ns("CatOtro"))
+      ))
+    ),
     #End categoría de respuesta
     
     #Extras
@@ -79,6 +112,21 @@ mod_cuestionario_pregunta_ui <- function(id){
         prettyRadioButtons(selected = 0, label = "Material de apoyo visual", choices = c("Presente", "No presente"), inputId = ns("material"))
       )
     ),
+    shinyjs::hidden(fluidRow(
+      id= "RowExtrasImplemented",
+      column(
+        width = 6,
+        pickerInput(label = "Superposición de categorías y etiquetas de escala", choices = c("Superposición presente", "Texto conectado correctamente con su categoría"), inputId = ns("SuperposicionCategoriaEtiquetaEscala"))
+      ),
+      column(
+        width = 6,
+        prettyRadioButtons(selected = 0, label = "Inicio de la frase de respuesta en la ayuda visual", choices = c("Presente", "No presente"), inputId = ns("InicioFraseRespuesta"))
+      ),
+      column(
+        width = 6,
+        prettyRadioButtons(selected = 0, label = "Imagen dentro del apoyo visual", choices = c("Presente", "No presente"), inputId = ns("ImagenApoyo"))
+      )
+    )),
     #End extras 
     # Ayudas
     div(
@@ -143,106 +191,66 @@ mod_cuestionario_pregunta_server <- function(input, output, session, valores = N
   })
   observeEvent(input$material,{
     if(input$material == "Presente"){
-      insertUI(
-        selector = '.RowExtras', 
-        where = "afterEnd",
-        ui = fluidRow(
-          class="RowExtrasImplemented",
-          column(
-            width = 6,
-            pickerInput(label = "Superposición de categorías y etiquetas de escala", choices = c("Superposición presente", "Texto conectado correctamente con su categoría"), inputId = ns("SuperposicionCategoriaEtiquetaEscala"))
-          ),
-          column(
-            width = 6,
-            prettyRadioButtons(selected = 0, label = "Inicio de la frase de respuesta en la ayuda visual", choices = c("Presente", "No presente"), inputId = ns("InicioFraseRespuesta"))
-          ),
-          column(
-            width = 6,
-            prettyRadioButtons(selected = 0, label = "Imagen dentro del apoyo visual", choices = c("Presente", "No presente"), inputId = ns("ImagenApoyo"))
-          )
-        )
-      )
-    }
-    else{
-      removeUI(
-        selector = ".RowExtrasImplemented"
-      )
+      shinyjs::show(selector = "#RowExtrasImplemented")
+    }else{
+      shinyjs::hide(selector = "#RowExtrasImplemented")
     }
   })
   observeEvent(input$CategoriaRespuesta,{
-    removeUI(
-      selector = ".RowCategoriaImplemented"
-    )
-    insertUI(
-      selector = '.RowCategoriaRespuesta', 
-      where = "afterEnd",
-      ui = fluidRow(
-        class = "RowCategoriaImplemented",
-        if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
-          column(
-            width = 6,
-            numericInput(label = "Número de categorías", min = 1, value = 1, inputId = ns("NCategorias"))
-          )
-        },
-        if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
-          column(
-            width = 6,
-            prettyRadioButtons(selected = 0, label = "Categorías mutuamente excluyente", choices = c("Presente", "No presente"), inputId = ns("CatExcluyentes"))
-          )
-        },
-        if(input$CategoriaRespuesta == "Numéricas" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
-          column(
-            width = 6,
-            prettyRadioButtons(selected = 0, label = "Categoría neutral", choices = c("Presente", "No presente"), inputId = ns("CatNeutral"))
-          )
-        },
-        if(input$CategoriaRespuesta == "Numéricas" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
-          column(
-            width = 6,
-            prettyRadioButtons(selected = 0, label = "Equilibrio entre las categorías", choices = c("Presente", "No presente"), inputId = ns("EquilibrioCat"))
-          )
-        },
-        if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Dicotómicas" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Dibujo de línea" ||input$CategoriaRespuesta == "Numéricas"){
-          column(
-            width = 6,
-            prettyRadioButtons(selected = 0, label = "No sabe/No contesta", choices = c("Presente", "No presente"), inputId = ns("NoSabeNoContest"))
-          )
-        },
-        if(input$CategoriaRespuesta == "Nominal"){
-          column(
-            width = 6,
-            prettyRadioButtons(selected = 0, label = "Otro", choices = c("Presente", "No presente"), inputId = ns("CatOtro"))
-          )
-        }
-      )
-    )
+    shinyjs::hide(selector = paste0("#",ns("C_NCategorias")))
+    shinyjs::hide(selector = paste0("#",ns("C_CatExcluyentes")))
+    shinyjs::hide(selector = paste0("#",ns("C_CatNeutral")))
+    shinyjs::hide(selector = paste0("#",ns("C_EquilibrioCat")))
+    shinyjs::hide(selector = paste0("#",ns("C_NoSabeNoContest")))
+    shinyjs::hide(selector = paste0("#",ns("C_CatOtro")))
+    
+    if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
+      shinyjs::show(selector = paste0("#",ns("C_NCategorias")))
+    }
+    if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
+      shinyjs::show(selector = paste0("#",ns("C_CatExcluyentes")))
+    }
+    if(input$CategoriaRespuesta == "Numéricas" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
+      shinyjs::show(selector = paste0("#",ns("C_CatNeutral")))
+    }
+    if(input$CategoriaRespuesta == "Numéricas" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
+      shinyjs::show(selector = paste0("#",ns("C_EquilibrioCat")))
+    }
+    if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Dicotómicas" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Dibujo de línea" ||input$CategoriaRespuesta == "Numéricas"){
+      shinyjs::show(selector = paste0("#",ns("C_NoSabeNoContest")))
+    }
+    if(input$CategoriaRespuesta == "Nominal"){
+      shinyjs::show(selector = paste0("#",ns("C_CatOtro")))
+    }
   })
   
   observeEvent(valores,{
     if(!is.null(valores)){
-      updateTextInput(session = parent_session, inputId = ns("Pregunta"), value = valores$Pregunta)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("DeseabilidadSocial"), selected = valores$DeseabilidadSocial)
-      updatePickerInput(session = parent_session, inputId = ns("Centralidad"), selected = valores$Centralidad)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("EnfasisSRespuesta"), selected = valores$EnfasisSRespuesta)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("BalanceSRespuesta"), selected = valores$BalanceSRespuesta)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("SolicitudesImplicitos"), selected = valores$SolicitudesImplicitos)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("DobleBarril"), selected = valores$DobleBarril)
-      updateNumericInput(session = parent_session, inputId = ns("NEnunciadosRespuesta"), value = valores$NEnunciadosRespuesta)
-      
-      updatePickerInput(session = parent_session, inputId = ns("CategoriaRespuesta"), selected = valores$CategoriaRespuesta)
-      updateNumericInput(session = parent_session, inputId = ns("NCategorias"), value = valores$NCategorias)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("CatExcluyentes"), selected = valores$CatExcluyentes)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("CatNeutral"), selected = valores$CatNeutral)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("EquilibrioCat"), selected = valores$EquilibrioCat)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("NoSabeNoContest"), selected = valores$NoSabeNoContest)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("CatOtro"), selected = valores$CatOtro)
-      
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("InfExtra"), selected = valores$InfExtra)
-      updatePickerInput(session = parent_session, inputId = ns("SuperposicionCategoriaEtiquetaEscala"), selected = valores$SuperposicionCategoriaEtiquetaEscala)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("InicioFraseRespuesta"), selected = valores$InicioFraseRespuesta)
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("ImagenApoyo"), selected = valores$ImagenApoyo)
-      
-      updatePrettyRadioButtons(session = parent_session, inputId = ns("material"), selected = valores$material)
+      isolate({
+        updateTextInput(session = parent_session, inputId = ns("Pregunta"), value = valores$Pregunta)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("DeseabilidadSocial"), selected = valores$DeseabilidadSocial)
+        updatePickerInput(session = parent_session, inputId = ns("Centralidad"), selected = valores$Centralidad)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("EnfasisSRespuesta"), selected = valores$EnfasisSRespuesta)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("BalanceSRespuesta"), selected = valores$BalanceSRespuesta)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("SolicitudesImplicitos"), selected = valores$SolicitudesImplicitos)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("DobleBarril"), selected = valores$DobleBarril)
+        updateNumericInput(session = parent_session, inputId = ns("NEnunciadosRespuesta"), value = valores$NEnunciadosRespuesta)
+        
+        updatePickerInput(session = parent_session, inputId = ns("CategoriaRespuesta"), selected = valores$CategoriaRespuesta)
+        updateNumericInput(session = parent_session, inputId = ns("NCategorias"), value = valores$NCategorias)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("CatExcluyentes"), selected = valores$CatExcluyentes)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("CatNeutral"), selected = valores$CatNeutral)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("EquilibrioCat"), selected = valores$EquilibrioCat)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("NoSabeNoContest"), selected = valores$NoSabeNoContest)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("CatOtro"), selected = valores$CatOtro)
+        
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("InfExtra"), selected = valores$InfExtra)
+        updatePickerInput(session = parent_session, inputId = ns("SuperposicionCategoriaEtiquetaEscala"), selected = valores$SuperposicionCategoriaEtiquetaEscala)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("InicioFraseRespuesta"), selected = valores$InicioFraseRespuesta)
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("ImagenApoyo"), selected = valores$ImagenApoyo)
+        
+        updatePrettyRadioButtons(session = parent_session, inputId = ns("material"), selected = valores$material) 
+      })
     }
   })
   return (out)

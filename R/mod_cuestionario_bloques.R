@@ -63,7 +63,7 @@ mod_cuestionario_bloques_server <- function(input, output, session, bloque = NUL
     )
     )
   })
-  
+  callModule(mod_cuestionario_pregunta_server, glue::glue("cuestionario_pregunta_ui_1"), valores = NULL, parent_session = parent_session)
   preguntas <- reactiveValues()
   uiCount <- reactiveValues(val = 1)
   observeEvent(input$agregar,{
@@ -76,7 +76,6 @@ mod_cuestionario_bloques_server <- function(input, output, session, bloque = NUL
              ))
     )
     uiCount$val <- uiCount$val+1
-    
   })
   actualEditable <- reactiveValues(value = 0)
   observeEvent(input$editar,{
