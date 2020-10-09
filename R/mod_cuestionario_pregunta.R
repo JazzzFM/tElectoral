@@ -132,29 +132,29 @@ mod_cuestionario_pregunta_ui <- function(id){
     div(
       class = "AyudasContainer",
       tags$p("Suele haber deseabilidad social en temas como caridad, finanzas, información y cultura de la persona, gobierno e instituciones. 
-      Sobre todo en temas que se refieren al racismo, violencia, religión, comportamiento de voto, situación política, crímenes, drogas, relaciones sexuales.", `ref-id`="DeseabilidadSocial"),
+      Sobre todo en temas que se refieren al racismo, violencia, religión, comportamiento de voto, situación política, crímenes, drogas, relaciones sexuales.", `ref-id`=ns("DeseabilidadSocial")),
       
       tags$p("Esto se refiere a si el tema es de cercanía para los entrevistados, si le es familiar o no. Por ejemplo:
 - No es central: Responden algo sobre lo que podrían no conocer,ejemplo coches solares.
 - Poco central: Los entrevistadores pueden conocer algo sobre el tema, ejemplo, condiciones laborales.
 - Algo centrales: No es algo que tengan que haber pensado antes pero que fácilmente pueden responder con base en su experiencia, si confían en su sistema de justicia.
 - Central: Sobre actividades comunes de una persona, pero aún así tienen que pensar o recordar para medir su respuesta. Ej. ¿Cuánto tiempo a la semana ve la tele?
-- Muy Central: El entrevistado puede dar una respuesta casi inmediata sobre sus actividades comunes, ejemplo, ¿Cuál es grado de escolaridad?", `ref-id` = "Centralidad"),
+- Muy Central: El entrevistado puede dar una respuesta casi inmediata sobre sus actividades comunes, ejemplo, ¿Cuál es grado de escolaridad?", `ref-id` = ns("Centralidad")),
       
       tags$p('Una solicitud puede hacer hincapié en la opinión subjetiva del encuestado o no. Está presente cuando, por ejemplo, se usan frases
-como "Por favor, danos tu opinión sobre ...", "¿Qué piensas sobre ...?", "Según usted cuál es el …"', `ref-id` = "EnfasisSRespuesta"),
+como "Por favor, danos tu opinión sobre ...", "¿Qué piensas sobre ...?", "Según usted cuál es el …"', `ref-id` = ns("EnfasisSRespuesta")),
       
       tags$p('Cuando se le pide una escala al entrevistado, esta escala debe estar balanceada.
 Balanceada: conceptos bipolares, ejemplo, ¿a usted le gustan o le disgustan los perritos?
 No balanceada: Solo se menciona uno de los conceptos bipolares, ¿A usted le disgustan los perritos?
-No aplica: Cuando las respuestas son unipolares.', `ref-id` = "BalanceSRespuesta"),
+No aplica: Cuando las respuestas son unipolares.', `ref-id` = ns("BalanceSRespuesta")),
       
       tags$p('Hay solicitudes de respuestas que asumen un primer componente que no se pregunta literalmente pero que es implícitamente verdadero para responder al segundo componente. Ejemplo: ¿Cuál es el mejor libro que leíste el año pasado? Aquí, la suposición oculta es que los encuestados realmente leen libros. 
-    Si el componente oculto se hace explícito en una solicitud separada, el problema se resuelve.', `ref-id` = "SolicitudesImplicitos"),
+    Si el componente oculto se hace explícito en una solicitud separada, el problema se resuelve.', `ref-id` = ns("SolicitudesImplicitos")),
       
-      tags$p('Doble barril se refiere a cuando se está haciendo una solicitud doble al entrevistado en un mismo ítem.',`ref-id` = "DobleBarril"),
+      tags$p('Doble barril se refiere a cuando se está haciendo una solicitud doble al entrevistado en un mismo ítem.',`ref-id` = ns("DobleBarril")),
       
-      tags$p('Este es el número de oraciones que componen la solicitud, sin contar los de la introducción, instrucción, definición motivación u opciones de respuesta, etcétera.',`ref-id` = "NEnunciadosRespuesta")
+      tags$p('Este es el número de oraciones que componen la solicitud, sin contar los de la introducción, instrucción, definición motivación u opciones de respuesta, etcétera.',`ref-id` = ns("NEnunciadosRespuesta"))
     ),
     # End ayudas
   )

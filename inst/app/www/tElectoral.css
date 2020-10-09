@@ -1113,8 +1113,8 @@ z-index: 1;
   position: fixed;
   top: 58px;
   min-height: 150px;
-  width: 50%;
-  right: 0;
+  width: 75%;
+  right: -20%;
   z-index: 1;
   box-shadow: 0px 2px 4px 4px rgba(0,0,0,0.1);
   border-radius: 3px;
@@ -1124,6 +1124,12 @@ z-index: 1;
   transition: ease all .5s;
   background-color: #fff;
   padding: 20px;
+}
+@media only screen and (max-width: 748px) and (min-width: 300px){
+  .AyudasContainer{
+    width: 95%;
+  right: 0%;
+  }
 }
 .AyudasContainer.show{
   visibility: visible;

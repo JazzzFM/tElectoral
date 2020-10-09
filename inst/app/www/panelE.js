@@ -187,7 +187,7 @@ $(".hexItem").hover(function(){
 
 /* Control de ayudas */
 var ayudasContainer;
-$('.sidebar .nav-link').on("click", SetAyudas);
+$(document).on("click", 'button', SetAyudas);
 function SetAyudas(){
     if($("button.showInfo").length == 0){
      setTimeout(function() {
@@ -201,8 +201,9 @@ function SetAyudas(){
         // Asignamos ids al dom
         referencias.forEach(item => {
             var element = $(`[id="${item}"]`);
-            if(!element.hasClass("form-group"))
-                element = element.parents(".form-group");
+            console.log(item)
+            //if(!element.hasClass("form-group"))
+            //    element = element.parents(".form-group");
             element.find(".control-label").prepend(`
                 <button type="button" ref-id="${item}" class="showInfo"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
             `);
