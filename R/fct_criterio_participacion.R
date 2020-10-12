@@ -1,12 +1,12 @@
 load("data/DB_Mich.rda")
-DB_Mich
+#DB_Mich
 
 # Se crea una base de datos temporal: Informacion falsa (la intención es que se actualice con datos reales)
 # Extraer una muestra aleatoria de tamaño 10 de nombres de municipio
 # Vector de visitas=simulaciones de una poisson
 
-fake_visitas <-tibble(MUNICIPIO=sample(size=10, DB_Mich$MUNICIPIO))
-fake_visitas <-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
+#fake_visitas <-tibble(MUNICIPIO=sample(size=10, DB_Mich$MUNICIPIO))
+#fake_visitas <-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
   
 criterio_participacion <- function(DB_ESTADO, DB_VISITAS){
   # Calcular la frecuencia relativa de las visitas c
@@ -74,7 +74,7 @@ criterio_participacion_pri <- function(DB_ESTADO, DB_VISITAS){
   return(DB_ORDENADA)
 }
 
-PRI <- criterio_participacion_pri(DB_Mich, fake_visitas)
-#PRIS <- select(PRI, c(VISITAS, TOTAL_R_VOTOS, CRITERIOP))
+#PRI <- criterio_participacion_pri(DB_Mich, fake_visitas)
+#PRIS <- select(PRI, c(VISITAS, CRITERIOP))
 #S <- write_excel_csv(PRIS, "~/GerenciaPoder/PRIFUNCRIT.csv")
 
