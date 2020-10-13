@@ -5,7 +5,7 @@
 # Extraer una muestra aleatoria de tamaño 10 de nombres de municipio
 # Vector de visitas=simulaciones de una poisson
 
-criterio_participacion <- function(DB_ESTADO, DB_VISITAS){
+criterio_participacion <- function(DB_ESTADO, DB_VISITAS,n){
   # Calcular la frecuencia relativa de las visitas c
   # DB_VISITAS debe tener mínimo una columna de MUNICIPIO y otra de VISITAS
   # DB_ESTADO debe tener mínimo una columna de MUNICIPIO y otra de TOTAL_VOTOS
@@ -20,7 +20,7 @@ criterio_participacion <- function(DB_ESTADO, DB_VISITAS){
   # Con mutate CP vistas (relativas - total_votos)^2
     
   DB_AUX <- select(DB_AUX, c(CABECERA_MUNICIPAL, TOTAL_VOTOS, FREC_R_VIS, VISITAS)) %>%
-    mutate(CRITERIOP = ((2*FREC_R_VIS - 2*TOTAL_VOTOS)*5+1)/5^2,
+    mutate(CRITERIOP = ((2*FREC_R_VIS - 2*TOTAL_VOTOS)*(n+1)+1)/(n+1)^2,
            TOTAL_VOTOS=scales::percent(round(TOTAL_VOTOS,2)))
    
   # # # Arrange CP visitas
