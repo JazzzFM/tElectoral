@@ -32,6 +32,8 @@ usethis::use_package( "purrr" )
 usethis::use_package( "stringr" )
 usethis::use_package( "lubridate" )
 usethis::use_package( "htmltools" )
+usethis::use_package( "tidyr" )
+usethis::use_package( "forcats" )
 
 # no se instaló bs4Dash a propósito, para ver que pasa
 
@@ -53,7 +55,6 @@ golem::add_module( name = "registroGira" )
 # Inegi
 golem::add_fct(name = "inegi" )
 golem::add_fct("criterio_participacion")
-golem::add_fct("GraphAnalisis")
 golem::add_utils( "helpers" )
 golem::add_utils( "mandatorio" )
 golem::add_utils( "alinear" )
