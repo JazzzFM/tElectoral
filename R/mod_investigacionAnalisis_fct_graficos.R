@@ -1,5 +1,4 @@
-# Tema
-
+# Temas
 tema_intCred <- function(){
   fuente <- "Georgia"   
   # Tema base
@@ -11,6 +10,25 @@ tema_intCred <- function(){
   
 }
 
+tema_probGanar <- function(){
+  fuente <- "Georgia"   
+  # Tema base
+  theme_minimal() %+replace%  
+    theme(
+      # Ratio
+      aspect.ratio = 1,
+      # Fondo
+      # Texto
+      plot.title = element_text(family = fuente,hjust = .5),
+      # Retícula
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      # Ejes
+      axis.text.y = element_blank(),
+      axis.title = element_blank()
+    )
+  
+}
 
 # Probabilidad de ganar
 probGanar <- function(bd, candidato){
@@ -37,25 +55,77 @@ probGanar <- function(bd, candidato){
   
 }
 
-tema_probGanar <- function(){
-  fuente <- "Georgia"   
-  # Tema base
-  theme_minimal() %+replace%  
-    theme(
-      # Ratio
-      aspect.ratio = 1,
-      # Fondo
-      # Texto
-      plot.title = element_text(family = fuente,hjust = .5),
-      # Retícula
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      # Ejes
-      axis.text.y = element_blank(),
-      axis.title = element_blank()
-    )
+hPollofPolls <- function(DB){
+  # Funciones para volver al español
+  hcoptslang <- getOption("highcharter.lang")
+  hcoptslang$weekdays<- c("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
+  hcoptslang$shortMonths <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
+  hcoptslang$months <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+  hcoptslang$thousandsSep <- c(",")
+  options(highcharter.lang = hcoptslang)
+  # Formato redondeado
+  DB <-DB %>% mutate(votacion_r = round(votacion*100),
+                     votacion_min = round(min*100),
+                     votacion_max = round(max*100),
+                     votacion = votacion *100,
+                     min = min * 100,
+                     max = max * 100)
+  # Tooltip
+  tt <- tooltip_table(c("{point.series.name}"),
+                      c("{point.votacion_r}%"))
+  # Gráfica
+  Graph <- DB%>% 
+    hchart(hcaes(x = fecha,  low = min,
+                              high = max, group = candidato),
+                        type = "arearange", enableMouseTracking= F)%>% 
+    hc_title(text = "Poll of Polls") %>%
+    hc_subtitle(text = "Data from Simulation") %>% 
+    hc_add_series(data = DB,
+                  hcaes(x = fecha, y = votacion,
+                        group = candidato),
+                  type = "line") %>% 
+    hc_yAxis(title = list(text = "Porcentaje"), labels = list(format = "{value}%") ) %>%
+    hc_xAxis(crosshair = T) %>% 
+    hc_plotOptions(line = list(colorByPoint = F, showInLegend = F)) %>% 
+    hc_tooltip(sort = T,
+               share=T,
+               pointFormat = tt, 
+               useHTML = TRUE) %>%
+    hc_add_theme(hc_theme_hcrt()) %>%
+    hc_legend(enabled = TRUE) %>% 
+    hc_colors(c("#685369","#849324", "#F7ACCF", "#4E8098"))
   
+  return(Graph)
 }
+
+bd <- tibble(cand1 = rnorm(n = 30, sd = .06, mean = .3),
+             cand2 = rnorm(n = 30, sd = .05, mean = .20),
+             cand3 = rnorm(n = 30, sd = .06, mean = .10),
+             cand4 = rnorm(n = 30, sd = .04, mean = .25),
+             fecha = seq(from = as.Date("2020/12/01"),as.Date("2021/06/25"), by = "week" )) %>%
+  gather(candidato, votacion, cand1:cand4) %>%
+  mutate(min = votacion-rnorm(mean = .03, sd = .01, n =120),
+         max = votacion+rnorm(mean = .03, sd = .01, n =120))
+
+hPollofPolls(bd)
+
+bd %>% 
+  hchart(hcaes(x = fecha,  low = min, 
+               high = max, group = candidato),
+         type = "arearange")%>% 
+  hc_title(text = "Poll of Polls") %>%
+  hc_subtitle(text = "Data from Simulation") %>% 
+  hc_add_series(data = bd,
+                hcaes(x = fecha, y = votacion,
+                      group = candidato),
+                type = "line") %>%
+  hc_yAxis(title = list(text = "Porcentaje"), labels = list(format = "{value}%") ) %>%
+  hc_xAxis(crosshair = T) %>% 
+  hc_plotOptions(line = list(colorByPoint = F, showInLegend = F)) %>% 
+  hc_tooltip(pointFormat = tt, useHTML = TRUE) %>%
+  hc_add_theme(hc_theme_hcrt()) %>%
+  hc_legend(enabled = TRUE) %>% 
+  hc_colors(c("#685369","#849324", "#F7ACCF", "#4E8098"))
 
 iVotoBarras <- function(DB){
   
@@ -72,44 +142,7 @@ iVotoBarras <- function(DB){
 }
 
 
-hPollofPolls <- function(DB){
-  
-  hcoptslang <- getOption("highcharter.lang")
-  hcoptslang$weekdays<- c("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
-  hcoptslang$shortMonths <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
-  hcoptslang$months <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
-  hcoptslang$thousandsSep <- c(",")
-  options(highcharter.lang = hcoptslang)
-  
-  DB <-DB %>% mutate(votacion_r = round(votacion*100),
-                votacion_min = round(min*100),
-                votacion_max = round(max*100),
-                votacion = votacion *100,
-                min = min * 100,
-                max = max * 100)
-  
-  tt <- tooltip_table(c("", "estamacion","Votacion min", "Votacion max"),
-                      c("{point.series.name}", "{point.votacion_r}%", "{point.votacion_min}%", "{point.votacion_max}%"))
-  
-  Graph <- DB%>% hchart(hcaes(x = fecha,  low = min,
-                              high = max, group = candidato),
-                              type = "arearange")%>% 
-    hc_title(text = "Poll of Polls") %>%
-    hc_subtitle(text = "Data from Simulation") %>% 
-    hc_add_series(data = DB,
-                  hcaes(x = fecha, y = votacion,
-                        group = candidato),
-                        type = "line") %>% 
-    hc_yAxis(title = list(text = "Porcentaje"), labels = list(format = "{value}%") ) %>%
-    hc_xAxis(crosshair = T) %>% 
-    hc_plotOptions(line = list(colorByPoint = F, showInLegend = F)) %>% 
-    hc_tooltip(pointFormat = tt, useHTML = TRUE) %>%
-    hc_add_theme(hc_theme_hcrt()) %>%
-    hc_legend(enabled = TRUE) %>% 
-    hc_colors(c("#685369","#849324", "#F7ACCF", "#4E8098"))
-  
-  return(Graph)
-}
+
 
 hVotoPopu <- function(DB){
   Graph <- ggplot(bd, aes(votacion, fill = candidato, colour = candidato)) +
