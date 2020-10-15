@@ -348,6 +348,8 @@ span.input-group-addon:empty{
 }
 .skin-blue .main-header .navbar{
   background-color: var(--m-green-color);
+  padding: 3px 10px;
+  height: 35px;
 }
 .skin-blue .main-header .logo{
   background-color: var(--m-red-color);
@@ -403,7 +405,7 @@ div#logo img{
     background-image: url(img/forma-cuadrado-redondo.svg);
     background-repeat: no-repeat;
     background-size: 110%;
-    background-position: -100px 150px;
+    background-position: -100px 185px;
 }
 
 .sidebar{
@@ -1111,8 +1113,8 @@ z-index: 1;
   position: fixed;
   top: 58px;
   min-height: 150px;
-  width: 50%;
-  right: 0;
+  width: 75%;
+  right: -20%;
   z-index: 1;
   box-shadow: 0px 2px 4px 4px rgba(0,0,0,0.1);
   border-radius: 3px;
@@ -1122,6 +1124,12 @@ z-index: 1;
   transition: ease all .5s;
   background-color: #fff;
   padding: 20px;
+}
+@media only screen and (max-width: 748px) and (min-width: 300px){
+  .AyudasContainer{
+    width: 95%;
+  right: 0%;
+  }
 }
 .AyudasContainer.show{
   visibility: visible;
@@ -1214,6 +1222,7 @@ z-index: 1;
 .ButtonWDeleteAddon button:nth-of-type(2) {
 position: relative;
 min-width: 150px;
+padding-left: 45px;
 }
 
 /* Masonry effect */
@@ -1232,7 +1241,16 @@ box-shadow: 2px 2px 2px 0px rgba(0,0,0,.1);
 /* End masonry effect */
 
 /* Box */
-.box:last-child{
-  margin-bottom: 100px;
+.mt-25{
+  margin-top: 25px;
+}
+.box-header .box-title, .box-header>.fa, .box-header>.glyphicon, .box-header>.ion{
+  font-size: 15px;
+  padding-right: 55px;
 }
 /* End box */
+
+/* Alinear encabezado hacia la derecha (Verificar porqué se crean así algunos encabezados de tabla) */
+table.dataTable th.dt-right, table.dataTable td.dt-right{
+  text-align:center !important;
+}

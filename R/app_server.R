@@ -17,10 +17,10 @@ app_server <- function( input, output, session ) {
   # Investigación
   callModule(mod_investigacionAnalisis_server, "investigacionAnalisis_ui_1")
   # Protocolo de cuestionarios
-  callModule(mod_comunicacion_server, "comunicacion_ui_1")
+  callModule(mod_comunicacion_server, "comunicacion_ui_1", session)
   # End cuestionario
   # Registro
   callModule(mod_registro_server, "registro_ui_1")
   # Gira
-  callModule(mod_gira_server, "gira_ui_1")
+  callModule(mod_gira_server, "gira_ui_1", session)
 }
