@@ -57,7 +57,7 @@ golem::add_module( name = "comunicacion" )
 golem::add_module( name = "cuestionario_paso_1" )
 golem::add_module( name = "cuestionario_paso_2" )
 golem::add_module( name = "cuestionario_pregunta" )
-golem::add_module( name = "pregunta_guardada" )
+golem::add_module( name = "cuestionario_bloques" )
 # End Cuestionario
 # Registro
 golem::add_module( name = "registro" )
@@ -66,6 +66,8 @@ golem::add_module( name = "gira" )
 golem::add_module( name = "giraPaso1" )
 golem::add_module( name = "lugaresGira" )
 golem::add_module( name = "giraPaso3" )
+golem::add_module( name = "lugaresPaso3" )
+golem::add_module( name = "evento" )
 
 
 ## Add helper functions ----
