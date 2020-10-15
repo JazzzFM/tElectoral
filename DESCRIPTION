@@ -24,6 +24,7 @@ Imports:
     stringr,
     shinyTime,
     shinyalert,
+    tidyr,
     TSP,
     dplyr,
     ggplot2,
