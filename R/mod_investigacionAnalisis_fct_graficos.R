@@ -89,6 +89,8 @@ hPollofPolls <- function(DB){
     hc_plotOptions(line = list(colorByPoint = F, showInLegend = F)) %>% 
     hc_tooltip(sort = T,
                share=T,
+               borderWidth= 0,
+               split=T,
                pointFormat = tt, 
                useHTML = TRUE) %>%
     hc_add_theme(hc_theme_hcrt()) %>%
@@ -98,34 +100,6 @@ hPollofPolls <- function(DB){
   return(Graph)
 }
 
-bd <- tibble(cand1 = rnorm(n = 30, sd = .06, mean = .3),
-             cand2 = rnorm(n = 30, sd = .05, mean = .20),
-             cand3 = rnorm(n = 30, sd = .06, mean = .10),
-             cand4 = rnorm(n = 30, sd = .04, mean = .25),
-             fecha = seq(from = as.Date("2020/12/01"),as.Date("2021/06/25"), by = "week" )) %>%
-  gather(candidato, votacion, cand1:cand4) %>%
-  mutate(min = votacion-rnorm(mean = .03, sd = .01, n =120),
-         max = votacion+rnorm(mean = .03, sd = .01, n =120))
-
-hPollofPolls(bd)
-
-bd %>% 
-  hchart(hcaes(x = fecha,  low = min, 
-               high = max, group = candidato),
-         type = "arearange")%>% 
-  hc_title(text = "Poll of Polls") %>%
-  hc_subtitle(text = "Data from Simulation") %>% 
-  hc_add_series(data = bd,
-                hcaes(x = fecha, y = votacion,
-                      group = candidato),
-                type = "line") %>%
-  hc_yAxis(title = list(text = "Porcentaje"), labels = list(format = "{value}%") ) %>%
-  hc_xAxis(crosshair = T) %>% 
-  hc_plotOptions(line = list(colorByPoint = F, showInLegend = F)) %>% 
-  hc_tooltip(pointFormat = tt, useHTML = TRUE) %>%
-  hc_add_theme(hc_theme_hcrt()) %>%
-  hc_legend(enabled = TRUE) %>% 
-  hc_colors(c("#685369","#849324", "#F7ACCF", "#4E8098"))
 
 iVotoBarras <- function(DB){
   
