@@ -13,16 +13,16 @@ mod_investigacionAnalisis_ui <- function(id){
   ns <- NS(id)
   tagList(
     # Letreros
-    # Valid colors are: red, yellow, aqua, blue, light-blue, green, navy, teal, olive, lime, orange, fuchsia, purple, maroon, black.
     fluidRow(
-      valueBox(value = paste(round(rpois(1,90)), "%", sep=""), subtitle = "Probabilidad de Triunfo", color = "black"),
-      valueBox(value = paste(round(rpois(1,30)), "%", sep=""),
-               subtitle = "21 municipios 96 secciones", color = "red"),
-      valueBox(value = paste(round(rpois(1,30)), "%", sep=""),
-               subtitle = "21 municipios 96 secciones", color = "orange"),
-      valueBox(value = paste(round(rpois(1,30)), "%", sep=""),
-               subtitle = "21 municipios 96 secciones", color = "green")
-      ),
+      column(width = 3,
+             plotOutput(ns("caja1"))),
+      column(width = 3,
+            plotOutput(ns("caja2"))),
+      column(width = 3,
+             plotOutput(ns("caja3"))),
+      column(width = 3,
+             plotOutput(ns("caja4")))
+    ),
     # Gráficos
     fluidRow(
       column(width = 12,
@@ -84,7 +84,32 @@ mod_investigacionAnalisis_server <- function(input, output, session){
     
   hVotoPopu(bd)
   })
-}
+  
+  output$caja1 <- renderPlot({
+    BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+    
+    cajaResume(BB, 1)
+  })
+  
+  output$caja2 <- renderPlot({
+    BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+    
+    cajaResume(BB, 2)
+  })
+  
+  output$caja3 <- renderPlot({
+    BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+    
+    cajaResume(BB, 3)
+  })
+  
+  output$caja4 <- renderPlot({
+    BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+    
+    cajaResume(BB, 4)
+  })
+  }
+
   
 ## To be copied in the UI
 # 

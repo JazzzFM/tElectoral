@@ -124,15 +124,85 @@ hVotoPopu <- function(DB){
   return(Graph)
 }
 
-cajaResume <- function(title2){
+cajaResume <- function(DB, x){
 
-  Graph <- ggplot(mpg, aes(displ, hwy)) +
-  geom_point() +
-  geom_smooth() +
-  theme(title = {title2},
-        axis.title.y = element_blank(),
-        axis.title.x = element_blank())
+  Graph <- ggplot(DB, aes(x, y)) +
+  geom_smooth(color = "white", se = FALSE) + theme_light() +
+  theme(axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text = element_blank())
+  
+  if(x == 1){
+        Graph <- Graph + 
+          theme(panel.background = element_rect(fill = "gray"),
+                panel.grid.major = element_blank(), 
+                panel.grid.minor = element_blank()) + 
+                annotate("text", x = 0.36, y=0.13,
+                         label= "82%",
+                         colour = "White", size = 25) +
+                annotate("text", x = 0.32, y=0.10,
+                   label = "Probabilidad",
+                   colour = "White", size = 11) +
+               annotate("text", x = 0.33, y=0.09,
+                   label = "De Triunfo",
+                   colour = "White", size = 11) 
+    return(Graph)
+  }
+  
+  if(x == 2){
+    Graph <- Graph + 
+      theme(panel.background = element_rect(fill = "red"),
+            panel.grid.major = element_blank(), 
+            panel.grid.minor = element_blank()) + 
+      annotate("text", x = 0.36, y=0.13,
+               label= "22%",
+               colour = "White", size = 25) +
+      annotate("text", x = 0.32, y=0.115,
+               label= "21 Municipios",
+               colour = "White", size = 11) +
+      annotate("text", x = 0.32, y=0.099,
+               label= "96 Secciones",
+               colour = "White", size = 11)
+    
+    return(Graph)
+  }
+  
+  if(x == 3){
+    Graph <- Graph + 
+      theme(panel.background = element_rect(fill = "yellow"),
+            panel.grid.major = element_blank(), 
+            panel.grid.minor = element_blank()) + 
+      annotate("text", x = 0.36, y=0.14,
+               label= "22%",
+               colour = "White", size = 25) +
+      annotate("text", x = 0.34, y=0.105,
+               label= "21 Municipios",
+               colour = "White", size = 11) +
+      annotate("text", x = 0.34, y=0.095,
+               label= "96 Secciones",
+               colour = "White", size = 11)
 
 return(Graph)
+    return(Graph)
+  }
+  if(x == 4){
+    Graph <- Graph + 
+      theme(panel.background = element_rect(fill = "green"),
+            panel.grid.major = element_blank(), 
+            panel.grid.minor = element_blank()) + 
+      annotate("text", x = 0.36, y=0.14,
+               label= "22%",
+               colour = "White", size = 25) +
+      annotate("text", x = 0.32, y=0.115,
+               label= "21 Municipios",
+               colour = "White", size = 11) +
+      annotate("text", x = 0.32, y=0.109,
+               label= "96 Secciones",
+               colour = "White", size = 11)
+
+return(Graph)
+    
+    return(Graph)
+  }
 }
   
