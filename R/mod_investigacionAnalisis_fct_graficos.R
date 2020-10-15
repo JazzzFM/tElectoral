@@ -1,5 +1,4 @@
 # Tema
-
 tema_intCred <- function(){
   fuente <- "Georgia"   
   # Tema base
@@ -14,7 +13,7 @@ tema_intCred <- function(){
 
 
 
-# Probabilidad de gabar
+# Probabilidad de ganar
 probGanar <- function(bd, candidato){
   pCand <- bd %>% 
     filter(cand==candidato) %>% 
