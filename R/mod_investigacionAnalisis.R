@@ -96,7 +96,7 @@ mod_investigacionAnalisis_server <- function(input, output, session){
     
     cajaResume(BB, 2)
   })
-  
+    
   output$caja3 <- renderPlot({
     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
     

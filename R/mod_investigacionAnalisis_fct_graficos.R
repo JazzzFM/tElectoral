@@ -151,7 +151,7 @@ cajaResume <- function(DB, x){
   
   if(x == 2){
     Graph <- Graph + 
-      theme(panel.background = element_rect(fill = "red"),
+      theme(panel.background = element_rect(fill = "tomato"),
             panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank()) + 
       annotate("text", x = 0.36, y=0.13,
