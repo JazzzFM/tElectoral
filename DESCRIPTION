@@ -19,9 +19,18 @@ Imports:
     shinyWidgets,
     shinydashboardPlus,
     shinyjs,
+    magrittr,
+    purrr,
+    stringr,
     shinyTime,
     shinyalert,
-    tidyr
+    tidyr,
+    TSP,
+    dplyr,
+    ggplot2,
+    leaflet,
+    tidyr,
+    pkgload
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

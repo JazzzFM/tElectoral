@@ -62,8 +62,10 @@ app_ui <- function(request) {
           tabItem(tabName = "investigacion",
                   mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1")),
           tabItem(tabName = "comunicacion",
-                  mod_comunicacion_ui("comunicacion_ui_1"))
-          
+                  mod_comunicacion_ui("comunicacion_ui_1")),
+          tabItem(tabName = "gira",
+                  mod_gira_ui("gira_ui_1")
+          )
         )
       )
     )
@@ -90,6 +92,7 @@ golem_add_external_resources <- function(){
       path = app_sys('app/www'),
       app_title = 'tElectoral'
     ),
+    shinyjs::useShinyjs(),
     shinyalert::useShinyalert()
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 

@@ -11,15 +11,35 @@
   --twitter-black-secondary: #263a5b;
   --bg-primary: #f2f5fa;
   
-  /* Colores tElectoral */
+  /* Colores pan */
+  /*--m-black-color: #2a2c2b;
+  --m-red-color: #1e50a9;
+  --m-red-black-color: #1b2f9f;
+  --m-tr-selected: #1e50a9;*/
   
+  /* Colores pri */
+  
+ /* --m-black-color: #2a2c2b;
+  --m-red-color: #c00301;
+  --m-red-black-color: #005734;
+  --m-tr-selected: #005734;*/
+  
+  /* Colores movimiento */
   --m-black-color: #2a2c2b;
-  --m-red-color: #6e1b33;
+  --m-red-color: #ff8201;
+  --m-red-black-color: #cc6900;
+  --m-tr-selected: rgba(1, 111, 184,.4);
+  
+  /* Colores morena */
+  /*--m-black-color: #2a2c2b;
+  --m-red-color: #b92207;
+  --m-red-black-color: #a01d06;
+  --m-tr-selected: #b92207;*/
+  
   --m-green-color: #0c231e;
-  --m-semibrown-color: #e3c294;
+  --m-semibrown-color: #ececec;
   --m-white-primary-color: #f2f2f2;
   --m-white-secondary-color: #e0e0e0;
-  --m-red-black-color: #5b0a1c;
   
   /* Colores de barras */
   --cbar-red: #e44e44;
@@ -38,7 +58,10 @@
   src: url('webfonts/DIN Condensed Bold.ttf'); /* IE9 Compat Modes */
   src: url('webfonts/DIN Condensed Bold.ttf')  format('truetype'); /* Safari, Android, iOS */
 }
-
+.row{
+  display: flex;
+  flex-wrap: wrap;
+}
 body{
   font-family: "DIN A1", sans-serif;
 }
@@ -54,6 +77,9 @@ body{
 .wrapper .content-wrapper{
   background-color: #fff ;
 }
+.skin-blue .left-side, .skin-blue .main-sidebar, .skin-blue .wrapper{
+  background-color: #fff;
+}
 .content-wrapper>.content{
   position: relative;
   z-index: 1;
@@ -65,6 +91,16 @@ body{
 .FlexColumn{
   display: flex;
   align-items: center;
+}
+.FlexColumn .input-group{
+  display: flex;
+}
+.FlexColumn .input-group-addon, .FlexColumn .input-group-btn{
+  width: auto !important;
+  white-space: normal !important;
+}
+.FlexColumn .input-group-addon .btn, .FlexColumn .input-group-btn .btn{
+  white-space: normal !important;
 }
 .FlexColumn > *{
   margin: 0 5px;
@@ -123,6 +159,9 @@ body{
 .btn.btn-primary:focus{
   color: #fff;
 }
+a{
+  color: #333;
+}
 .btn-default,
 .btn-primary,
 .btn-secondary,
@@ -155,8 +194,9 @@ body{
 .btn-secondary{
   background-color: var(--m-red-black-color) !important;
 }
-.btn-danger{
-  background-color: #e44e44;
+.btn-danger, .btn-danger:hover{
+  background-color: #e44e44 !important;
+  color: #fff !important;
 }
 .btn-success{
   background-color: #00b963;
@@ -175,7 +215,9 @@ body{
   background-color: #eaeaea;
   color: #333;
 }
-.btn-default:hover,
+.btn-default:hover{
+  color: #333;
+}
 .btn-primary:hover{
   background-color: var(--m-red-black-color);
   color: #fff;
@@ -304,12 +346,16 @@ span.input-group-addon:empty{
     align-items: center;
     box-shadow: 2px 2px 2px 0px rgba(0,0,0,.3);
 }
-.skin-blue .main-header .navbar,
-.skin-blue .main-header .logo{
+.skin-blue .main-header .navbar{
   background-color: var(--m-green-color);
+  padding: 3px 10px;
+  height: 35px;
+}
+.skin-blue .main-header .logo{
+  background-color: var(--m-red-color);
 }
 .skin-blue .main-header .logo:hover{
-  background-color: var(--m-green-color);
+  background-color: var(--m-red-black-color);
 }
 .skin-blue .main-header .navbar .sidebar-toggle{
   width: 45px;
@@ -359,7 +405,7 @@ div#logo img{
     background-image: url(img/forma-cuadrado-redondo.svg);
     background-repeat: no-repeat;
     background-size: 110%;
-    background-position: -100px 150px;
+    background-position: -100px 185px;
 }
 
 .sidebar{
@@ -772,8 +818,11 @@ table.dataTable tr.selected td, table.dataTable td.selected{
 }
 .dataTables_wrapper table tbody tr:hover td{
     cursor: pointer;
-    background-color: #eaeaea !important;
     transform: translateY(2px)
+}
+table.dataTable tr.selected td, table.dataTable td.selected{
+  background-color: var(--m-semibrown-color) !important;
+  
 }
 .dataTables_wrapper table tbody tr td:first-child{
     border-top-left-radius: 5px !important;
@@ -858,7 +907,7 @@ table tbody tr [role="texto"]{
   display: flex;
 }
 
-.selectize-input.full{
+.custom .selectize-input.full{
   padding: 15px 10px;
   text-align: center;
   font-size: 1.5em;
@@ -1064,8 +1113,8 @@ z-index: 1;
   position: fixed;
   top: 58px;
   min-height: 150px;
-  width: 50%;
-  right: 0;
+  width: 75%;
+  right: -20%;
   z-index: 1;
   box-shadow: 0px 2px 4px 4px rgba(0,0,0,0.1);
   border-radius: 3px;
@@ -1075,6 +1124,12 @@ z-index: 1;
   transition: ease all .5s;
   background-color: #fff;
   padding: 20px;
+}
+@media only screen and (max-width: 748px) and (min-width: 300px){
+  .AyudasContainer{
+    width: 95%;
+  right: 0%;
+  }
 }
 .AyudasContainer.show{
   visibility: visible;
@@ -1146,3 +1201,56 @@ z-index: 1;
   padding-right: 30px;
 }
 /* End ayudas */
+
+/* Tabs */
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+  color: var(--m-red-color);
+}
+.tabbable .tabbable {
+    margin-top: 15px;
+}
+
+/* Preguntas guardadas */
+.ButtonWDeleteAddon {
+position: relative;
+margin: 10px;
+}
+.ButtonWDeleteAddon button:first-child {
+position: absolute;
+z-index: 1;
+}
+.ButtonWDeleteAddon button:nth-of-type(2) {
+position: relative;
+min-width: 150px;
+padding-left: 45px;
+}
+
+/* Masonry effect */
+.masonryContent {
+display: flex;
+flex-wrap: wrap;
+}
+.masonryContent > * {
+width: calc(50% - 25px);
+margin-right: 25px;
+padding: 10px 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+box-shadow: 2px 2px 2px 0px rgba(0,0,0,.1);
+}
+/* End masonry effect */
+
+/* Box */
+.mt-25{
+  margin-top: 25px;
+}
+.box-header .box-title, .box-header>.fa, .box-header>.glyphicon, .box-header>.ion{
+  font-size: 15px;
+  padding-right: 55px;
+}
+/* End box */
+
+/* Alinear encabezado hacia la derecha (Verificar porqué se crean así algunos encabezados de tabla) */
+table.dataTable th.dt-right, table.dataTable td.dt-right{
+  text-align:center !important;
+}

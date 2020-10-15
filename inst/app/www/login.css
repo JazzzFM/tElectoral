@@ -12,14 +12,41 @@
   --bg-primary: #f2f5fa;
   
   /* Colores telectoral */
-  
+  /*
   --m-black-color: #2a2c2b;
   --m-red-color: #6e1b33;
+  --m-red-black-color: #5b0a1c;
   --m-green-color: #0c231e;
-  --m-semibrown-color: #e3c294;
+  --m-semibrown-color: #e3c294;*/
+  
+  /* Colores pan */
+  /*--m-black-color: #2a2c2b;
+  --m-red-color: #1e50a9;
+  --m-green-color: #0c231e;
+  --m-semibrown-color: #ececec;
+  --m-red-black-color: #1b2f9f;*/
+  
+  /* Colores pri */
+  
+  /*--m-black-color: #2a2c2b;
+  --m-red-color: #c00301;
+  --m-green-color: #0c231e;
+  --m-semibrown-color: #ececec;
+  --m-red-black-color: #005734;*/
+  
+  /* Colores movimiento */
+  --m-black-color: #2a2c2b;
+  --m-red-color: #ff8201;
+  --m-red-black-color: #cc6900;
+  
+  /* Colores morena */
+  /*--m-black-color: #2a2c2b;
+  --m-red-color: #b92207;
+  --m-red-black-color: #a01d06;*/
+  
+  
   --m-white-primary-color: #f2f2f2;
   --m-white-secondary-color: #e0e0e0;
-  --m-red-black-color: #5b0a1c;
   
   /* Colores de barras */
   --cbar-red: #e44e44;
@@ -76,6 +103,7 @@ body{
   border: none;
   background-color: var(--m-red-color);
   color: #fff;
+  padding: 15px;
 }
 /* End panel */
 
