@@ -14,14 +14,12 @@ mod_investigacionAnalisis_ui <- function(id){
   tagList(
     # Letreros
     fluidRow(
-      column(width = 3,
-             plotOutput(ns("caja1"))),
-      column(width = 3,
-            plotOutput(ns("caja2"))),
-      column(width = 3,
-             plotOutput(ns("caja3"))),
-      column(width = 3,
-             plotOutput(ns("caja4")))
+      valueBox(value = rpois(1,7),subtitle = "encuestas realizadas"),
+      valueBox(value = sample(seq(as.Date('1999/01/01'), 
+                                  as.Date('2000/01/01'), by="day"), 1),
+               subtitle = "última día con encuesta"),
+      valueBox(value=as.numeric(as.Date("2021-06-06")-lubridate::today()) ,
+               subtitle = "días para la elección")
     ),
     # Gráficos
     fluidRow(
@@ -29,14 +27,14 @@ mod_investigacionAnalisis_ui <- function(id){
              highchartOutput(ns("intervalos")))
     ),
     fluidRow(
-    column(width = 6,
-           plotOutput(ns("intencion"))),
-    column(width = 6,
-           plotOutput(ns("votopopu")))
+      column(width = 6,
+             plotOutput(ns("intencion"))),
+      column(width = 6,
+             plotOutput(ns("votopopu")))
     )
   )
 }
-    
+
 #' investigacionAnalisis Server Function
 #'
 #' @noRd 
@@ -55,7 +53,7 @@ mod_investigacionAnalisis_server <- function(input, output, session){
              max = votacion+rnorm(mean = .03, sd = .01, n =120))
     
     hPollofPolls(bd)
-      })
+  })
   # Probabilidad de triunfo
   output$intencion <- renderPlot({
     # Temporal: Fake data!!!!!!
@@ -82,7 +80,7 @@ mod_investigacionAnalisis_server <- function(input, output, session){
       mutate(min = votacion-rnorm(mean = .03, sd = .01, n =120),
              max = votacion+rnorm(mean = .03, sd = .01, n =120))
     
-  hVotoPopu(bd)
+    hVotoPopu(bd)
   })
   
   output$caja1 <- renderPlot({
@@ -96,7 +94,7 @@ mod_investigacionAnalisis_server <- function(input, output, session){
     
     cajaResume(BB, 2)
   })
-    
+  
   output$caja3 <- renderPlot({
     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
     
@@ -108,12 +106,12 @@ mod_investigacionAnalisis_server <- function(input, output, session){
     
     cajaResume(BB, 4)
   })
-  }
+}
 
-  
+
 ## To be copied in the UI
 # 
-    
+
 ## To be copied in the server
 # callModule(mod_investigacionAnalisis_server, "investigacionAnalisis_ui_1")
- 
+
