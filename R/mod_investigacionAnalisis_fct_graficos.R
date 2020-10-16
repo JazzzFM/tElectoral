@@ -57,6 +57,47 @@ tema_probGanar <- function(){
   
 }
 
+procesamiento_graph <- function(DB){
+  
+  BB <- select(DB, c("estado","fecha_final","partido","voto"))
+  BB <- BB %>% mutate(fecha = fecha_final,
+                      candidato = partido) %>%
+    group_by(fecha, candidato) %>% 
+    summarise(across(where(is.numeric), sum, na.rm=TRUE)) %>% 
+    ungroup()
+  
+  X <- BB %>% group_by(fecha) %>% 
+    summarise(across(where(is.numeric), sum, .names ="Tot_{col}", na.rm=TRUE)) %>% 
+    ungroup() %>% na.omit()
+  
+  
+  BB <- BB %>% 
+    full_join(y = X, by = "fecha")
+  
+  PROM <- BB %>% group_by(fecha) %>% 
+    summarise(across(c(where(is.numeric), -Tot_voto), mean, .names ="prom_r_{col}", na.rm=TRUE)) %>% 
+    ungroup() %>% na.omit()
+  
+  BB <- BB %>% 
+    full_join(y = PROM, by = "fecha")
+  
+  BB <- BB %>% mutate(votacion = voto/Tot_voto,
+                      prom_r_voto = prom_r_voto/Tot_voto,
+                      sigma = (votacion - prom_r_voto)^2)
+  
+  Vari <- BB %>% group_by(fecha) %>% 
+    summarise(across(sigma, sum, .names ="var", na.rm=TRUE)) %>% 
+    ungroup() %>% na.omit()
+  
+  BB <- BB %>% 
+    full_join(y = Vari, by = "fecha")
+  
+  BB <- BB %>% mutate(fecha = dmy(fecha),
+                      min = votacion - var,
+                      max = votacion + var)
+  
+  return(BB)
+}
 iVotoBarras <- function(DB){
   
   barras <- DB %>% group_by(candidato) %>% summarise(voto = mean(votacion)*100)  %>% mutate(label = sprintf("%1.1f%%", voto))
