@@ -11,68 +11,47 @@
 mod_cuestionario_paso_2_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fluidRow(
-      class = "FlexRow",
-      column(width = 5,
-             textInput(inputId = ns("PreguntaAnalizar"), placeholder = "Ingrese pregunta a analizar", label = "Pregunta")
-      ),
-      column(width = 4,
-             pickerInput(label = "Bloque al que pertenece", choices = c(), inputId = ns("BloquePerteneciente")
-             )
-      ),
-      column(width = 3,
-             actionButton(inputId = ns("GenPregunta"), "Generar pregunta", class = "btn-primary"),
-      )
-    ),
-    fluidRow(
-      column(width = 12, class="TabBloques", uiOutput(ns("TabBloques")))
-    )
+    shinyjs::useShinyjs(),
+    h3("Creación de preguntas"),
+    p("De click en Agregar pregunta para añadir una pregunta a un bloque."),
+    uiOutput(ns("outPreguntas")),
+    actionButton(ns("guardar"), "Guardar", class = "btn-primary")
   )
 }
 
 #' cuestionario_paso_2 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_2_server <- function(input, output, session, tituloBloques = c()){
+mod_cuestionario_paso_2_server <- function(input, output, session, cuestionario = NULL, parent_session){
   ns <- session$ns
-  slotPregunta <- reactiveValues(pregunta = "", bloque = "", preguntas = c())
-  var <- callModule(mod_cuestionario_pregunta_server, "cuestionario_pregunta_ui_1")
+ 
   
-  observeEvent(input$GenPregunta, {
-    slotPregunta$pregunta <- pregunta <- input$PreguntaAnalizar
-    slotPregunta$bloque <- bloque <- input$BloquePerteneciente
-    showModal(modalDialog(
-      title = paste0(pregunta, " - Bloque: ", bloque),
-      mod_cuestionario_pregunta_ui(ns("cuestionario_pregunta_ui_1")),
-      easyClose = T,
-      footer = list(
-        modalButton("Cancelar"),
-        actionButton(inputId = ns("GuardarPregunta"), "Guardar pregunta")
-      )
-    ))
+  listaPreguntas <- reactiveValues(preguntas = NULL)
+  output$outPreguntas <- renderUI({
+    if(!is.null(cuestionario$paso1)){
+      lapply(seq_along(cuestionario$titulos), function(i) {
+        mod_cuestionario_bloques_ui(ns(glue::glue("cuestionario_bloques_ui_{i}")), bloque = cuestionario$titulos[i])
+      }) 
+    }
   })
-  observeEvent(input$GuardarPregunta,{
-    #slotPregunta$preguntas[1] <- slotPregunta$modulo
+  observe({
+    listaPreguntas$preguntas <- seq_along(cuestionario$titulos) %>% map(~callModule(mod_cuestionario_bloques_server,
+                                                                              glue::glue("cuestionario_bloques_ui_{.x}"),
+                                                                              bloque = cuestionario$titulos[.x],
+                                                                              parent_session = parent_session))
+  })
+  
+  observeEvent(input$guardar, {
     browser()
-    var()
-    insertUI(selector = paste0(".tab-pane[data-value='",slotPregunta$bloque,"']"), where = "beforeEnd", session = session,
-             ui = mod_pregunta_guardada_ui(ns(paste0("pregunta_guardada_ui_1-",slotPregunta$pregunta)), slotPregunta$pregunta, slotPregunta$bloque))
-  })
-  observe({
-    callModule(mod_pregunta_guardada_server, "pregunta_guardada_ui_1", slotPregunta)
-  })
-  observe({
-    isolate(
-      if(length(tituloBloques$titulos) > 1){
-        output$TabBloques <- renderUI({
-          do.call(tabsetPanel, c(id=ns("Tabs"),lapply(2:length(tituloBloques$titulos), function(i) {
-            titulo <- tituloBloques$titulos[i]
-            tabPanel(title = titulo, value = titulo)
-          })))
-        })
+    if(is.null(seq_along(listaPreguntas$preguntas) %>% detect(~is.null(listaPreguntas$preguntas[[.x]]())))){
+      if(is.null(seq_along(listaPreguntas$preguntas) %>% detect(~nrow(listaPreguntas$preguntas[[.x]]()) == 0))){
+        seq_along(listaPreguntas$preguntas) %>% map(~listaPreguntas$preguntas[[.x]]()) %>% do.call(rbind,.)  
+      }else{
+        shinyalert::shinyalert(title = "Debe añadir al menos una pregunta por bloque")  
       } 
-    )
-    updatePickerInput(session = session, inputId = "BloquePerteneciente", choices = tituloBloques$titulos)
+    }else{
+      shinyalert::shinyalert(title = "Debe añadir al menos una pregunta por bloque")  
+    }
   })
 }
 
