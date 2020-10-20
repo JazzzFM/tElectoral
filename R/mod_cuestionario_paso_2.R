@@ -42,7 +42,6 @@ mod_cuestionario_paso_2_server <- function(input, output, session, cuestionario 
   })
   
   observeEvent(input$guardar, {
-    browser()
     if(is.null(seq_along(listaPreguntas$preguntas) %>% detect(~is.null(listaPreguntas$preguntas[[.x]]())))){
       if(is.null(seq_along(listaPreguntas$preguntas) %>% detect(~nrow(listaPreguntas$preguntas[[.x]]()) == 0))){
         seq_along(listaPreguntas$preguntas) %>% map(~listaPreguntas$preguntas[[.x]]()) %>% do.call(rbind,.)  

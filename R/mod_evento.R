@@ -125,7 +125,6 @@ mod_evento_server <- function(input, output, session, valores = NULL, parent_ses
       }
       
       # Eliminamos horas para viejo horario para todas las fechas
-      browser()
       horas <- horas[!(horas < horariosOcupados$horaInicio[as.numeric(index)] | horas > horariosOcupados$horaFinal[as.numeric(index)])]
      
      updateSelectizeInput(session = parent_session, inputId = ns("inicioEvento"), selected = horas[1], choices = c("Seleccione hora" = "", horas))

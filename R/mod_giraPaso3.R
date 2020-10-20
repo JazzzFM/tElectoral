@@ -37,7 +37,6 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
         # Reuniendo información de tramo (horas y minutos hacia cada lugar)
         if(i != 1){
           dbInfo <- DB_Mich2 %>% select(CABECERA_MUNICIPAL, TOTAL_VOTOS)
-          browser()
         }
       }) 
     }
@@ -54,7 +53,6 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
   })
 
   observeEvent(input$guardar, {
-    browser()
     if(is.null(seq_along(listaEventos$eventos) %>% detect(~is.null(listaEventos$eventos[[.x]]())))){
       if(is.null(seq_along(listaEventos$eventos) %>% detect(~nrow(listaEventos$eventos[[.x]]()) == 0))){
         seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.)  
