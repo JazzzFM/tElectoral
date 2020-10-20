@@ -34,12 +34,6 @@ app_ui <- function(request) {
                    menuSubItem("Análisis", tabName = "analisisEventos"),
                    menuSubItem("Crear", tabName = "giraCrear"),
                    menuSubItem("Evaluar", tabName = "giraEvaluar")),
-          menuItem("Evaluación de gira",
-                   tabName = "evaluacionGira",
-                   icon = icon("th")),
-          menuItem("Análisis de eventos",
-                   tabName = "analisisEventos",
-                   icon = icon("th")),
           menuItem("Representantes generales",
                    tabName = "representanteGeneral",
                    icon = icon("dashboard")),
@@ -78,6 +72,7 @@ app_ui <- function(request) {
           ),
           tabItem(tabName = "analisisEventos",
                   mod_analisisEventos_ui("analisisEventos_ui_1")
+                  ),
           tabItem(tabName = "giraCrear",
                   mod_gira_ui("gira_ui_1")),
           tabItem(tabName = "representantes",
@@ -88,7 +83,6 @@ app_ui <- function(request) {
           ),
           tabItem(tabName = "giraEvaluar",
                   mod_evaluacionGira_ui("evaluacionGira_ui_1")
->>>>>>> upstream/dev
           )
         )
       )

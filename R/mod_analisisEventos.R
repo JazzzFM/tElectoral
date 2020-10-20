@@ -10,7 +10,7 @@
 mod_analisisEventos_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput("barras")
+    plotOutput(outputId = ns("barras"))
   )
 }
     
@@ -22,7 +22,8 @@ mod_analisisEventos_server <- function(input, output, session){
  
   output$barras <- renderPlot({
     fake_data <- tibble(x = 1, y = 2)
-    barras(fake_data)
+    # barras(ggpl)
+    fake_data %>% ggplot(aes(x=x,y = y)) + geom_bar(stat = "identity")
   })
 }
     
