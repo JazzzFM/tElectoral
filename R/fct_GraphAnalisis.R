@@ -1,4 +1,4 @@
-library(highcharter)
+# library(highcharter)
 
 # Load Database 
 # bd <- tibble(cand1 = rnorm(n = 30, sd = .06, mean = .3),

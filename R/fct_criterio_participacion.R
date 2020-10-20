@@ -1,4 +1,4 @@
-load("data/DB_Mich.rda")
+# load("data/DB_Mich.rda")
 #DB_Mich
 
 # Se crea una base de datos temporal: Informacion falsa (la intención es que se actualice con datos reales)
@@ -34,7 +34,7 @@ criterio_participacion <- function(DB_ESTADO, DB_VISITAS){
   return(DB_ORDENADA)
 }
 
-R<-criterio_participacion(DB_Mich, fake_visitas)
+# R<-criterio_participacion(DB_Mich, fake_visitas)
 
 criterio_participacion_pri <- function(DB_ESTADO, DB_VISITAS){
   # Calcular la frecuencia relativa de las visitas c
