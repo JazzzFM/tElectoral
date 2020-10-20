@@ -21,7 +21,8 @@ mod_analisisEventos_server <- function(input, output, session){
   ns <- session$ns
  
   output$barras <- renderPlot({
-    
+    fake_data <- tibble(x = 1, y = 2)
+    barras(fake_data)
   })
 }
     
