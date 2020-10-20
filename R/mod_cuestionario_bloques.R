@@ -16,6 +16,7 @@ mod_cuestionario_bloques_ui <- function(id, bloque){
                title = paste0("Bloque: ", bloque),
                collapsible = T,
                width = 12,
+               closable = F,
                actionButton(
                  inputId = ns("addPregunta"),
                  "Agregar pregunta",

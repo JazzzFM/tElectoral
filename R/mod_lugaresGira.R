@@ -77,14 +77,17 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
     DB_Mich2 %>% select(CABECERA_MUNICIPAL, TOTAL_VOTOS)
   })
   a <- reactive({
-    camino_mas_corto(municipios_seleccionados = muns()%>% 
-                       slice(input$recomendaciones_rows_selected) %>% 
-                       pull(CABECERA_MUNICIPAL),
+    temp <- muns()
+    temp <- temp[!(temp$CABECERA_MUNICIPAL== gira$paso1$LugarInicio | temp$CABECERA_MUNICIPAL== gira$paso1$LugarFinal),]
+    municipios <- temp %>% slice(input$recomendaciones_rows_selected) %>% pull(CABECERA_MUNICIPAL)
+    camino_mas_corto(municipios_seleccionados = municipios,
                      info=munRPAP,
                      municipios = DB_Mich2)
   })
   # Mapa de gira
   output$mapa <- renderLeaflet({
+    # Se renderizan lugares 1 y 2
+    
     validate(
       need(
         length(input$recomendaciones_rows_selected)>1,
@@ -100,16 +103,20 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
         length(input$recomendaciones_rows_selected)>1,
         message = "Favor de seleccionar al menos dos cabeceras municipales de la tabla.")
     )
+    
     div(class="masonryContent",
         a()[[2]] %>% map(function(x){
           htmltools::HTML("<p>",x,"</p>")
         })
         )
+    
   })
   observeEvent(input$GuardarPaso2,{
     if(length(input$recomendaciones_rows_selected)>1){
-      gira$paso2 <- tibble(lugares = sort(muns()%>% slice(input$recomendaciones_rows_selected) %>% 
-                                            pull(CABECERA_MUNICIPAL)))
+      temp <- a()[[3]]
+      temp <- prepend(temp,gira$paso1$LugarInicio)
+      temp <- append(temp,gira$paso1$LugarFinal)
+      gira$paso2 <- tibble(lugares = temp)
     }else{
       shinyalert::shinyalert(title = "Debe seleccionar al menos un origen y un destino")
     }
@@ -117,13 +124,17 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
   
   # Tabla de recomendaciones
   output$recomendaciones <- DT::renderDT({
+    if(!is.null(gira$paso1)){
+      temp <- muns()
+      temp <- temp[!(temp$CABECERA_MUNICIPAL== gira$paso1$LugarInicio | temp$CABECERA_MUNICIPAL== gira$paso1$LugarFinal),]
+      DT::datatable(data = temp)
+    }
     fake_visitas <-tibble(CABECERA_MUNICIPAL=sample(size=10, DB_Mich2$CABECERA_MUNICIPAL))
     fake_visitas <-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
     # nvisitas <-    length(input$recomendaciones_rows_selected)+1
     # browser()
     muns() %>%
       criterio_participacion(DB_VISITAS = fake_visitas, n=5)
-
   })
   
   

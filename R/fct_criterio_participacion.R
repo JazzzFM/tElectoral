@@ -1,6 +1,4 @@
 
-# load("data/DB_Mich.rda")
-# DB_Mich
 
 # Se crea una base de datos temporal: Informacion falsa (la intención es que se actualice con datos reales)
 # Extraer una muestra aleatoria de tamaño 10 de nombres de municipio
@@ -8,10 +6,12 @@
 
 
 criterio_participacion <- function(DB_ESTADO, DB_VISITAS,n){
+
   # Calcular la frecuencia relativa de las visitas c
   # DB_VISITAS debe tener mínimo una columna de MUNICIPIO y otra de VISITAS
   # DB_ESTADO debe tener mínimo una columna de MUNICIPIO y otra de TOTAL_VOTOS
   
+
   VISITAS <- select(DB_VISITAS, c(CABECERA_MUNICIPAL, VISITAS)) %>% 
     mutate(FREC_R_VIS = VISITAS / sum(VISITAS, na.rm = TRUE))
   
@@ -35,4 +35,3 @@ criterio_participacion <- function(DB_ESTADO, DB_VISITAS,n){
 }
 
 # R<-criterio_participacion(DB_Mich, fake_visitas)
-# R

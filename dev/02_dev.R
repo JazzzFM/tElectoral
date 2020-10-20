@@ -36,12 +36,14 @@ usethis::use_package( "purrr" )
 usethis::use_package( "stringr" )
 usethis::use_package( "lubridate" )
 usethis::use_package( "htmltools" )
+usethis::use_package( "forcats" )
 usethis::use_package("DT")
 usethis::use_package("TSP")
 usethis::use_package("dplyr")
 usethis::use_package("ggplot2")
 usethis::use_package("leaflet")
 usethis::use_package("tidyr")
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -64,6 +66,8 @@ golem::add_module( name = "registro" )
 # Gira
 golem::add_module( name = "registroGira" )
 golem::add_module( name = "gira" )
+golem::add_module( name = "evaluacionGira" )
+golem::add_module( name = "evaluacionGiraPreguntas" )
 golem::add_module( name = "giraPaso1" )
 golem::add_module( name = "lugaresGira" )
 golem::add_module( name = "giraPaso3" )
@@ -71,17 +75,24 @@ golem::add_module( name = "lugaresPaso3" )
 golem::add_module( name = "evento" )
 # Pantalla eventos
 golem::add_module( name = "analisisEventos",fct = "graficas" )
+# Representantes de casilla
+golem::add_module( name = "representantes" )
+# Representantes generales
+golem::add_module( name = "representantesGenerales" )
+
+
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
 # Inegi
 golem::add_fct(name = "inegi" )
 golem::add_fct("criterio_participacion")
-golem::add_fct("GraphAnalisis")
 golem::add_utils( "helpers" )
 golem::add_fct( "mandatory" ) 
 golem::add_utils( "mandatorio" )
 golem::add_utils( "alinear" )
-
+golem::add_fct("input_btns")
+# Modelo Poll of polls
+golem::add_fct(name = "pollofpolls" )
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
