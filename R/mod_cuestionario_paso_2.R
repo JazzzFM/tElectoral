@@ -15,7 +15,7 @@ mod_cuestionario_paso_2_ui <- function(id){
     h3("Creación de preguntas"),
     p("De click en Agregar pregunta para añadir una pregunta a un bloque."),
     uiOutput(ns("outPreguntas")),
-    actionButton(ns("guardar"), "Guardar", class = "btn-primary")
+    actionButton(ns("guardar"), "Guardar", class = "btn-definitive")
   )
 }
 
