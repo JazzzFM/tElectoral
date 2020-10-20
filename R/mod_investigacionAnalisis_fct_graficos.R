@@ -1,5 +1,4 @@
 # Tema
-
 tema_intCred <- function(){
   fuente <- "Georgia"   
   # Tema base
@@ -10,8 +9,6 @@ tema_intCred <- function(){
     )
   
 }
-
-
 # Probabilidad de ganar
 probGanar <- function(bd, candidato){
   pCand <- bd %>% 
@@ -57,6 +54,7 @@ tema_probGanar <- function(){
   
 }
 
+
 procesamiento_graph <- function(DB){
   
   BB <- select(DB, c("estado","fecha_final","partido","voto"))
@@ -96,10 +94,20 @@ procesamiento_graph <- function(DB){
                       min = votacion - var,
                       max = votacion + var)
   
+  BB <- BB %>% arrange(fecha)
+  BB <- BB %>% filter(!candidato %in% c('Aún no sabe',
+                                        'Aún no decide',
+                                        'Otro', 'No respuesta',
+                                        'No declara', 'No votaré',
+                                        'No sabe', 'Ns/Nc',
+                                        'Indefinidos','Ninguno',
+                                        'Anulará su voto',
+                                        'No ha tomado una decisión'))
+
   return(BB)
 }
+
 iVotoBarras <- function(DB){
-  
   barras <- DB %>% group_by(candidato) %>% summarise(voto = mean(votacion)*100)  %>% mutate(label = sprintf("%1.1f%%", voto))
   Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = candidato))+ geom_bar(stat = "identity")+
     coord_flip() + theme_minimal() + labs(title = "Intención de Voto",subtitle = "(2020)",caption = "Data from simulation",
@@ -107,14 +115,13 @@ iVotoBarras <- function(DB){
                                           x = "candidatos") +
     geom_text(aes(label = label, hjust = 1.2), color = "white")+
     theme(legend.position = "none",  axis.title.y = element_blank()) +
-    scale_fill_manual(values=(c("#685369","#849324", "#F7ACCF", "#4E8098")))
+    scale_fill_manual(values=(c("#685369","#849324", "#F7ACCF", "#4E8098", "#767347", "BEA07A", "6F6358", "#A396B4", "#798BA6")))
   
   return(Graph)
 }
 
 
 hPollofPolls <- function(DB){
-  
   hcoptslang <- getOption("highcharter.lang")
   hcoptslang$weekdays<- c("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
   hcoptslang$shortMonths <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
@@ -136,7 +143,7 @@ hPollofPolls <- function(DB){
                               high = max, group = candidato),
                               type = "arearange")%>% 
     hc_title(text = "Poll of Polls") %>%
-    hc_subtitle(text = "Data from Simulation") %>% 
+    hc_subtitle(text = "Data from Different Survey Houses") %>% 
     hc_add_series(data = DB,
                   hcaes(x = fecha, y = votacion,
                         group = candidato),
@@ -147,7 +154,7 @@ hPollofPolls <- function(DB){
     hc_tooltip(pointFormat = tt, useHTML = TRUE) %>%
     hc_add_theme(hc_theme_hcrt()) %>%
     hc_legend(enabled = TRUE) %>% 
-    hc_colors(c("#685369","#849324", "#F7ACCF", "#4E8098"))
+    hc_colors(c("#685369","#849324", "#F7ACCF", "#4E8098", "#767347", "BEA07A", "6F6358", "#A396B4", "#798BA6"))
   
   return(Graph)
 }
