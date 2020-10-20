@@ -25,6 +25,7 @@ tema_probGanar <- function(){
       panel.grid.minor = element_blank(),
       # Ejes
       axis.text.y = element_blank(),
+      axis.text.x = element_text(size = 40/.pt),
       axis.title = element_blank()
     )
   
@@ -35,16 +36,18 @@ probGanar <- function(bd, candidato){
   pCand <- bd %>% 
     filter(cand==candidato) %>% 
     pull("prob")
-  
+  bd <- bd %>% mutate(bueno=if_else(cand==candidato, 1, .6))
   g <- bd %>% 
     ggplot()+
     # Marcas
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25),alpha=.8, fill="tomato")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50),alpha=.5, fill="#ffadad")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75),alpha=.5, fill="#ADECFF")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100),alpha=.8, fill="#0081A7")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25),alpha=.15, fill="tomato")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50),alpha=.1, fill="#ffadad")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75),alpha=.1, fill="#ADECFF")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100),alpha=.15, fill="#0081A7")+
     # Indicadores
-    geom_rect(aes(xmin=rw, xmax=rw+.8, ymin=0, ymax=prob, fill=cand),size=.3,color="white") +
+    geom_segment(aes(x=rw, xend=rw, y=0, yend=prob, color=cand, alpha=bueno),
+                 size=3, lineend = "round") +
+    scale_alpha_identity() +
     geom_text(aes(x=-nCand,y=0, label=scales::percent(pCand/100)), size=10)+
     coord_polar(theta = "y")+
     labs(title = "Probabilidad de triunfo")+

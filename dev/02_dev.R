@@ -81,7 +81,8 @@ golem::add_utils( "helpers" )
 golem::add_fct( "mandatory" ) 
 golem::add_utils( "mandatorio" )
 golem::add_utils( "alinear" )
-
+# Modelo Poll of polls
+golem::add_fct(name = "pollofpolls" )
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
