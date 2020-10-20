@@ -36,6 +36,9 @@ app_ui <- function(request) {
           menuItem("Gira",
                    tabName = "gira",
                    icon = icon("th")),
+          menuItem("Análisis de eventos",
+                   tabName = "analisisEventos",
+                   icon = icon("th")),
           menuItem("Finanzas",
                    tabName = "finanzas",
                    icon = icon("dashboard")),
@@ -65,6 +68,9 @@ app_ui <- function(request) {
                   mod_comunicacion_ui("comunicacion_ui_1")),
           tabItem(tabName = "gira",
                   mod_gira_ui("gira_ui_1")
+          ),
+          tabItem(tabName = "analisisEventos",
+                  mod_analisisEventos_ui("analisisEventos_ui_1")
           )
         )
       )
