@@ -23,7 +23,7 @@ mod_giraPaso1_ui <- function(id){
     ),
     fluidRow(
       column(width = 4,
-             selectizeInput(inputId = ns("LugarInicio"), label = "Lugar de inicio", choices = c("Seleccione un lugar" = "", "Lugar 1", "Lugar 2") )
+             selectizeInput(inputId = ns("LugarInicio"), label = "Lugar de inicio", choices = c("Seleccione un lugar" = "", DB_Mich2 %>% select(CABECERA_MUNICIPAL) %>% pull(CABECERA_MUNICIPAL)) )
       ),
       column(width = 4,
              dateInput(inputId = ns("FechaInicio"), label = "Fecha de inicio", format = "dd/mm/yyyy", language = "es", value = Sys.Date(), min = Sys.Date() )
@@ -39,7 +39,7 @@ mod_giraPaso1_ui <- function(id){
     ),
     fluidRow(
       column(width = 4,
-             selectizeInput(inputId = ns("LugarFinal"), label = "Lugar de destino", choices = c("Seleccione un lugar" = "", "Lugar 1", "Lugar 2") )
+             selectizeInput(inputId = ns("LugarFinal"), label = "Lugar de destino", choices = c("Seleccione un lugar" = "", DB_Mich2 %>% select(CABECERA_MUNICIPAL) %>% pull(CABECERA_MUNICIPAL)) )
       ),
       column(width = 4,
              dateInput(inputId = ns("FechaFinal"), label = "Fecha de finalización", format = "dd/mm/yyyy", language = "es", value = Sys.Date(), min = Sys.Date() )
