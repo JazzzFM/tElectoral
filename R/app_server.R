@@ -23,6 +23,11 @@ app_server <- function( input, output, session ) {
   callModule(mod_registro_server, "registro_ui_1")
   # Gira
   callModule(mod_gira_server, "gira_ui_1", session)
+
+  # Pantalla de eventos
+  callModule(mod_analisisEventos_server, "analisisEventos_ui_1")
+
   # Evaluación gira
   callModule(mod_evaluacionGira_server, "evaluacionGira_ui_1", session)
+
 }

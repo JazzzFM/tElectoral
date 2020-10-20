@@ -63,6 +63,7 @@ golem::add_module( name = "cuestionario_bloques" )
 # End Cuestionario
 # Registro
 golem::add_module( name = "registro" )
+# Gira
 golem::add_module( name = "registroGira" )
 golem::add_module( name = "gira" )
 golem::add_module( name = "evaluacionGira" )
@@ -72,6 +73,8 @@ golem::add_module( name = "lugaresGira" )
 golem::add_module( name = "giraPaso3" )
 golem::add_module( name = "lugaresPaso3" )
 golem::add_module( name = "evento" )
+# Pantalla eventos
+golem::add_module( name = "analisisEventos",fct = "graficas" )
 # Representantes de casilla
 golem::add_module( name = "representantes" )
 # Representantes generales
