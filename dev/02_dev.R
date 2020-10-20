@@ -36,12 +36,14 @@ usethis::use_package( "purrr" )
 usethis::use_package( "stringr" )
 usethis::use_package( "lubridate" )
 usethis::use_package( "htmltools" )
+usethis::use_package( "forcats" )
 usethis::use_package("DT")
 usethis::use_package("TSP")
 usethis::use_package("dplyr")
 usethis::use_package("ggplot2")
 usethis::use_package("leaflet")
 usethis::use_package("tidyr")
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -80,13 +82,14 @@ golem::add_module( name = "representantesGenerales" )
 ## Creates ftc_* and utils_*
 # Inegi
 golem::add_fct(name = "inegi" )
-golem::add_fct( "helpers" ) 
+golem::add_fct("criterio_participacion")
 golem::add_utils( "helpers" )
 golem::add_fct( "mandatory" ) 
 golem::add_utils( "mandatorio" )
 golem::add_utils( "alinear" )
 golem::add_fct("input_btns")
-
+# Modelo Poll of polls
+golem::add_fct(name = "pollofpolls" )
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

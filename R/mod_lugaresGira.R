@@ -129,6 +129,12 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
       temp <- temp[!(temp$CABECERA_MUNICIPAL== gira$paso1$LugarInicio | temp$CABECERA_MUNICIPAL== gira$paso1$LugarFinal),]
       DT::datatable(data = temp)
     }
+    fake_visitas <-tibble(CABECERA_MUNICIPAL=sample(size=10, DB_Mich2$CABECERA_MUNICIPAL))
+    fake_visitas <-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
+    # nvisitas <-    length(input$recomendaciones_rows_selected)+1
+    # browser()
+    muns() %>%
+      criterio_participacion(DB_VISITAS = fake_visitas, n=5)
   })
   
   
