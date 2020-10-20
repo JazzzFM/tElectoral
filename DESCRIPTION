@@ -23,7 +23,14 @@ Imports:
     purrr,
     stringr,
     shinyTime,
-    shinyalert
+    shinyalert,
+    tidyr,
+    TSP,
+    dplyr,
+    ggplot2,
+    leaflet,
+    tidyr,
+    pkgload
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
