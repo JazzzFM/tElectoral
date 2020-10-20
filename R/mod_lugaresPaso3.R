@@ -13,16 +13,22 @@ mod_lugaresPaso3_ui <- function(id, titulo){
   tagList(
     fluidRow(
       column(width = 12,
-             shinydashboardPlus::boxPlus(
-               title = titulo,
-               collapsible = T,
-               width = 12,
-               actionButton(
-                 inputId = ns("addEvento"),
-                 "Agregar evento",
-                 class = "btn btn-primary"
-               )
-             )
+             div(class = "tramoContainer",
+                 shinydashboardPlus::boxPlus(
+                   title = titulo,
+                   collapsible = T,
+                   width = 12,
+                   closable = F,
+                   actionButton(
+                     inputId = ns("addEvento"),
+                     "Agregar evento",
+                     class = "btn btn-primary"
+                   )
+                 ),
+                 div(class = "tramo",
+                     textOutput(ns("tramoTexto"))
+                     )
+           )
       )
     )
   )
@@ -31,27 +37,8 @@ mod_lugaresPaso3_ui <- function(id, titulo){
 #' lugaresPaso3 Server Function
 #'
 #' @noRd 
-input_btns <- function(inputId, users, tooltip, icon = "", status = "default", label = "") {
-  tag <- lapply(
-    X = users,
-    FUN = function(x) {
-      res <- tags$button(
-        class = paste0("btn btn-", status),
-        onclick = sprintf(
-          "Shiny.setInputValue('%s', '%s',  {priority: 'event'})",
-          inputId, x
-        ),
-        label,
-        icon(icon),
-        `data-toggle` = "tooltip"
-      )
-      res <- tagList(res, tags$script(HTML("$('[data-toggle=\"tooltip\"]').tooltip();")))
-      doRenderTags(res)
-    }
-  )
-  unlist(tag, use.names = FALSE)
-}
-mod_lugaresPaso3_server <- function(input, output, session, lugar, parent_session = NULL){
+
+mod_lugaresPaso3_server <- function(input, output, session, lugar, parent_session = NULL, horariosOcupados = NULL, horariosPaso1 = NULL, infoTramo = NULL, index = 0){
   ns <- session$ns
   
   observeEvent(input$addEvento,{
@@ -62,23 +49,33 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, parent_sessio
                           easyClose = T
                           )
               )
+    callModule(mod_evento_server, glue::glue("evento_ui_{uiCount$val}"), parent_session = parent_session, horariosOcupados = horariosOcupados, horariosPaso1 = horariosPaso1)
   })
  
   eventos <- reactiveValues()
   uiCount <- reactiveValues(val = 1)
   observeEvent(input$agregar,{
     removeModal()
-    eventos[[as.character(uiCount$val)]] <- callModule(mod_evento_server, glue::glue("evento_ui_{uiCount$val}"), valores = NULL, parent_session = parent_session)
+    eventos[[as.character(uiCount$val)]] <- callModule(mod_evento_server, glue::glue("evento_ui_{uiCount$val}"), parent_session = parent_session, horariosPaso1 = horariosPaso1)
     insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
              ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
                  input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]()$nombre), icon ="trash-o", status = "danger"),
                  input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]()$nombre), label = eventos[[as.character(uiCount$val)]]()$nombre)
                                                     ))
     )
-    uiCount$val <- uiCount$val+1
+    # Se guardan horarios ocupados
     
+    horariosOcupados$index <- append(horariosOcupados$index, uiCount$val)
+    horariosOcupados$lugar <- append(horariosOcupados$lugar, lugar)
+    horariosOcupados$evento <- append(horariosOcupados$evento, eventos[[as.character(uiCount$val)]]()$nombre)
+    horariosOcupados$fecha <- append(horariosOcupados$fecha, eventos[[as.character(uiCount$val)]]()$fechaEvento)
+    horariosOcupados$horaInicio <- append(horariosOcupados$horaInicio, eventos[[as.character(uiCount$val)]]()$inicioEvento)
+    horariosOcupados$horaFinal <- append(horariosOcupados$horaFinal, eventos[[as.character(uiCount$val)]]()$finEvento)
+    
+    uiCount$val <- uiCount$val+1
   })
   actualEditable <- reactiveValues(value = 0)
+  
   observeEvent(input$editar,{
     showModal(modalDialog(title = "Evento",
                           mod_evento_ui(ns(glue::glue("evento_ui_{input$editar}"))),
@@ -86,19 +83,33 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, parent_sessio
                           easyClose = T
       )
     )
-    callModule(mod_evento_server, glue::glue("evento_ui_{input$editar}"), valores = eventos[[as.character(input$editar)]](), parent_session = parent_session)
+    
+    callModule(mod_evento_server, glue::glue("evento_ui_{input$editar}"), valores = eventos[[as.character(input$editar)]](), parent_session = parent_session, editar = T, horariosOcupados = horariosOcupados, horariosPaso1 = horariosPaso1, index = input$editar)
     actualEditable$value <- input$editar
   })
   observeEvent(input$editarModal,{
     removeModal()
     eventos[[as.character(actualEditable$value)]] <- callModule(mod_evento_server, glue::glue("evento_ui_{actualEditable$value}"), valores = NULL, parent_session = parent_session)
     removeUI(selector = paste0("#evento-",actualEditable$value))
+    data <- eventos[[as.character(actualEditable$value)]]()
     insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
              ui = div(class= "ButtonWDeleteAddon", id = paste0("evento-",actualEditable$value),HTML(
-               input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]()$nombre), icon ="trash-o", status = "danger"),
-               input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", eventos[[as.character(actualEditable$value)]]()$nombre), label = eventos[[as.character(actualEditable$value)]]()$nombre)
+               input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",data$nombre), icon ="trash-o", status = "danger"),
+               input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", data$nombre), label = data$nombre)
              ))
     )
+    
+    # Se edita el horario ocupado por índice
+    if(!is.null(horariosOcupados) & length(horariosOcupados$lugar) > 0){
+      for(i in 1:length(horariosOcupados$lugar)){
+        if(horariosOcupados$index[i] == actualEditable$value){
+          horariosOcupados$evento[i] <- data$nombre
+          horariosOcupados$fecha[i] <- data$fechaEvento
+          horariosOcupados$horaInicio[i] <- data$inicioEvento
+          horariosOcupados$horaFinal[i] <- data$finEvento
+        }
+      }
+    }
     
   })
   observeEvent(input$eliminar,{
@@ -108,6 +119,18 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, parent_sessio
                            confirmButtonText = "Sí", 
                            callbackR = function(x) if(x) {
                              eventos[[as.character(input$eliminar)]] <- reactive(tibble(nombre = NA, descripcion = NA, contacto = NA, duracion = NA))
+                             
+                             # Se eliminan horarios ocupados
+                             if(!is.null(horariosOcupados) & length(horariosOcupados$lugar) > 0){
+                               for(i in 1:length(horariosOcupados$lugar)){
+                                 if(horariosOcupados$index[i] == input$eliminar){
+                                   horariosOcupados$fecha[i] <- "1995-01-01"
+                                   horariosOcupados$horaInicio[i] <- ""
+                                   horariosOcupados$horaFinal[i] <- ""
+                                 }
+                               }
+                             }
+                             # Se elimina elemento de la ui
                              removeUI(selector = paste0("#evento-",input$eliminar))
                            })
   })

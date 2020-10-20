@@ -18,12 +18,11 @@ crearMD <- function(info){
 
 # Calcular el camino más corto entre los municipios seleccionados
 camino_mas_corto <- function(municipios_seleccionados, info, municipios){
-  municipios_seleccionados <- municipios_seleccionados %>% sort()
+  municipios_seleccionados <- municipios_seleccionados #%>% sort()
   # Filtrar la matriz de información
   info <- info %>%
     filter(origen %in% municipios_seleccionados,
            destino %in% municipios_seleccionados)
-
   # Matriz de distancias
   mDist <- crearMD(info)
   # Encontrar el camino más corto
@@ -51,9 +50,10 @@ camino_mas_corto <- function(municipios_seleccionados, info, municipios){
                radius = .1)
 
   # Info
+  destinos <- c(ruta_info$origen, last(ruta_info$destino)) 
+  minutos <- ruta_info$tiempo_min
   ruta_info <- glue::glue("Tramo: {ruta_info$origen}-{ruta_info$destino} {floor(ruta_info$tiempo_min/60)} y {round(ruta_info$tiempo_min %% 60)} minuto(s)")
 
-
-  list(mapa, ruta_info)
+  list(mapa, ruta_info, destinos, minutos)
 
 }

@@ -11,11 +11,6 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Dashboard
     dashboardPage(
-      # tags$head(
-      #   includeCSS(app_sys("app/www/tElectoral.css")),
-      #   tags$link(href="https://fonts.googleapis.com/css?family=Muli:400,600,700&display=swap", rel = "stylesheet"),
-      #   tags$script(async = TRUE, src = "https://platform.twitter.com/widgets.js")
-      # ),
       header = dashboardHeader(title = "Tablero electoral"),
       sidebar = dashboardSidebar(#expand_on_hover = F,
         # Sidebar #####
@@ -35,7 +30,16 @@ app_ui <- function(request) {
                    icon = icon("dashboard")),
           menuItem("Gira",
                    tabName = "gira",
-                   icon = icon("th")),
+                   icon = icon("th"),
+                   menuSubItem("Análisis", tabName = "analisisEventos"),
+                   menuSubItem("Crear", tabName = "giraCrear"),
+                   menuSubItem("Evaluar", tabName = "giraEvaluar")),
+          menuItem("Representantes generales",
+                   tabName = "representanteGeneral",
+                   icon = icon("dashboard")),
+          menuItem("Representantes de casilla",
+                   tabName = "representantes",
+                   icon = icon("dashboard")),
           menuItem("Finanzas",
                    tabName = "finanzas",
                    icon = icon("dashboard")),
@@ -63,8 +67,19 @@ app_ui <- function(request) {
                   mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1")),
           tabItem(tabName = "comunicacion",
                   mod_comunicacion_ui("comunicacion_ui_1")),
-          tabItem(tabName = "gira",
-                  mod_gira_ui("gira_ui_1")
+          tabItem(tabName = "analisisEventos",
+                  mod_analisisEventos_ui("analisisEventos_ui_1")
+                  ),
+          tabItem(tabName = "giraCrear",
+                  mod_gira_ui("gira_ui_1")),
+          tabItem(tabName = "representantes",
+                  mod_representantes_ui("representantes_ui_1")
+          ),
+          tabItem(tabName = "representanteGeneral",
+                  mod_representantesGenerales_ui("representantesGenerales_ui_1")
+          ),
+          tabItem(tabName = "giraEvaluar",
+                  mod_evaluacionGira_ui("evaluacionGira_ui_1")
           )
         )
       )

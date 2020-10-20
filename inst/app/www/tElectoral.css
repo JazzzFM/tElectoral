@@ -28,6 +28,7 @@
   --m-black-color: #2a2c2b;
   --m-red-color: #ff8201;
   --m-red-black-color: #cc6900;
+  --m-blue-color: rgba(1, 111, 184,1);
   --m-tr-selected: rgba(1, 111, 184,.4);
   
   /* Colores morena */
@@ -171,7 +172,8 @@ a{
 .btn-info,
 .btn-light,
 .btn-dark,
-.sweet-alert button{
+.sweet-alert button,
+.btn-definitive{
   background-color: var(--m-red-color);
   color: #fff;
   border-radius: 30px;
@@ -180,9 +182,46 @@ a{
   transform-origin: center;
   transition: ease all .3s;
 }
+
 .btn-default{
   background-color: #eaeaea !important;
   color: #333;
+}
+.btn-definitive{
+  display: block;
+  margin: 15px auto;
+  width: 50%;
+  min-width: 150px;
+  background-color: var(--m-blue-color) !important;
+  color: #fff !important;
+  position: relative;
+  overflow: hidden;
+}
+.btn-definitive::before,
+.btn-definitive::after{
+  content: '';
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  top: -10px;
+  position: absolute;
+  transition: ease all .3s;
+  transform-origin: center;
+}
+.btn-definitive::before{
+  left: 0;
+  transform: rotateZ(45deg) translateX(-50px);
+}
+.btn-definitive::after{
+  right: 0;
+  transform: rotateZ(45deg) translateX(50px);
+}
+.btn-definitive:hover{
+  transform: scale(1.1);
+}
+.btn-definitive:hover::before,
+.btn-definitive:hover::after{
+  transform: rotateZ(45deg) translateX(0px);
 }
 .sweet-alert button{
   background-color: var(--m-red-color) !important;
@@ -1081,7 +1120,7 @@ z-index: 1;
 .FlexRadioButtons .shiny-input-container:not(.shiny-input-container-inline){
   width: 100%;
 }
-.FlexRadioButtons .shiny-input-checkboxgroup label ~ .shiny-options-group, .shiny-input-radiogroup label ~ .shiny-options-group{
+.FlexRadioButtons .shiny-input-checkboxgroup label ~ .shiny-options-group{
   margin-top: -10px;
     display: flex;
     justify-content: center;
@@ -1253,4 +1292,17 @@ box-shadow: 2px 2px 2px 0px rgba(0,0,0,.1);
 /* Alinear encabezado hacia la derecha (Verificar porqué se crean así algunos encabezados de tabla) */
 table.dataTable th.dt-right, table.dataTable td.dt-right{
   text-align:center !important;
+}
+
+/* Checkbox input */
+.checkbox label{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Estilo para selectize en modales de evento gira */
+
+#gira_ui_1-giraPaso3_ui_1-lugaresPaso3_ui_1-evento_ui_1-inputsEditar{
+  width: 100%;
 }
