@@ -45,16 +45,8 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   ns <- session$ns
   # Prueba
   output$intervalos <- renderHighchart({
-    # fake data
-    bd <- tibble(cand1 = rnorm(n = 30, sd = .06, mean = .3),
-                 cand2 = rnorm(n = 30, sd = .05, mean = .20),
-                 cand3 = rnorm(n = 30, sd = .06, mean = .10),
-                 cand4 = rnorm(n = 30, sd = .04, mean = .25),
-                 fecha = seq(from = as.Date("2020/12/01"),as.Date("2021/06/25"), by = "week" )) %>%
-      gather(candidato, votacion, cand1:cand4) %>%
-      mutate(min = votacion-rnorm(mean = .03, sd = .01, n =120),
-             max = votacion+rnorm(mean = .03, sd = .01, n =120))
-    
+    # real data
+    bd <- procesamiento_graph(DB_MichEncuesta)
     hPollofPolls(bd)
   })
   # Probabilidad de triunfo
