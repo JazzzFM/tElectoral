@@ -14,12 +14,15 @@ mod_investigacionAnalisis_ui <- function(id){
   tagList(
     # Letreros
     fluidRow(
-      valueBox(value = rpois(1,7),subtitle = "encuestas realizadas"),
-      valueBox(value = sample(seq(as.Date('1999/01/01'), 
-                                  as.Date('2000/01/01'), by="day"), 1),
-               subtitle = "última día con encuesta"),
-      valueBox(value=as.numeric(as.Date("2021-06-06")-lubridate::today()) ,
-               subtitle = "días para la elección")
+      column(width = 3,
+             plotOutput(ns("caja1"))),
+      column(width = 3,
+            plotOutput(ns("caja2"))),
+      column(width = 3,
+            plotOutput(ns("caja3"))),
+      column(width = 3,
+             plotOutput(ns("caja4")))
+      
     ),
     # Gráficos
     fluidRow(
@@ -69,6 +72,7 @@ mod_investigacionAnalisis_server <- function(input, output, session){
     iVotoBarras(bd)
   })
   #Probabilidad de triunfo
+  
   output$gPdt <- renderPlot({
     # Temporal: Fake data!!!!!!
     nCand <- 3+rpois(1,2)
@@ -94,31 +98,28 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   #   hVotoPopu(bd)
   # })
   
-
+   output$caja1 <- renderPlot({
+     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+     cajaResume(BB, 1)
+   })
   
-  # output$caja1 <- renderPlot({
-  #   BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-  #   
-  #   cajaResume(BB, 1)
-  # })
-  # 
-  # output$caja2 <- renderPlot({
-  #   BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-  #   
-  #   cajaResume(BB, 2)
-  # })
-  # 
-  # output$caja3 <- renderPlot({
-  #   BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-  #   
-  #   cajaResume(BB, 3)
-  # })
-  # 
-  # output$caja4 <- renderPlot({
-  #   BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-  #   
-  #   cajaResume(BB, 4)
-  # })
+   output$caja2 <- renderPlot({
+     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+     
+     cajaResume(BB, 2)
+   })
+   
+   output$caja3 <- renderPlot({
+     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+     
+     cajaResume(BB, 3)
+   })
+   
+   output$caja4 <- renderPlot({
+     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+     
+     cajaResume(BB, 4)
+   })
 }
 
 

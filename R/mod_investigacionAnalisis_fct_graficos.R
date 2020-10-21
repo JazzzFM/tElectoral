@@ -1,4 +1,3 @@
-
 # Temas
 tema_intCred <- function(){
   fuente <- "Georgia"   
@@ -32,24 +31,21 @@ tema_probGanar <- function(){
   
 }
 
-
 # Probabilidad de ganar
 probGanar <- function(bd, candidato){
   pCand <- bd %>% 
     filter(cand==candidato) %>% 
     pull("prob")
-  bd <- bd %>% mutate(bueno=if_else(cand==candidato, 1, .6))
+  
   g <- bd %>% 
     ggplot()+
     # Marcas
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25),alpha=.15, fill="tomato")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50),alpha=.1, fill="#ffadad")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75),alpha=.1, fill="#ADECFF")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100),alpha=.15, fill="#0081A7")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25),alpha=.8, fill="tomato")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50),alpha=.5, fill="#ffadad")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75),alpha=.5, fill="#ADECFF")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100),alpha=.8, fill="#0081A7")+
     # Indicadores
-    geom_segment(aes(x=rw, xend=rw, y=0, yend=prob, color=cand, alpha=bueno),
-                 size=3, lineend = "round") +
-    scale_alpha_identity() +
+    geom_rect(aes(xmin=rw, xmax=rw+.8, ymin=0, ymax=prob, fill=cand),size=.3,color="white") +
     geom_text(aes(x=-nCand,y=0, label=scales::percent(pCand/100)), size=10)+
     coord_polar(theta = "y")+
     labs(title = "Probabilidad de triunfo")+
@@ -60,7 +56,72 @@ probGanar <- function(bd, candidato){
   
 }
 
+procesamiento_graph <- function(DB){
+  
+  BB <- select(DB, c("estado","fecha_final","partido","voto"))
+  BB <- BB %>% mutate(fecha = fecha_final,
+                      candidato = partido) %>%
+    group_by(fecha, candidato) %>% 
+    summarise(across(where(is.numeric), sum, na.rm=TRUE)) %>% 
+    ungroup()
+  
+  X <- BB %>% group_by(fecha) %>% 
+    summarise(across(where(is.numeric), sum, .names ="Tot_{col}", na.rm=TRUE)) %>% 
+    ungroup() %>% na.omit()
+  
+  
+  BB <- BB %>% 
+    full_join(y = X, by = "fecha")
+  
+  PROM <- BB %>% group_by(fecha) %>% 
+    summarise(across(c(where(is.numeric), -Tot_voto), mean, .names ="prom_r_{col}", na.rm=TRUE)) %>% 
+    ungroup() %>% na.omit()
+  
+  BB <- BB %>% 
+    full_join(y = PROM, by = "fecha")
+  
+  BB <- BB %>% mutate(votacion = voto/Tot_voto,
+                      prom_r_voto = prom_r_voto/Tot_voto,
+                      sigma = (votacion - prom_r_voto)^2)
+  
+  Vari <- BB %>% group_by(fecha) %>% 
+    summarise(across(sigma, sum, .names ="var", na.rm=TRUE)) %>% 
+    ungroup() %>% na.omit()
+  
+  BB <- BB %>% 
+    full_join(y = Vari, by = "fecha")
+  
+  BB <- BB %>% mutate(fecha = dmy(fecha),
+                      min = votacion - var,
+                      max = votacion + var)
+  
+  BB <- BB %>% arrange(fecha)
+  BB <- BB %>% filter(!candidato %in% c('Aún no sabe',
+                                        'Aún no decide',
+                                        'Otro', 'No respuesta',
+                                        'No declara', 'No votaré',
+                                        'No sabe', 'Ns/Nc',
+                                        'Indefinidos','Ninguno',
+                                        'Anulará su voto',
+                                        'No ha tomado una decisión'))
+
+  return(BB)
+}
+
+iVotoBarras <- function(DB){
+  barras <- DB %>% group_by(candidato) %>% summarise(voto = mean(votacion)*100)  %>% mutate(label = sprintf("%1.1f%%", voto))
+  Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = candidato))+ geom_bar(stat = "identity")+
+    coord_flip() + theme_minimal() + labs(title = "Intención de Voto",subtitle = "(2020)",caption = "Data from simulation",
+                                          y = "Porcentaje de voto",
+                                          x = "candidatos") +
+    geom_text(aes(label = label, hjust = 1.2), color = "white")+
+    theme(legend.position = "none",  axis.title.y = element_blank()) +
+    scale_fill_manual(values=(c("#685369","#849324", "#F7ACCF", "#4E8098", "#767347", "BEA07A", "6F6358", "#A396B4", "#798BA6")))
+  
+}
+
 hPollofPolls <- function(DB){
+
   # Funciones para volver al español
   hcoptslang <- getOption("highcharter.lang")
   hcoptslang$weekdays<- c("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
@@ -84,7 +145,7 @@ hPollofPolls <- function(DB){
                               high = max, group = candidato),
                         type = "arearange", enableMouseTracking= F)%>% 
     hc_title(text = "Poll of Polls") %>%
-    hc_subtitle(text = "Data from Simulation") %>% 
+    hc_subtitle(text = "Data from Different Survey Houses") %>% 
     hc_add_series(data = DB,
                   hcaes(x = fecha, y = votacion,
                         group = candidato),
@@ -100,7 +161,7 @@ hPollofPolls <- function(DB){
                useHTML = TRUE) %>%
     hc_add_theme(hc_theme_hcrt()) %>%
     hc_legend(enabled = TRUE) %>% 
-    hc_colors(c("#685369","#849324", "#F7ACCF", "#4E8098"))
+    hc_colors(c("#685369","#849324", "#F7ACCF", "#4E8098", "#767347", "BEA07A", "6F6358", "#A396B4", "#798BA6"))
   
   return(Graph)
 }
@@ -193,8 +254,6 @@ cajaResume <- function(DB, x){
       annotate("text", x = 0.34, y=0.095,
                label= "96 Secciones",
                colour = "White", size = 11)
-
-return(Graph)
     return(Graph)
   }
   if(x == 4){
@@ -212,8 +271,6 @@ return(Graph)
                label= "96 Secciones",
                colour = "White", size = 11)
 
-return(Graph)
-    
     return(Graph)
   }
 }
