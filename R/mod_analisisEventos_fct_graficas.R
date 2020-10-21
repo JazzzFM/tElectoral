@@ -64,7 +64,7 @@ return(p)
 # bd <- tibble(animo = sample(c("Interesados", "Participativos" , "Emocionados",
 #                               "Desesperados", "Molestos", "Aburridos", "Otro"),
 #                             size = 100, replace = T,
-#                             prob = c(.3,.2, .1, .1, .1,.05,.05) ))
+#                             prob = c(.4,.2, .1, .05, .05,.05,.05) ))
 
 distRadar <- function(bd, pregunta, n, titulo =""){
 bd %>%  count({{pregunta}}) %>%  mutate(n  = round(n/sum(n),2)) %>% 
