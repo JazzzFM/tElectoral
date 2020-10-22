@@ -111,15 +111,48 @@ bd <- bd  %>%
                           etiqueta == "Adecuado" ~"#3C908B",
                           )) 
 
-p<- bd %>% ggplot( aes(x = etiqueta, y = etiqueta2, color = color, size = n) )+
+p<- bd %>% ggplot( aes(x = etiqueta, y = etiqueta2, color = color, size = n,
+                       label =n %>%  scales::percent()) )+
   geom_point(stat = "identity", alpha= .6)+
     scale_color_identity()+ theme_minimal()+
-  scale_size_area(max_size = 40)+
+  scale_size_area(max_size = 45)+
   labs(x = "Respuesta", y = "Aspecto", title = "")+
+  geom_text(hjust = .5, size = 5, color = "white")+
   theme(legend.position = "none",
         panel.grid = element_blank())
 return(p)
 
 }
     
+# burbujas(bd, pregunta1 = asistentes, pregunta2 = tiempo)
 
+paletaRecursos <- function(bd, pregunta, titulo = ""){
+  # De la base de datos, sacar porcentaje por pregunta y redondear
+    bd <-  bd %>%
+      count({{pregunta}}) %>% na.omit() %>%
+      mutate(pct = n/sum(n),
+             pregunta = gsub({{pregunta}}, pattern = " calidad", replacement = ""),
+             colores  = case_when(pregunta  == "Muy buena"~"#0C4147",
+                                  pregunta  == "Buena"~"#3C908B",
+                                  pregunta  == "Mala"~"#EB6A8A",
+                                  pregunta  == "Muy mala"~"#C42751"),
+             pregunta = factor(pregunta, c("Muy buena", "Buena", "Mala", "Muy mala")))
+  
+  p<-bd %>% ggplot(aes(x= pregunta, y=pct)) +
+    geom_segment( aes( xend=pregunta,y=0, yend=pct, color = colores) , size = 3, alpha=.8)+
+    geom_point(aes(y = pct,color = colores), size =18,stroke = 2,alpha=.85) +
+    # coord_flip()+
+    scale_color_identity()+
+    geom_text( aes(label = pct %>%  percent(accuracy = 1), y = pct), 
+               color = "white", fontface="bold",size = 6)+
+    scale_y_continuous(labels=scales::percent,limits = c(0,max(bd$pct) + .1))+
+    labs(title =titulo, x = "", y = "" )+
+    geom_hline(yintercept = 0, linetype = "solid", size = .6, color = "#395C6B")+
+    theme_minimal()+
+    theme(panel.grid = element_blank(),
+          axis.text.y = element_blank())
+  
+  return(p)
+}
+
+# paletaRecursos(bd, pregunta = recursos, titulo = "Nivel de calidad de los recursos tecnológicos empleados en el evento")
