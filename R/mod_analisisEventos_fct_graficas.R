@@ -91,33 +91,35 @@ bd %>%  count({{pregunta}}) %>%  mutate(n  = round(n/sum(n),2)) %>%
 #                                 prob = c(.5, .7, .3, .2), size = 150, replace= T ),
 #              tiempo =sample(c("Debía de haber durado menos tiempo", "Adecuado", "Debía de haber durado más tiempo"),
 #                                 prob = c(.3, .7, .2), size = 150, replace= T ) )
-# 
-# 
-# aux <- bd  %>% 
-#   gather(grupo, resp, c(asistentes, tiempo)) %>% 
-#   group_by(grupo) %>%  count(resp) %>% 
-#  mutate(n = round(n/sum(n), 2), 
-#          etiqueta = case_when(resp%in% c("Debían haber sido menos personas",
-#                                       "Debía de haber durado menos tiempo")~ "Debió haber sido menor",
-#                            resp%in% c("Debían de haber sido más personas", 
-#                                       "Debía de haber durado más tiempo")~"Debió haber sido mayor",
-#                            resp%in% c("Adecuado")~"Adecuado",
-#                            ),
-#         etiqueta2 = case_when(grupo == "tiempo"~"Duración del evento", 
-#                               grupo == "asistentes"~"Número de asistentes"
-#         ),
-#         color = case_when(etiqueta == "Debió haber sido menor" ~"#EB6A8A",
-#                           etiqueta == "Debió haber sido mayor" ~"#18658C",
-#                           etiqueta == "Adecuado" ~"#3C908B",
-#                           )) 
-# 
-# aux %>% ggplot( aes(x = etiqueta, y = etiqueta2, color = color, size = n) )+
-#   geom_point(stat = "identity", alpha= .7)+
-#     scale_color_identity()+ theme_minimal()+
-#   scale_size_area(max_size = 40)+
-#   labs(x = "Respuesta", y = "Pregunta", title = "")+
-#   theme(legend.position = "none",
-#         panel.grid = element_blank())
-#     
-#     
-# 
+
+burbujas <- function(bd, pregunta1, pregunta2){
+bd <- bd  %>% 
+  gather(grupo, resp, c({{pregunta1}}, {{pregunta2}})) %>% 
+  group_by(grupo) %>%  count(resp) %>% 
+ mutate(n = round(n/sum(n), 2), 
+         etiqueta = case_when(resp%in% c("Debían haber sido menos personas",
+                                      "Debía de haber durado menos tiempo")~ "Debió haber sido menor",
+                           resp%in% c("Debían de haber sido más personas", 
+                                      "Debía de haber durado más tiempo")~"Debió haber sido mayor",
+                           resp%in% c("Adecuado")~"Adecuado",
+                           ),
+        etiqueta2 = case_when(grupo == "tiempo"~"Duración del evento", 
+                              grupo == "asistentes"~"Número de asistentes"
+        ),
+        color = case_when(etiqueta == "Debió haber sido menor" ~"#EB6A8A",
+                          etiqueta == "Debió haber sido mayor" ~"#18658C",
+                          etiqueta == "Adecuado" ~"#3C908B",
+                          )) 
+
+p<- bd %>% ggplot( aes(x = etiqueta, y = etiqueta2, color = color, size = n) )+
+  geom_point(stat = "identity", alpha= .6)+
+    scale_color_identity()+ theme_minimal()+
+  scale_size_area(max_size = 40)+
+  labs(x = "Respuesta", y = "Aspecto", title = "")+
+  theme(legend.position = "none",
+        panel.grid = element_blank())
+return(p)
+
+}
+    
+
