@@ -1,3 +1,5 @@
+# Eventos , municipios, incidentes-> datos 
+# rep grafica facets para bubble chart
 
 ## gauge
 # bd <- tibble(x = sample(0:10, size = 20, replace = T))
@@ -25,10 +27,11 @@ aux %>%    ggplot() +
 }
 
 ## linea
-# bd <- tibble(fecha = seq(from = today(), to = today()+90, by = 10 ), 
+# fecha sea con hora
+# bd <- tibble(fecha = seq(from = today(), to = today()+90, by = 10 ),
 #              calif = sample(6:10, 10, replace = T),
 #        lugares = sample( c("Apodaca", "Cadereyta Jiménez", "El Carmen", "García",
-#                          "San Pedro Garza García", "General Escobedo", "Monterrey"), 
+#                          "San Pedro Garza García", "General Escobedo", "Monterrey"),
 #                        10, replace = T),
 #        personas = sample(500:3000, 10))
 
@@ -44,7 +47,7 @@ p<- bd %>% hchart(hcaes(x = fecha, y  = calificacion), type = "area", color = "#
             crosshair = list(ebabled= T, color= "#F8737D", dashStyle="shortdash", width= 2, snap = F),
             lineWidth =0, tickWidth =0) %>%
   hc_plotOptions(area = list(fillOpacity= .3,
-                             fillcolor = list(
+                             fillColor = list(
                                linearGradient = list(x1 = 0, x2 = 0, y1 = 0, y2 = 1),
                                stops = list(
                                  c(0, '#F8737D'),
@@ -61,10 +64,14 @@ return(p)
 
 
 # Radar 
+# Agregar en la función la regla de otro si supera el umbral modificable
 # bd <- tibble(animo = sample(c("Interesados", "Participativos" , "Emocionados",
 #                               "Desesperados", "Molestos", "Aburridos", "Otro"),
 #                             size = 100, replace = T,
-#                             prob = c(.4,.2, .1, .05, .05,.05,.05) ))
+#                             prob = c(.4,.2, .1, .05, .05,.05, .1) ),
+#              otro = sample(c("Tristes", "Angustiados", "Ruidosos"),
+#                             size = 100, replace = T,
+#                             prob = c(.7, .3, .01) ))
 
 distRadar <- function(bd, pregunta, n, titulo =""){
 bd %>%  count({{pregunta}}) %>%  mutate(n  = round(n/sum(n),2)) %>% 
@@ -74,4 +81,43 @@ bd %>%  count({{pregunta}}) %>%  mutate(n  = round(n/sum(n),2)) %>%
     theme(plot.background = element_rect(fill = "white", color = "white"))
 }
 
+# distRadar(bd, pregunta = animo)
 
+
+# Burbujas
+# bd <- tibble(asistentes =sample(c("Debían de haber sido más personas", "Adecuado", "Debían haber sido menos personas"),
+#                                   prob = c(.3, .7, .2), size = 150, replace= T ),
+#              recursos =sample(c("Muy buena calidad","Buena calidad", "Mala calidad" , "Muy mala calidad"),
+#                                 prob = c(.5, .7, .3, .2), size = 150, replace= T ),
+#              tiempo =sample(c("Debía de haber durado menos tiempo", "Adecuado", "Debía de haber durado más tiempo"),
+#                                 prob = c(.3, .7, .2), size = 150, replace= T ) )
+# 
+# 
+# aux <- bd  %>% 
+#   gather(grupo, resp, c(asistentes, tiempo)) %>% 
+#   group_by(grupo) %>%  count(resp) %>% 
+#  mutate(n = round(n/sum(n), 2), 
+#          etiqueta = case_when(resp%in% c("Debían haber sido menos personas",
+#                                       "Debía de haber durado menos tiempo")~ "Debió haber sido menor",
+#                            resp%in% c("Debían de haber sido más personas", 
+#                                       "Debía de haber durado más tiempo")~"Debió haber sido mayor",
+#                            resp%in% c("Adecuado")~"Adecuado",
+#                            ),
+#         etiqueta2 = case_when(grupo == "tiempo"~"Duración del evento", 
+#                               grupo == "asistentes"~"Número de asistentes"
+#         ),
+#         color = case_when(etiqueta == "Debió haber sido menor" ~"#EB6A8A",
+#                           etiqueta == "Debió haber sido mayor" ~"#18658C",
+#                           etiqueta == "Adecuado" ~"#3C908B",
+#                           )) 
+# 
+# aux %>% ggplot( aes(x = etiqueta, y = etiqueta2, color = color, size = n) )+
+#   geom_point(stat = "identity", alpha= .7)+
+#     scale_color_identity()+ theme_minimal()+
+#   scale_size_area(max_size = 40)+
+#   labs(x = "Respuesta", y = "Pregunta", title = "")+
+#   theme(legend.position = "none",
+#         panel.grid = element_blank())
+#     
+#     
+# 
