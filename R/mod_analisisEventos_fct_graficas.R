@@ -134,12 +134,18 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
   bd_2 <- bd_2 %>% mutate(n = round(n/nTot,2)) %>%
     spread(value = n, key = {{ otro }})
   
+  if(nrow(bd_1) != nrow(bd_2)){
+    
+    Graph <- ggradar(bd_1, base.size = 25) +
+      labs(title = titulo) +
+      theme(plot.background = element_rect(fill = "white", color = "white"))
+  }else{
   df <- data.frame(bd_1, bd_2)
 
    Graph <- ggradar(df, base.size = 25) +
      labs(title = titulo) +
      theme(plot.background = element_rect(fill = "white", color = "white"))
-
+    }
   return(Graph)
 }
 
