@@ -122,28 +122,28 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
   bd_1 <- bd_1 %>%
     filter(!{{ pregunta }} %in% c('Otro'))
   
-  bd_1 <- bd_1 %>% mutate(n  = round(n/100,2)) %>%
+  bd_1 <- bd_1 %>% mutate(n  = round(n/100, 2)) %>%
     spread(value = n, key = {{ pregunta }})
   
   bd_2 <- count(bd_2, {{ otro }}) %>%
     mutate(porcentaje  = round(100*n/sum(n), 2)) %>%
     filter(porcentaje > x)
   
+  bd_2 <- select(bd_2, -porcentaje) 
   
   bd_2 <- bd_2 %>% mutate(n = round(n/nTot,2)) %>%
     spread(value = n, key = {{ otro }})
   
-  bd_2 <- select(bd_2, -porcentaje)
-  
-  df = data.frame(bd_1, bd_2)
-  
-  Graph <- ggradar(df, base.size = 25) +
-    labs(title = titulo) +
-    theme(plot.background = element_rect(fill = "white", color = "white"))
+  df <- data.frame(bd_1, bd_2)
+
+   Graph <- ggradar(df, base.size = 25) +
+     labs(title = titulo) +
+     theme(plot.background = element_rect(fill = "white", color = "white"))
 
   return(Graph)
 }
 
+# distRadar(bd, pregunta = animo, otro = animo_otro, x = 30, titulo = "Animo de los asistentes")
 # Agregar en la función la regla de otro si supera el umbral modificable
 
 barras_animo <- function(DB, pregunta, Otro, x){
