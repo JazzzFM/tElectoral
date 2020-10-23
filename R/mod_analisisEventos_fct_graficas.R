@@ -1,5 +1,4 @@
-
-# bd <- select(DB_Mich, c(MUNICIPIO, lugar =CABECERA_MUNICIPAL)) %>% 
+# bd <- select(DB_Mich, c(MUNICIPIO, lugar =CABECERA_MUNICIPAL)) %>%
 #   mutate(fecha= seq(from = dmy_hm("06-01-21 11:00"), to = dmy_hm("06-02-21 11:00"), length.out =113),
 #     asistentes = sample(c("Debían de haber sido más personas",
 #                                "Adecuado",
@@ -14,13 +13,13 @@
 #                          'Otro'),
 #                        size=113, replace=T,
 #                        prob=c(.1,.1,.2,.1,.1,.1,.2)),
-#          
+# 
 #          animo_otro = sample(c('deprimido',
 #                       'triste',
 #                       'ansioso',
 #                       'borracho'),
 #                     size=113, replace=T),
-#          
+# 
 #          incidente = sample(c('Perdida del sonido o audio', 'Perdida de corriente eléctrica',
 #                             'Los asistentes no llegaron a tiempo','El recinto no era adecuado',
 #                             'Insultos por parte de los participantes', 'Enfrentamiento entre participantes',
@@ -34,11 +33,11 @@
 #                           'Las autoridad local no lo permitió'),
 #                     size=113, replace=T,
 #                     prob=c(.3,.1,.2,.2)),
-#          
+# 
 #          duracion = sample(c("Debía de haber durado menos tiempo",
 #                               "Adecuado", "Debía de haber durado más tiempo"),
 #                            prob = c(.3, .7, .2), size = 113, replace= T ),
-#          
+# 
 #          calidad =  sample(c("Muy buena calidad",
 #                                       "Buena calidad",
 #                                       "Mala calidad" ,
@@ -67,7 +66,7 @@ promedioGauge <- function(bd, calificacion){
     coord_polar(theta = "y") +
     scale_x_continuous(limits = c(-5,2)) +
     scale_y_continuous(limits = c(0, 10))+
-    theme_minimal()+
+    theme_minimal() + tema_ggplot() +
     theme(panel.grid = element_blank(),
           axis.text = element_blank(),
           axis.title = element_blank()
@@ -102,51 +101,106 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                style = list(fontSize = "15px", color = "#14373B"))
   return(p)
 }
-# lineaCalificacion(BD , fecha = fecha, calificacion = calif, lugar = MUNICIPIO, asistentes = personas)
+# lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
 
 # Radar 
-# Agregar en la función la regla de otro si supera el umbral modificable
-
 distRadar <- function(bd, pregunta, otro, x, titulo =""){
   
   bd_2 <- bd %>% filter({{ pregunta }} %in% c('Otro'))
+  
+  bd_1 = count(bd, {{ pregunta }}) %>%
+    mutate(n  = round(100*n/sum(n),2)) %>%
+    arrange(-n)
+  
+  nTot <- bd_1 %>%
+    select(n) %>%
+    mutate(sum = sum(n)) %>%
+    select(sum)
+  
+  nTot <- nTot[1,1]$sum
+  
+  bd_1 <- bd_1 %>%
+    filter(!{{ pregunta }} %in% c('Otro'))
+  
+  bd_1 <- bd_1 %>% mutate(n  = round(n/100,2)) %>%
+    spread(value = n, key = {{ pregunta }})
+  
+  bd_2 <- count(bd_2, {{ otro }}) %>%
+    mutate(porcentaje  = round(100*n/sum(n), 2)) %>%
+    filter(porcentaje > x)
+  
+  
+  bd_2 <- bd_2 %>% mutate(n = round(n/nTot,2)) %>%
+    spread(value = n, key = {{ otro }})
+  
+  bd_2 <- select(bd_2, -porcentaje)
+  
+  df = data.frame(bd_1, bd_2)
+  
+  Graph <- ggradar(df) +
+    labs(title = titulo) + tema_ggplot() +
+    theme(plot.background = element_rect(fill = "white", color = "white"),
+          text = element_text(size = 20))
 
-   bd_1 = count(bd, {{ pregunta }}) %>%
-      mutate(n  = round(100*n/sum(n),2)) %>%
-      arrange(-n)
-    
-    nTot <- bd_1 %>%
-      select(n) %>%
-      mutate(sum = sum(n)) %>%
-      select(sum)
- 
-    nTot <- nTot[1,1]
-   
-    bd_1 <- bd_1 %>%
-        filter(!{{ pregunta }} %in% c('Otro'))
-    
-    bd_1 <- bd_1 %>% mutate(n  = round(n/100,2)) %>%
-            spread(value = n, key = {{ pregunta }})
-   
-    bd_2 <- count(bd_2, {{ otro }}) %>%
-              mutate(porcentaje  = round(100*n/sum(n), 2)) %>%
-                 filter(porcentaje > x)
-
-
-    bd_2 <- bd_2 %>% mutate(n  = round(n/nTot, 2)) %>%
-      spread(value = n, key = {{ otro }})
-    
-    bd_2 <- select(bd_2, -porcentaje)
-    
-    df = data.frame(bd_1, bd_2)
-
-     Graph <- ggradar(df) +
-     labs(title = titulo) +
-     theme(plot.background = element_rect(fill = "white", color = "white"))
-    
-    return(Graph)
+  return(Graph)
 }
-# distRadar(bd, pregunta = animo, otro = animo_otro,  x =  50)
+
+# Agregar en la función la regla de otro si supera el umbral modificable
+
+barras_animo <- function(DB, pregunta, Otro, x){
+  DB <- DB %>% mutate(pregunta_2 = {{ pregunta }},
+                      Otro_2 = {{ Otro }})
+  
+  DB_AUX <- DB %>% filter(pregunta_2 %in% c('Otro'))
+  
+  frec_1 = count(DB, pregunta_2)
+  frec_2 = count(DB_AUX, Otro_2)
+  
+  frec_1 <- frec_1 %>% 
+    mutate(porcentaje = (100*n/sum(n))) %>%
+    mutate(label = sprintf("%1.1f%%", porcentaje)) %>%
+    arrange(-n)
+  
+  nTot <- frec_1 %>% 
+    select(n) %>% 
+    mutate(sum = sum(n)) %>% 
+    select(sum)
+  
+  nTot <- nTot[1,1]$sum
+  
+  frec_1 <- frec_1 %>% 
+    filter(!pregunta_2 %in% c('Otro')) %>% 
+    head(4)
+  
+  frec_2 <- frec_2 %>% 
+    mutate(porcentaje = (100*n/sum(n))) %>%
+    mutate(label = sprintf("%1.1f%%", porcentaje)) %>%
+    mutate(pregunta_2 = Otro_2) %>% 
+    select(c(pregunta_2,"n","porcentaje", "label")) %>% 
+    arrange(-n) %>%
+    filter(porcentaje > x) 
+  
+  frec_2 <- frec_2 %>% 
+    select(c(pregunta_2, n)) %>% 
+    mutate(porcentaje = (100*n/nTot)) %>% 
+    mutate(label = sprintf("%1.1f%%", porcentaje)) %>% 
+    arrange(-n)
+  
+  frec <- frec_1 %>% 
+    union(frec_2) 
+  
+  frec <- frec %>% 
+    mutate(n = n/sum(n))
+  
+  Graph <- ggplot(frec, aes(x = reorder(pregunta_2, -n), y = n)) +
+    scale_y_continuous(labels = scales::percent) + tema_ggplot() +
+    geom_bar(fill='#55C1FF', color = "#55C1FF", width = 0.7, alpha = 0.5, stat = "identity") +
+    labs(title = "En general, ¿cómo describiría el ánimo de los asistentes?", x = "", y = "") +
+    tema_barras_animo()
+  
+  return(Graph)
+}
+
 #Burbujas
 
 burbujas <- function(bd, pregunta1, pregunta2){
@@ -174,7 +228,8 @@ burbujas <- function(bd, pregunta1, pregunta2){
     scale_size_area(max_size = 40)+
     labs(x = "Respuesta", y = "Aspecto", title = "")+
     theme(legend.position = "none",
-          panel.grid = element_blank())
+          panel.grid = element_blank(),
+          text = element_text(size = 20))
   return(p)
 }
 # burbujas(bd, pregunta1 = asistentes, pregunta2 = duracion)
@@ -210,7 +265,7 @@ barras_animo <- function(DB, pregunta, Otro, x){
               mutate(sum = sum(n)) %>% 
                 select(sum)
   
-  nTot <- nTot[1,1]
+  nTot <- nTot[1,1]$sum
    
   frec_1 <- frec_1 %>% 
      filter(!pregunta_2 %in% c('Otro')) %>% 
@@ -337,11 +392,10 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
     geom_hline(yintercept = 0, linetype = "solid", size = .6, color = "#395C6B")+
     theme_minimal()+
     theme(panel.grid = element_blank(),
-          axis.text.y = element_blank())
+          axis.text.y = element_blank(),
+          text = element_text(size = 22))
   
   return(p)
 }
-#paletaRecursos(BD, pregunta = calidad_recursos_tech, titulo = "Nivel de calidad de los recursos tecnológicos empleados en el evento")
-
-
+#paletaRecursos(bd, pregunta = calidad, titulo = "Nivel de calidad de los recursos tecnológicos empleados en el evento")
 
