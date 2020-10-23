@@ -1,14 +1,11 @@
 
-#  Mun <- select(DB_Mich, c(MUNICIPIO, CABECERA_MUNICIPAL))
-#  Mun <- Mun %>% mutate(lugar_evento = CABECERA_MUNICIPAL)
-#  Mun <- select(Mun, c(MUNICIPIO, lugar_evento))
-# 
-# considera_num_asist = sample(c("Debían de haber sido más personas",
-#                                 "Adecuado", 
-#                                 "Debían haber sido menos personas"),
-#                                 prob = c(.3, .7, .2), size = 113, replace= T )
-#  
-#  animo_asist = sample(c('Interesados',
+# bd <- select(DB_Mich, c(MUNICIPIO, lugar =CABECERA_MUNICIPAL)) %>% 
+#   mutate(fecha= seq(from = dmy_hm("06-01-21 11:00"), to = dmy_hm("06-02-21 11:00"), length.out =113),
+#     asistentes = sample(c("Debían de haber sido más personas",
+#                                "Adecuado",
+#                                "Debían haber sido menos personas"),
+#                              prob = c(.3, .7, .2), size = 113, replace= T ),
+#          animo = sample(c('Interesados',
 #                          'Participativos',
 #                          'Emocionados',
 #                          'Desesperados',
@@ -16,68 +13,42 @@
 #                          'Aburridos',
 #                          'Otro'),
 #                        size=113, replace=T,
-#                        prob=c(.1,.1,.2,.1,.1,.1,.2))
-# 
-#  Otro_Anim = sample(c('deprimido',
+#                        prob=c(.1,.1,.2,.1,.1,.1,.2)),
+#          
+#          animo_otro = sample(c('deprimido',
 #                       'triste',
 #                       'ansioso',
 #                       'borracho'),
-#                     size=113, replace=T,
-#                     prob=c(.1,.5,.3,.1))
-# 
-# incident_expect = sample(c('Perdida del sonido o audio', 'Perdida de corriente eléctrica',
+#                     size=113, replace=T),
+#          
+#          incidente = sample(c('Perdida del sonido o audio', 'Perdida de corriente eléctrica',
 #                             'Los asistentes no llegaron a tiempo','El recinto no era adecuado',
 #                             'Insultos por parte de los participantes', 'Enfrentamiento entre participantes',
 #                             'Salida repentina de participantes antes de que finalice el evento',
 #                             'Constantes interrupciones al discurso del candidato',
 #                             'Hackeo del evento (en caso de ser virtual)', 'Otro'),
-#                           size=113, replace=T,
-#                           prob=c(.1,.1,.1,.1,.1,.1,.1,.1,.1,.1))
-# 
-#  Otro_incident = sample(c('Se congelaba la pantalla',
+#                           size=113, replace=T),
+#          incidente_otro = sample(c('Se congelaba la pantalla',
 #                           'Hubo balazos',
 #                           'Se rompió el templete',
 #                           'Las autoridad local no lo permitió'),
 #                     size=113, replace=T,
-#                     prob=c(.3,.1,.2,.2))
-# 
-#   duracion_evento = sample(c("Debía de haber durado menos tiempo",
+#                     prob=c(.3,.1,.2,.2)),
+#          
+#          duracion = sample(c("Debía de haber durado menos tiempo",
 #                               "Adecuado", "Debía de haber durado más tiempo"),
-#                            prob = c(.3, .7, .2), size = 113, replace= T )
-#   
-#   
-#   calidad_recursos_tech =  sample(c("Muy buena calidad",
+#                            prob = c(.3, .7, .2), size = 113, replace= T ),
+#          
+#          calidad =  sample(c("Muy buena calidad",
 #                                       "Buena calidad",
-#                                       "Mala calidad" , 
+#                                       "Mala calidad" ,
 #                                       "Muy mala calidad"),
-#                                    prob = c(.5, .7, .3, .2), size = 113, replace= T )
-# 
-#   expect0_10 = sample(c(1:10), size = 113, replace = T,
-#                       prob=c(.1,.1,.1,.1,.1,.1,.1,.1,.1,.1))
-# 
-# # fecha sea con hora
-# 
-#  bb <- tibble(fecha = seq(from = today(), to = today()+90, by = 113 ),
-#               calif = sample(c(6:10), size = 113, replace = T,
-#                      prob=c(.1,.1,.1,.1,.1)),
-#               personas = sample(500:3000, 113))
-# 
-#  df <- data.frame(Mun, considera_num_asist)
-#  df <- data.frame(df, animo_asist)
-#  df <- data.frame(df, Otro_Anim)
-#  df <- data.frame(df, incident_expect)
-#  df <- data.frame(df, Otro_incident)
-#  df <- data.frame(df, calidad_recursos_tech)
-#  df <- data.frame(df, expect0_10)
-#  df <- data.frame(df, bb)
-# 
-#  BD <-select(df, c("fecha", "MUNICIPIO",
-#                    "lugar_evento",
-#                    "considera_num_asist",
-#                    "animo_asist", "Otro_Anim",
-#                    "incident_expect", "Otro_incident",
-#                    "calidad_recursos_tech",
-#                    "expect0_10", "calif", "personas")) %>% head(50)
+#                                    prob = c(.5, .7, .3, .2), size = 113, replace= T ),
+#          calif = sample(c(0:10), size = 113, replace = T,
+#                       prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
+#   )
+
+# lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
 
 ## gauge
 
@@ -102,16 +73,18 @@ promedioGauge <- function(bd, calificacion){
           axis.title = element_blank()
     )
 } 
-# promedioGauge(BD, expect0_10)
+# promedioGauge(bd, calif)
 
 lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
   bd <- bd %>%  mutate(lugar = {{lugar}}, asistentes={{asistentes}},
-                       fecha = {{fecha}}, calificacion = {{calificacion}}) 
+                       calificacion = {{calificacion}},
+                       fecha_tt =floor_date({{fecha}}, unit = "hour"),
+                       fecha =datetime_to_timestamp(fecha_tt)) 
   p<- bd %>% hchart(hcaes(x = fecha, y  = calificacion), type = "area", color = "#F8737D") %>% 
     hc_yAxis(min = 0, max = 10, title = list(text = "Calificación"), 
              gridLineWidth =0,
              labels = list(style = list(fontSize = "15px", color = "#F8737D"))) %>% 
-    hc_xAxis( title = list(text = "Fecha del evento"),
+    hc_xAxis( title = list(text = "Fecha del evento"), type = "datetime",
               labels = list(step = 2,style = list(fontSize = "15px", color = "#43515C")),
               crosshair = list(ebabled= T, color= "#F8737D", dashStyle="shortdash", width= 2, snap = F),
               lineWidth =0, tickWidth =0) %>%
@@ -124,8 +97,8 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                                crisp=F, lineWidth = 5, marker = list(radius =0))) %>% 
     hc_title(text = "Calificación  ", align = "right", style = list(fontSize = "20px", color = "#0C4147")) %>% 
     hc_tooltip(borderWidth =0,shadow = F,
-               headerFormat = '<span style="font-size: 18px">{point.key}</span><br/>',
-               pointFormat = '</b><br>Calificación: <b>{point.y}</b><br>Total de asistentes: <b>{point.lugar}</b></b><br>Total de asistentes: <b>{point.asistentes}</b>',
+               headerFormat = '',
+               pointFormat = '<span style="font-size: 18px">{point.fecha_tt}</span><br/></b><br>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
                style = list(fontSize = "15px", color = "#14373B"))
   return(p)
 }
@@ -173,7 +146,7 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
     
     return(Graph)
 }
-# distRadar(BD, pregunta = animo_asist, otro = Otro_Anim, 50)
+# distRadar(bd, pregunta = animo, otro = animo_otro,  x =  50)
 #Burbujas
 
 burbujas <- function(bd, pregunta1, pregunta2){
