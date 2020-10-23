@@ -1,3 +1,4 @@
+
 #  Mun <- select(DB_Mich, c(MUNICIPIO, CABECERA_MUNICIPAL))
 #  Mun <- Mun %>% mutate(lugar_evento = CABECERA_MUNICIPAL)
 #  Mun <- select(Mun, c(MUNICIPIO, lugar_evento))
