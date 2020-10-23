@@ -66,7 +66,7 @@ promedioGauge <- function(bd, calificacion){
     coord_polar(theta = "y") +
     scale_x_continuous(limits = c(-5,2)) +
     scale_y_continuous(limits = c(0, 10))+
-    theme_minimal() + tema_ggplot() +
+    theme_minimal() +
     theme(panel.grid = element_blank(),
           axis.text = element_blank(),
           axis.title = element_blank()
@@ -137,7 +137,7 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
   
   df = data.frame(bd_1, bd_2)
   
-  Graph <- ggradar(df, base.size = 25, font.radar = "sans") +
+  Graph <- ggradar(df, base.size = 25, font.radar = "Circular Air") +
     labs(title = titulo) +
     theme(plot.background = element_rect(fill = "white", color = "white"))
 
@@ -228,7 +228,7 @@ burbujas <- function(bd, pregunta1, pregunta2){
     labs(x = "Respuesta", y = "Aspecto", title = "")+
     theme(legend.position = "none",
           panel.grid = element_blank(),
-          text = element_text(size = 20))
+          text = element_text(size = 17))
   return(p)
 }
 # burbujas(bd, pregunta1 = asistentes, pregunta2 = duracion)
