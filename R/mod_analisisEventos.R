@@ -95,8 +95,8 @@ mod_analisisEventos_server <- function(input, output, session){
              calif = sample(c(0:10), size = 113, replace = T,
                             prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
       )
-    distRadar(bd, pregunta = animo, otro = animo_otro, x = 30)
-  })
+    distRadar(bd, pregunta = animo, otro = animo_otro, x = 30, titulo = "Animo de los asistentes" )
+      })
   
   output$cRecursos <- renderPlot({
   paletaRecursos(bd, pregunta = calidad, titulo = "Nivel de calidad de los recursos tecnológicos empleados en el evento")

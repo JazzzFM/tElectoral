@@ -137,10 +137,9 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
   
   df = data.frame(bd_1, bd_2)
   
-  Graph <- ggradar(df) +
-    labs(title = titulo) + tema_ggplot() +
-    theme(plot.background = element_rect(fill = "white", color = "white"),
-          text = element_text(size = 20))
+  Graph <- ggradar(df, base.size = 25, font.radar = "sans") +
+    labs(title = titulo) +
+    theme(plot.background = element_rect(fill = "white", color = "white"))
 
   return(Graph)
 }
