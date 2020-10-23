@@ -160,7 +160,7 @@ burbujas <- function(bd, pregunta1, pregunta2){
                                            "Debía de haber durado más tiempo")~"Debió haber sido mayor",
                                 resp%in% c("Adecuado")~"Adecuado",
            ),
-           etiqueta2 = case_when(grupo == "tiempo"~"Duración del evento", 
+           etiqueta2 = case_when(grupo == "duracion"~"Duración del evento", 
                                  grupo == "asistentes"~"Número de asistentes"
            ),
            color = case_when(etiqueta == "Debió haber sido menor" ~"#EB6A8A",
@@ -177,7 +177,7 @@ burbujas <- function(bd, pregunta1, pregunta2){
           panel.grid = element_blank())
   return(p)
 }
-# burbujas(bd, pregunta1 = considera_num_asist, pregunta2 = duracion_evento)
+# burbujas(bd, pregunta1 = asistentes, pregunta2 = duracion)
 
 tema_barras_animo <- function(){
   theme_classic() +
