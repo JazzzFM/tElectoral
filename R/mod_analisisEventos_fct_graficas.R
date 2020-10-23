@@ -85,7 +85,8 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
              labels = list(style = list(fontSize = "15px", color = "#F8737D"))) %>% 
     hc_xAxis( title = list(text = "Fecha del evento"), type = "datetime",
               labels = list(step = 2,style = list(fontSize = "15px", color = "#43515C")),
-              crosshair = list(ebabled= T, color= "#F8737D", dashStyle="shortdash", width= 2, snap = F),
+              crosshair = list(ebabled= T, color= "#F8737D", dashStyle="shortdash",
+                               width= 2, snap = F, zIndex= 5),
               lineWidth =0, tickWidth =0) %>%
     hc_plotOptions(area = list(fillOpacity= .3,
                                fillColor = list(
