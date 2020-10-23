@@ -96,7 +96,7 @@ mod_analisisEventos_server <- function(input, output, session){
                             prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
       )
     
-    distRadar(bd, pregunta = animo, otro = animo_otro, x = 30, titulo = "Animo de los asistentes" )
+    distRadar(bd, pregunta = animo, otro = animo_otro, x = 30, titulo = "Animo de los asistentes") 
       })
   
   output$cRecursos <- renderPlot({

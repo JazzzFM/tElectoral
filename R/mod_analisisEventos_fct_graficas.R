@@ -137,7 +137,7 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
   
   df = data.frame(bd_1, bd_2)
   
-  Graph <- ggradar(df, base.size = 25, font.radar = "Circular Air") +
+  Graph <- ggradar(df, base.size = 25) +
     labs(title = titulo) +
     theme(plot.background = element_rect(fill = "white", color = "white"))
 
