@@ -1306,3 +1306,99 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
 #gira_ui_1-giraPaso3_ui_1-lugaresPaso3_ui_1-evento_ui_1-inputsEditar{
   width: 100%;
 }
+
+/* Analisis gira */
+
+.topBoxInfo {
+  text-align: center;
+  line-height: .8;
+  height: 100%;
+  padding-top: 55px;
+}
+.topBoxInfo p:first-child {
+  font-size: 4.5em;
+  background-color: var(--m-red-color);
+  color: #fff;
+  width: 165px;
+  height: 165px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 8px auto;
+}
+.topBoxInfo p:nth-of-type(2) {
+  font-size: 2em;
+}
+.topBoxInfo p:last-child {
+  font-size: 1.2em;
+  margin-top: 15px;
+}
+
+.ViewBoxCustom {
+width: 100%;
+border: 1px solid #ccc;
+margin: 15px 0;
+border-radius: 5px;
+box-shadow: 2px 2px 2px 0px rgba(0,0,0,.1);
+text-align: center;
+padding: 15px;
+}
+
+.ViewBoxCustom .topInfo {
+border-bottom: 1px solid #ccc;
+}
+
+.ViewBoxCustom .topInfo p:first-child {
+font-size: 1.8em;
+}
+
+.ViewBoxCustom .topInfo p:last-child {
+max-width: 30%;
+padding: 7px;
+border-radius: 30px;
+display: block;
+margin: auto;
+margin-bottom: 15px;
+font-size: 1.2em;
+min-width: 120px;
+max-width: 35%;
+background-color: var(--m-red-color);
+color: #fff;
+}
+.wallInfo {
+display: flex;
+justify-content: center;
+align-content: center;
+margin-top: 10px;
+flex-wrap: wrap;
+}
+.wallInfo > * {
+margin: 10px 10px;
+padding: 6px 12px;
+border: 1px solid #ccc;
+border-radius: 30px;
+}
+.wallInfo.forOneItem {
+display: block;
+margin: 7px auto;
+font-size: 1.5em;
+}
+.wallInfo.forOneItem > * {
+border: none;
+display: block;
+}
+/* Ajustes columnas para navegador */
+.col-sm-6{
+  width: 49% !important;
+}
+@media (min-width: 768px){
+  .col-sm-4 {
+    width: 33% !important;
+  }
+}
+@media handheld, only screen and (max-width: 767px){
+  [class*='col-'] {
+    width: 100% !important;
+  }
+}

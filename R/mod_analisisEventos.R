@@ -15,17 +15,57 @@ mod_analisisEventos_ui <- function(id){
   ns <- NS(id)
   # Gráfico de Calificación Promedio
   tagList(
-    plotOutput(outputId = ns("pGauge")),
-  # Gráfico de Estado de Ánimo
+    h3("Evaluación general de la gira"),
     fluidRow(
-      column(width = 6,
-            plotOutput(ns("eAnimo"))),
-      column(width = 6,
-             plotOutput(ns("cRecursos")))
+      column(width = 4, plotOutput(outputId = ns("pGauge"))),
+      column(width = 4, 
+             div(class="topBoxInfo",
+                 p("52%"),
+                 p("Visitas prioritarias realizadas"),
+                 p("16 eventos")
+                 )
+       ),
+      column(width = 4,
+             div(class="tableMunicipios",
+                 DT::DTOutput(ns("tableMun"))
+             )
+       )
     ),
     fluidRow(
       column(width = 6,
-             highchartOutput(ns("lCalif"))),
+             div(class="ViewBoxCustom",
+                 div(class="topInfo",
+                     p("Eventos"),
+                     p("32")
+                 ),
+                 div(class="wallInfo forOneItem",
+                     p("100% de los municipios")
+                 )
+             ),
+             div(class="ViewBoxCustom",
+                 div(class="topInfo",
+                     p("Incidentes"),
+                     p("4")
+                 ),
+                 div(class="wallInfo",
+                     p("Evento 1"),
+                     p("Evento 3"),
+                     p("Evento 8"),
+                     p("Evento 12"),
+                 )
+             )
+       ),
+      column(width = 6, plotOutput(ns("eAnimo")))
+    ),
+  # Gráfico de Estado de Ánimo
+    fluidRow(
+      column(width = 12,
+             highchartOutput(ns("lCalif"))
+             )
+    ),
+    fluidRow(
+      column(width = 6,
+             plotOutput(ns("cRecursos"))),
       column(width = 6,
              plotOutput(ns("nAsistentes")))
   ),
@@ -44,6 +84,14 @@ mod_analisisEventos_server <- function(input, output, session){
   bd <- tibble(x = sample(0:10, size = 20, replace = T))
   promedioGauge(bd, calificacion = x)
   })
+  
+  a <- tibble(Municipio = c(a = "Municipio 1", b = "Municipio 2", c= "Municipio 3"), Calificación = c(a = 10, b = 5, c= 8))
+  output$tableMun <- DT::renderDT({
+    DT::datatable(
+      data = a,
+      options = list(dom = 't')
+    )
+  }, escape = F)
   
   output$eAnimo <- renderPlot({
     # fake data as the real structure
