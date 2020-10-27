@@ -137,9 +137,6 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
       temp <- temp[!(temp$CABECERA_MUNICIPAL== gira$paso1$LugarInicio | temp$CABECERA_MUNICIPAL== gira$paso1$LugarFinal),]
       DT::datatable(data = temp)
     }
-    
-    # nvisitas <-    length(input$recomendaciones_rows_selected)+1
-    # browser()
   })
   
   

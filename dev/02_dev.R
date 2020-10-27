@@ -93,6 +93,9 @@ golem::add_utils( "alinear" )
 golem::add_fct("input_btns")
 # Modelo Poll of polls
 golem::add_fct(name = "pollofpolls" )
+#Gira paso 3
+golem::add_fct(name = "validarHorarioOcupado" )
+golem::add_fct(name = "validarAlcanceTiempo" )
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
