@@ -26,7 +26,7 @@ mod_giraPaso3_ui <- function(id){
 mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_session = NULL){
   ns <- session$ns
   
-  listaEventos <- reactiveValues()
+  
   horariosOcupados <- reactiveValues()
   eventos <- reactiveValues()
   uiCount <- reactiveValues(val = 1)
