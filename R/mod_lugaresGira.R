@@ -116,7 +116,12 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
       temp <- a()[[3]]
       temp <- prepend(temp,gira$paso1$LugarInicio)
       temp <- append(temp,gira$paso1$LugarFinal)
+      
+      tiempos <- a()[[4]]
+      tiempos <- prepend(tiempos, 0) # Se necesitan insertar tiempos de origen y destino. Mientras son vacíos
+      tiempos <- append(tiempos, 0)
       gira$paso2 <- tibble(lugares = temp)
+      gira$paso2Tiempos <- tiempos
     }else{
       shinyalert::shinyalert(title = "Debe seleccionar al menos un origen y un destino")
     }
@@ -125,16 +130,16 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
   # Tabla de recomendaciones
   output$recomendaciones <- DT::renderDT({
     if(!is.null(gira$paso1)){
-      temp <- muns()
+      fake_visitas <-tibble(CABECERA_MUNICIPAL=sample(size=10, DB_Mich2$CABECERA_MUNICIPAL))
+      fake_visitas <-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
+      temp <- muns() %>%
+        criterio_participacion(DB_VISITAS = fake_visitas, n=5)
       temp <- temp[!(temp$CABECERA_MUNICIPAL== gira$paso1$LugarInicio | temp$CABECERA_MUNICIPAL== gira$paso1$LugarFinal),]
       DT::datatable(data = temp)
     }
-    fake_visitas <-tibble(CABECERA_MUNICIPAL=sample(size=10, DB_Mich2$CABECERA_MUNICIPAL))
-    fake_visitas <-fake_visitas %>% mutate(VISITAS=rpois(n=10,lambda = 1)+1)
+    
     # nvisitas <-    length(input$recomendaciones_rows_selected)+1
     # browser()
-    muns() %>%
-      criterio_participacion(DB_VISITAS = fake_visitas, n=5)
   })
   
   

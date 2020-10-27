@@ -35,7 +35,7 @@ mod_gira_ui <- function(id){
 #' @noRd 
 mod_gira_server <- function(input, output, session, parent_session){
   ns <- session$ns
-  gira <- reactiveValues(paso1 = NULL, paso2 = NULL, paso3 = NULL)
+  gira <- reactiveValues(paso1 = NULL, paso2 = NULL, paso2Tiempos = NULL, paso3 = NULL)
   # Paso 1
   callModule(mod_giraPaso1_server, "giraPaso1_ui_1", gira)
   # Lugares gira
