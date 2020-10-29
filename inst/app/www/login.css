@@ -1,5 +1,5 @@
 :root{
-  --white: #fff;
+  /*--white: #fff;
   --danger: #e44e44;
   --success: #00b963;
   --twitter-blue-primary: #00cdff;
@@ -9,7 +9,7 @@
   --twitter-red-primary: #c55b5b;
   --twitter-black-primary: #262525;
   --twitter-black-secondary: #263a5b;
-  --bg-primary: #f2f5fa;
+  --bg-primary: #f2f5fa;*/
   
   /* Colores telectoral */
   /*
@@ -35,24 +35,96 @@
   --m-red-black-color: #005734;*/
   
   /* Colores movimiento */
-  --m-black-color: #2a2c2b;
+  /*--m-black-color: #2a2c2b;
   --m-red-color: #ff8201;
   --m-red-black-color: #cc6900;
+  
+  --m-white-primary-color: #f2f2f2;
+  --m-white-secondary-color: #e0e0e0;*/
   
   /* Colores morena */
   /*--m-black-color: #2a2c2b;
   --m-red-color: #b92207;
   --m-red-black-color: #a01d06;*/
   
+  /* GENERAL */
+  --white: #fff;
+  --gray-primary: #ccc;
+  --gray-secondary: #eaeaea;
+  --black-primary: #333;
+  --black-secondary: #1b1e24;
+  --red-primary: #E04B4A;
+  --red-secondary: #e44e44;
   
-  --m-white-primary-color: #f2f2f2;
-  --m-white-secondary-color: #e0e0e0;
+  /* DEGRADADOS GENERALES*/
+  --gradient-button-info: linear-gradient(133deg, rgba(163,238,228,1) 4%, rgba(6,179,154,1) 61%);
+  --gradient-button-danger: linear-gradient(133deg, rgba(244,134,134,1) 4%, rgba(212,85,84,1) 61%);
+  --gradient-button-warning: linear-gradient(133deg, rgba(230,202,163,1) 4%, rgba(214,148,55,1) 61%);
+  --gradient-button-success: linear-gradient(133deg, rgba(47,152,103,1) 4%, rgba(0,185,99,1) 61%);
+  --gradient-button-default: linear-gradient(133deg, rgba(252,252,252,1) 4%, rgba(228,228,228,1) 61%);
+  --gradient-button-black: linear-gradient(133deg, rgba(11,20,38,1) 4%, rgba(22,28,41,1) 61%);
   
-  /* Colores de barras */
-  --cbar-red: #e44e44;
-  --cbar-yellow: #f1c410;
-  --cbar-green: #00b963;
-  --cbar-blue: #00cdff;
+  /* DEGRADADOS DEFAULT */
+  /*--gray-third: #777;
+  --gradient-sidebar: linear-gradient(0deg, rgba(97,97,97,1) 33%, rgba(167,167,167,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(167,167,167,1) 20%, rgba(97,97,97,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(97,97,97,1) -50%,rgba(167,167,167,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(135,135,135,1) 30%, rgba(97,97,97,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(170,170,170,1) 29%, rgba(97,97,97,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(167,167,167,1) 0%, rgba(97,97,97,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);*/
+  
+  /* DEGRADADOS PAN */
+  /*--gray-third: #4d64cc;
+  --gradient-sidebar: linear-gradient(0deg, rgba(30,52,156,1) 33%, rgba(63,121,221,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(63,121,221,1) 20%, rgba(30,52,156,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(30,52,156,1) -50%,rgba(63,121,221,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(77,100,204,1) 30%, rgba(34,80,161,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(62,83,181,1) 29%, rgba(63,121,221,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(77,100,204,1) 0%, rgba(34,80,161,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);*/
+  
+  /* DEGRADADOS MOVIMIENTO CIUDADANO */
+  /*--gray-third: #006fb8;
+  --gradient-sidebar: linear-gradient(0deg, rgba(255,129,1,1) 33%, rgba(210,157,22,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(210,157,22,1) 20%, rgba(255,129,1,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(255,129,1,1) -50%,rgba(210,157,22,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(255,129,1,1) 30%, rgba(231,165,0,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(238,163,85,1) 29%, rgba(213,153,4,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(241,187,131,1) 0%, rgba(213,153,4,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);*/
+  
+  /* DEGRADADOS MORENA */
+  /*--gray-third: #201915;
+  --gradient-sidebar: linear-gradient(0deg, rgba(180,54,1,1) 33%, rgba(240,111,63,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(240,111,63,1) 20%, rgba(180,54,1,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(180,54,1,1) -50%,rgba(240,111,63,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(180,54,1,1) 30%, rgba(242,100,47,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(180,54,1,1) 29%, rgba(242,100,47,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(180,54,1,1) 0%, rgba(242,100,47,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);*/
+  
+  /* DEGRADADOS PRD */
+  /*--gray-third: #c4a309;
+  --gradient-sidebar: linear-gradient(0deg, rgba(85,103,112,1) 33%, rgba(136,152,161,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(136,152,161,1) 20%, rgba(85,103,112,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(85,103,112,1) -50%,rgba(136,152,161,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(85,103,112,1) 30%, rgba(116,126,131,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(85,103,112,1) 29%, rgba(116,126,131,1) 95%);
+  --gradient-button-primary: linear-gradient(107deg, rgba(223,197,74,1) 29%, rgba(207,172,12,1) 95%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);*/
+  
+  /* DEGRADADOS PRI */
+  --gray-third: #df5252;
+  --gradient-sidebar: linear-gradient(0deg, rgba(120,7,7,1) 33%, rgba(228,66,66,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(228,66,66,1) 20%, rgba(120,7,7,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(120,7,7,1) -50%,rgba(228,66,66,1) 0%);
+  --gradient-active-link:linear-gradient(194deg, rgba(223,82,82,1) 30%, rgba(162,32,32,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(150,18,18,1) 29%, rgba(176,33,33,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(223,82,82,1) 0%, rgba(162,32,32,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);
+  
+  
 }
 .btn-primary:active:hover, .btn-primary.active:hover, .open>.dropdown-toggle.btn-primary:hover, .btn-primary:active:focus, .btn-primary.active:focus, .open>.dropdown-toggle.btn-primary:focus, .btn-primary:active.focus, .btn-primary.active.focus, .open>.dropdown-toggle.btn-primary.focus{
       background-color: var(--m-red-color) !important;
@@ -101,7 +173,7 @@ body{
 .panel-auth .panel{
   box-shadow: 0px 0px 55px 5px rgba(0,0,0,.3);
   border: none;
-  background-color: var(--m-red-color);
+  background: var(--gradient-sidebar);
   color: #fff;
   padding: 15px;
 }
@@ -117,7 +189,7 @@ body{
     align-items: center;
     margin: auto;
     background-color: var(--white);
-    color: var(--m-red-color);
+    color: var(--gray-primary);
     font-size: 2em;
     position: relative;
     transition: ease all .7s;
@@ -151,7 +223,7 @@ body{
   justify-content: center;
   align-items: center;
   background-color: #fff;
-  color: var(--m-black-color);
+  color: var(--black-primary);
   padding: 4px 16px;
   border-radius: 4px;
   transition: ease all .3s;
@@ -183,7 +255,7 @@ body{
 /* Button */
 .panel-auth button[type="button"]{
     background-color: var(--white) !important;
-    color: var(--m-red-color);
+    color: var(--black-primary);
     width: 100%;
     padding: 10px;
     border: none;

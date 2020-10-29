@@ -15,7 +15,7 @@ mod_lugaresGira_ui <- function(id){
       class = "mt-25",
       column(width = 12,
              class = "col-lg-6",
-             tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {background-color: var(--m-tr-selected) !important;}')),
+             tags$style(HTML('table.dataTable tbody tr.selected {background: var(--gradient-tr-selected) !important; background-attachment: fixed !important; color: #fff} table.dataTable tbody tr.selected td {background-color: transparent !important}')),
              DT::DTOutput(ns("recomendaciones"))
       ),
       column(
