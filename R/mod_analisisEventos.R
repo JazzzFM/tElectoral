@@ -10,6 +10,10 @@
 #' @import ggfittext
 #' @import scales
 #' @import ggradar
+#' @import sf
+#' @import glue
+#' @import leaflet
+#' @import magrittr
 
 mod_analisisEventos_ui <- function(id){
   ns <- NS(id)
@@ -69,9 +73,13 @@ mod_analisisEventos_ui <- function(id){
       column(width = 6,
              plotOutput(ns("nAsistentes")))
   ),
-  
+  fluidRow(
+    column(width = 12,
+           plotOutput(ns("ggmapa")))
+    # column(width = 6,
+    #        plotOutput(ns("llmapa")))
+    )
   )
-  
 }
     
 #' analisisEventos Server Function
@@ -306,7 +314,16 @@ mod_analisisEventos_server <- function(input, output, session){
         )
     burbujas(bd, pregunta1 = asistentes, pregunta2 = duracion)
   })
-  
+    
+    output$ggmapa <- renderPlot({
+      #MICH <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp",options = "ENCODING=WINDOWS-1252")
+      ggMapaEstado(MICH)
+    })
+    
+    output$llmapa <- renderLeaflet({
+      #MICH <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp",options = "ENCODING=WINDOWS-1252")
+      llMapaEstado(MICH)
+    })
 }
     
 ## To be copied in the UI

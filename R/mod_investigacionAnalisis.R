@@ -14,15 +14,12 @@ mod_investigacionAnalisis_ui <- function(id){
   tagList(
     # Letreros
     fluidRow(
-      column(width = 3,
+      column(width = 4,
              plotOutput(ns("caja1"))),
-      column(width = 3,
+      column(width = 4,
             plotOutput(ns("caja2"))),
-      column(width = 3,
-            plotOutput(ns("caja3"))),
-      column(width = 3,
-             plotOutput(ns("caja4")))
-      
+      column(width = 4,
+            plotOutput(ns("caja3")))
     ),
     # Gráficos
     fluidRow(

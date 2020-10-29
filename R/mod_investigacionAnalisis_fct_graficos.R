@@ -121,7 +121,6 @@ iVotoBarras <- function(DB){
 }
 
 hPollofPolls <- function(DB){
-
   # Funciones para volver al español
   hcoptslang <- getOption("highcharter.lang")
   hcoptslang$weekdays<- c("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
@@ -181,9 +180,6 @@ iVotoBarras <- function(DB){
   return(Graph)
 }
 
-
-
-
 hVotoPopu <- function(DB){
   Graph <- ggplot(bd, aes(votacion, fill = candidato, colour = candidato)) +
     geom_density(alpha = 0.9, na.rm = TRUE, ) + theme_minimal() + 
@@ -200,60 +196,83 @@ hVotoPopu <- function(DB){
 cajaResume <- function(DB, x){
 
   Graph <- ggplot(DB, aes(x, y)) +
-  geom_smooth(color = "white", se = FALSE) + theme_light() +
+  geom_smooth(color = "white", se = FALSE, size = 1.5) + theme_light() +
   theme(axis.title.y = element_blank(),
         axis.title.x = element_blank(),
         axis.text = element_blank())
   
   if(x == 1){
-        Graph <- Graph + 
+    annotation <- data.frame(
+      x = c(0.29),
+      y = c(0.12),
+      label = c("Número de Encuestas")
+    )
+        Graph <- Graph +
           theme(panel.background = element_rect(fill = "gray"),
                 panel.grid.major = element_blank(), 
                 panel.grid.minor = element_blank()) + 
-                annotate("text", x = 0.36, y=0.13,
-                         label= "82%",
-                         colour = "White", size = 25) +
-                annotate("text", x = 0.32, y=0.10,
-                   label = "Probabilidad",
-                   colour = "White", size = 11) +
-               annotate("text", x = 0.33, y=0.09,
-                   label = "De Triunfo",
-                   colour = "White", size = 11) 
+          geom_text(data = annotation, aes( x = x, y = y, label = label, weight = 2),
+                     color = "White", size = 8, angle = 0, fontface = "bold")
+               #  annotate("text", x = 0.36, y=0.13,
+               #           label= "82%",
+               #           colour = "White", size = 25) +
+               #  annotate("text", x = 0.32, y=0.10,
+               #     label = "Probabilidad",
+               #     colour = "White", size = 11) +
+               # annotate("text", x = 0.33, y=0.09,
+               #     label = "De Triunfo",
+               #     colour = "White", size = 11) 
     return(Graph)
   }
   
   if(x == 2){
+    annotation <- data.frame(
+      x = c(0.29),
+      y = c(0.12),
+      label = c("Días para la Elección")
+    )
     Graph <- Graph + 
       theme(panel.background = element_rect(fill = "tomato"),
             panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank()) + 
-      annotate("text", x = 0.36, y=0.13,
-               label= "22%",
-               colour = "White", size = 25) +
-      annotate("text", x = 0.32, y=0.115,
-               label= "21 Municipios",
-               colour = "White", size = 11) +
-      annotate("text", x = 0.32, y=0.099,
-               label= "96 Secciones",
-               colour = "White", size = 11)
-    
+      geom_text(data = annotation, aes( x = x, y = y, label = label, weight = 2),
+                color = "White", size = 8, angle = 0, fontface = "bold") 
+      
+      # annotate("text", x = 0.36, y=0.13,
+      #          label= "22%",
+      #          colour = "White", size = 25) +
+      # annotate("text", x = 0.32, y=0.115,
+      #          label= "21 Municipios",
+      #          colour = "White", size = 11) +
+      # annotate("text", x = 0.32, y=0.099,
+      #          label= "96 Secciones",
+      #          colour = "White", size = 11)
+      # 
     return(Graph)
   }
   
   if(x == 3){
+    annotation <- data.frame(
+      x = c(0.29),
+      y = c(0.12),
+      label = c("Última Encuesta Realizada")
+    )
     Graph <- Graph + 
-      theme(panel.background = element_rect(fill = "yellow"),
+      theme(panel.background = element_rect(fill = "brown"),
             panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank()) + 
-      annotate("text", x = 0.36, y=0.14,
-               label= "22%",
-               colour = "White", size = 25) +
-      annotate("text", x = 0.34, y=0.105,
-               label= "21 Municipios",
-               colour = "White", size = 11) +
-      annotate("text", x = 0.34, y=0.095,
-               label= "96 Secciones",
-               colour = "White", size = 11)
+      geom_text(data = annotation, aes( x = x, y = y, label = label, weight = 2),
+                color = "White", size = 8, angle = 0, fontface = "bold")
+      
+      # annotate("text", x = 0.36, y=0.14,
+      #          label= "22%",
+      #          colour = "White", size = 25) +
+      # annotate("text", x = 0.34, y=0.105,
+      #          label= "21 Municipios",
+      #          colour = "White", size = 11) +
+      # annotate("text", x = 0.34, y=0.095,
+      #          label= "96 Secciones",
+      #          colour = "White", size = 11)
     return(Graph)
   }
   if(x == 4){

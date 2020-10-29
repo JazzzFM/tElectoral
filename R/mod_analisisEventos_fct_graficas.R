@@ -137,13 +137,13 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
   
   if(nrow(bd_1) != nrow(bd_2)){
     
-    Graph <- ggradar(bd_1, base.size = 25) +
+    Graph <- ggradar(bd_1, base.size = 25, font.radar = "Circular Air") +
       labs(title = titulo) +
       theme(plot.background = element_rect(fill = "white", color = "white"))
   }else{
   df <- data.frame(bd_1, bd_2)
 
-   Graph <- ggradar(df, base.size = 25) +
+   Graph <- ggradar(df, base.size = 25, font.radar = "Circular Air") +
      labs(title = titulo) +
      theme(plot.background = element_rect(fill = "white", color = "white"))
     }
@@ -405,3 +405,23 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
 }
 #paletaRecursos(bd, pregunta = calidad, titulo = "Nivel de calidad de los recursos tecnológicos empleados en el evento")
 
+# MICH <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp",options = "ENCODING=WINDOWS-1252")
+ggMapaEstado <- function(Estado){
+  Graph <- ggplot(Estado) + geom_sf(fill = "#F2D479", color = "#FFFFF7") + theme_minimal() + 
+           theme(axis.text = element_blank(),panel.grid.major = element_blank(),
+           plot.background = element_rect(fill = "#FFFFF7",linetype = 0))
+  
+  return(Graph)
+}
+
+llMapaEstado <- function(Estado){
+  Estado %<>% st_transform(st_crs(4326))
+  Estado %<>% mutate(n = sample(1:200,size = nrow(.)))
+  
+  pal <- colorNumeric("Reds",domain = unique(mich$n))
+  
+  Graph <- leaflet(Estado) %>% addTiles() %>% addPolygons(popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
+                                               fillColor = ~pal(n), weight = 1, color = "black",opacity = 1,
+                                               fillOpacity = 1,label = ~MUNICIPIO) %>% addLegend(pal = pal,values = ~n)
+  return(Graph)
+}
