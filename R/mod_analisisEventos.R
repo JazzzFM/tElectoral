@@ -77,7 +77,7 @@ mod_analisisEventos_ui <- function(id){
     column(width = 12,
            plotOutput(ns("ggmapa")))
     # column(width = 6,
-    #        plotOutput(ns("llmapa")))
+    #         plotOutput(ns("llmapa")))
     )
   )
 }
@@ -316,13 +316,12 @@ mod_analisisEventos_server <- function(input, output, session){
   })
     
     output$ggmapa <- renderPlot({
-      #MICH <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp",options = "ENCODING=WINDOWS-1252")
-      ggMapaEstado(MICH)
+      
+    ggMapaEstado(MichGeograf)
     })
     
     output$llmapa <- renderLeaflet({
-      #MICH <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp",options = "ENCODING=WINDOWS-1252")
-      llMapaEstado(MICH)
+      llMapaEstado(MichGeograf)
     })
 }
     

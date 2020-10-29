@@ -418,7 +418,7 @@ llMapaEstado <- function(Estado){
   Estado %<>% st_transform(st_crs(4326))
   Estado %<>% mutate(n = sample(1:200,size = nrow(.)))
   
-  pal <- colorNumeric("Reds",domain = unique(mich$n))
+  pal <- colorNumeric("Reds",domain = unique(Estado$n))
   
   Graph <- leaflet(Estado) %>% addTiles() %>% addPolygons(popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
                                                fillColor = ~pal(n), weight = 1, color = "black",opacity = 1,

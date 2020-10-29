@@ -64,13 +64,14 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   
   output$gPdt <- renderPlot({
     # Temporal: Fake data!!!!!!
-    nCand <- 3+rpois(1,2)
-    cand <- tibble(prob=abs(rnorm(n = nCand,18, 25))) %>% 
+    
+    nCand <- 3 + rpois(1,2)
+    cand <- tibble(prob = abs(rnorm(n = nCand, 18, 25))) %>% 
       mutate(prob=round(100*prob/sum(prob)), 
              rw=row_number(),
              cand=paste("Candidato", rw))
     # Función
-    cand %>% probGanar(candidato = "Candidato 2")
+    probGanar(cand, candidato = "Candidato 2", nCand)
   })
   
   # output$votopopu <- renderPlot({

@@ -32,9 +32,9 @@ tema_probGanar <- function(){
 }
 
 # Probabilidad de ganar
-probGanar <- function(bd, candidato){
+probGanar <- function(bd, candidato, nCand){
   pCand <- bd %>% 
-    filter(cand==candidato) %>% 
+    filter(cand == candidato) %>% 
     pull("prob")
   
   g <- bd %>% 
@@ -164,7 +164,6 @@ hPollofPolls <- function(DB){
   
   return(Graph)
 }
-
 
 iVotoBarras <- function(DB){
   
