@@ -3,6 +3,7 @@
 export(run_app)
 import(DescTools)
 import(TSP)
+import(V8)
 import(dplyr)
 import(ggplot2)
 import(highcharter)

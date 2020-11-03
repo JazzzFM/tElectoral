@@ -1345,3 +1345,11 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
     display: none;
 }
 /* End Tramos */
+
+/* Deshabilitar tab */
+.nav li a.disabled {
+  background-color: #aaa !important;
+  color: #333 !important;
+  cursor: not-allowed !important;
+  border-color: #aaa !important;
+}

@@ -44,6 +44,7 @@ usethis::use_package("ggplot2")
 usethis::use_package("leaflet")
 usethis::use_package("tidyr")
 usethis::use_package("DescTools")
+usethis::use_package("V8")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
