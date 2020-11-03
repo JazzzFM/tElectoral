@@ -118,6 +118,8 @@ golem::add_css_file( "login")
 ## If you have data in your package
 usethis::use_data_raw( name = "DB_Mich", open = TRUE ) 
 usethis::use_data_raw( name = "Distancias", open = TRUE ) 
+usethis::use_data_raw( name = "DB_MichEncuesta", open = TRUE ) 
+
 
 ## Tests ----
 ## Add one line by test you want to create
