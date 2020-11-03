@@ -67,7 +67,6 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL){
     check <- c("Responsable","Descripcion","LugarInicio","HorarioInicio","LugarFinal","HorarioFinal", "FechaInicio", "FechaFinal") %>%
       mandatory(input = input, .)
     if(check){
-      if(input$LugarInicio != input$LugarFinal){
         if(input$FechaInicio != input$FechaFinal){
           gira$paso1 <- tibble::tibble(
             Responsable = input$Responsable, 
@@ -109,9 +108,6 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL){
                                    })
           }
         }
-      }else{
-        shinyalert::shinyalert(title = "El origen y destino deben ser diferentes")  
-      }
     } else{
       shinyalert::shinyalert(title = "Formato incompleto")
     }

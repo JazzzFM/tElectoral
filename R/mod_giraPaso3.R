@@ -57,15 +57,15 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
 
   observeEvent(input$guardar, {
     browser()
-    # if(is.null(seq_along(listaEventos$eventos) %>% detect(~is.null(listaEventos$eventos[[.x]]())))){
-    #   if(is.null(seq_along(listaEventos$eventos) %>% detect(~nrow(listaEventos$eventos[[.x]]()) == 0))){
-    #     seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.)  
-    #   }else{
-    #     shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")  
-    #   } 
-    # }else{
-    #   shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")  
-    # }
+    if(is.null(seq_along(listaEventos$eventos) %>% detect(~is.null(listaEventos$eventos[[.x]]())))){
+      if(is.null(seq_along(listaEventos$eventos) %>% detect(~nrow(listaEventos$eventos[[.x]]()) == 0))){
+        seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.)
+      }else{
+        shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")
+      }
+    }else{
+      shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")
+    }
   })
 }
 

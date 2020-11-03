@@ -96,6 +96,13 @@ golem::add_fct(name = "pollofpolls" )
 #Gira paso 3
 golem::add_fct(name = "validarHorarioOcupado" )
 golem::add_fct(name = "validarAlcanceTiempo" )
+golem::add_fct(name = "validarAscendenciaHorario")
+golem::add_fct(name = "validarInfoEvento")
+#Formulario
+golem::add_fct(name = "validarEmail" )
+golem::add_fct(name = "validarSoloNumeros" )
+golem::add_fct(name = "validarSoloLetras" )
+golem::add_fct(name = "validarVacio" )
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

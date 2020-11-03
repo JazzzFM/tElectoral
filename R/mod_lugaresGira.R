@@ -114,8 +114,8 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
   observeEvent(input$GuardarPaso2,{
     if(length(input$recomendaciones_rows_selected)>1){
       temp <- a()[[3]]
-      temp <- prepend(temp,gira$paso1$LugarInicio)
-      temp <- append(temp,gira$paso1$LugarFinal)
+      temp <- prepend(temp,glue::glue("{gira$paso1$LugarInicio} - ORÍGEN DE GIRA"))
+      temp <- append(temp,glue::glue("{gira$paso1$LugarFinal} - DESTINO DE GIRA"))
       
       tiempos <- a()[[4]]
       tiempos <- prepend(tiempos, 0) # Se necesitan insertar tiempos de origen y destino. Mientras son vacíos
