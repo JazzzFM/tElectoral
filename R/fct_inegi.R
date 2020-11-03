@@ -33,21 +33,54 @@ camino_mas_corto <- function(municipios_seleccionados, info, municipios){
   ruta_info <- map2_df(.x=ruta[1:(length(ruta)-1)],
           .y=ruta[2:length(ruta)],
           ~munRPAP %>%
-            filter((origen == municipios_seleccionados [.x] & destino == municipios_seleccionados [.y]) |
-                     (origen == municipios_seleccionados [.y] & destino == municipios_seleccionados [.x])) %>%
+            filter((origen == municipios_seleccionados [.x] & destino == municip <- ios_seleccionados [.y]) |
+                     (origen == municipios_seleccionados [.y] & destino == municipios_seleccionados [.x])
+                   ) %>%
             mutate(origen=municipios_seleccionados [.x],
                    destino=municipios_seleccionados [.y]))
   # Gráficas
-  b <- map(.x=ruta_info$geojson,
-           ~jsonlite::fromJSON(.x) %>% pluck("coordinates") %>% reduce(rbind)) %>%
-    reduce(rbind) %>%
-    as_tibble()
-  mapa <- b %>%
-    leaflet() %>%
-    addTiles() %>%
-    addCircles(lng =~ V1,
-               lat=~V2,
-               radius = .1)
+  # b <- map(.x=ruta_info$geojson,
+  #          ~jsonlite::fromJSON(.x) %>% pluck("coordinates") %>% reduce(rbind)) %>%
+  #   reduce(rbind) %>%
+  #   as_tibble()
+  b <- pmap(.l=ruta_info, 
+            function(geojson, origen, destino, ...){
+              jsonlite::fromJSON(geojson) %>% pluck("coordinates") %>% do.call(rbind,.) %>% 
+                as_tibble() %>% 
+                mutate(
+                  ruta = glue::glue("{origen} - {destino}"))
+            }) %>%
+    do.call(rbind,.) %>% sf::st_as_sf(coords=c("V1","V2"), remove=T, crs = sf::st_crs(4326))
+  
+  cabeceras <-  municipios %>% select(CABECERA_MUNICIPAL,coord) %>%  filter(CABECERA_MUNICIPAL %in% !!municipios_seleccionados) %>% 
+    deframe %>% do.call(rbind,.) %>% data.frame %>% 
+    rownames_to_column(var = "origen") %>% left_join(ruta_info %>% select(origen,costo_caseta,long_km)) %>% 
+    sf::st_as_sf(coords=c("X1","X2"), remove=T, crs = sf::st_crs(4326))
+  
+  # mapa <- b %>%
+  #   leaflet() %>%
+  #   addTiles() %>%
+  #   addCircles(lng =~ V1,
+  #              lat=~V2,
+  #              radius = .1)
+  
+  pal <- colorFactor(palette = topo.colors(nrow(ruta_info)),domain = unique(b$ruta))
+  # limites <- st_bbox(b)
+  mapa <- b %>% 
+    leaflet(options = leafletOptions(zoomControl = FALSE,
+                                     # minZoom = 9, maxZoom = 9,
+                                     dragging = FALSE)) %>%
+    addProviderTiles("CartoDB.Positron") %>%
+    addCircles(
+               radius = .1, color = ~pal(ruta),
+               label = ~ruta) %>% 
+    addMarkers(data = cabeceras,popup = ~glue::glue("<b> Cabecera municipal:</b> {origen} <br>
+                                                    <b> Distancia por recorrer: </b>{ifelse(paste(is.na(long_km),'km'), 'No hay registro',long_km)} <br>
+                                                    <b>costo_caseta:</b> {ifelse(is.na(costo_caseta), 'No hay registro',costo_caseta)}")) #%>% 
+    # fitBounds( lng1 = limites$xmin, 
+    #               lat1 = limites$ymin,
+    #               lng2 = limites$xmax,
+    #               lat2 = limites$ymax )
 
   # Info
   destinos <- c(ruta_info$origen, last(ruta_info$destino)) 

@@ -73,9 +73,11 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
   output$horaFinal <- renderText({gira$paso1$HorarioFinal})
   output$fechaInicio <- renderText({as.character(gira$paso1$FechaInicio)})
   output$fechaFinal <- renderText({as.character(gira$paso1$FechaFinal)})
+  
   muns <- reactive({
     DB_Mich2 %>% select(CABECERA_MUNICIPAL, TOTAL_VOTOS)
   })
+  
   a <- reactive({
     temp <- muns()
     temp <- temp[!(temp$CABECERA_MUNICIPAL== gira$paso1$LugarInicio | temp$CABECERA_MUNICIPAL== gira$paso1$LugarFinal),]
