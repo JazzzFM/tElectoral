@@ -28,7 +28,7 @@ mod_gira_ui <- function(id){
   "
   tagList(
     useShinyjs(),
-    extendShinyjs(text = jscode),
+    extendShinyjs(text = jscode, functions = "disableTab"),
     tabsetPanel(
       id = "TabsGira",
       tabPanel(title = "Paso 1", value = "paso1", id="paso1",
