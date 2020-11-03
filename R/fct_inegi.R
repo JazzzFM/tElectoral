@@ -33,7 +33,7 @@ camino_mas_corto <- function(municipios_seleccionados, info, municipios){
   ruta_info <- map2_df(.x=ruta[1:(length(ruta)-1)],
           .y=ruta[2:length(ruta)],
           ~munRPAP %>%
-            filter((origen == municipios_seleccionados [.x] & destino == municip <- ios_seleccionados [.y]) |
+            filter((origen == municipios_seleccionados [.x] & destino == municipios_seleccionados [.y]) |
                      (origen == municipios_seleccionados [.y] & destino == municipios_seleccionados [.x])
                    ) %>%
             mutate(origen=municipios_seleccionados [.x],
