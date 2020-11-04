@@ -28,7 +28,8 @@ mod_gira_ui <- function(id){
   "
   tagList(
     useShinyjs(),
-    extendShinyjs(text = jscode, functions = "disableTab"),
+    extendShinyjs(text = jscode, functions = c("disableTab", "enableTab")),
+    shinyjs::hidden(actionButton(inputId = ns("volverEmpezar"), "Volver a empezar", class = "btn-primary pull-right")),
     tabsetPanel(
       id = "TabsGira",
       tabPanel(title = "Paso 1", value = "paso1", id="paso1",
@@ -55,16 +56,18 @@ mod_gira_server <- function(input, output, session, parent_session){
   ns <- session$ns
   
   gira <- reactiveValues(paso1 = NULL, paso2 = NULL, paso2Tiempos = NULL, paso3 = NULL)
+  reseted <- reactiveValues(value = F)
   # Paso 1
-  callModule(mod_giraPaso1_server, "giraPaso1_ui_1", gira)
+  callModule(mod_giraPaso1_server, "giraPaso1_ui_1", gira, parent_session, reseted)
   # Lugares gira
-  callModule(mod_lugaresGira_server, "lugaresGira_ui_1", gira)
+  callModule(mod_lugaresGira_server, "lugaresGira_ui_1", gira, reseted)
   # Paso 3
-  callModule(mod_giraPaso3_server, "giraPaso3_ui_1", gira, parent_session)
+  callModule(mod_giraPaso3_server, "giraPaso3_ui_1", gira, parent_session, reseted)
   observe({
     if(!is.null(gira$paso1)){
       js$disableTab("paso1")
       shinyjs::show(selector = paste0("#", ns("Paso2")))
+      shinyjs::show(selector = paste0("#", ns("volverEmpezar")))
       updateTabsetPanel(inputId = "TabsGira", selected = "paso2", parent_session)
     }
     if(!is.null(gira$paso2)){
@@ -72,6 +75,28 @@ mod_gira_server <- function(input, output, session, parent_session){
       shinyjs::show(selector = paste0("#", ns("Paso3")))
       updateTabsetPanel(inputId = "TabsGira", selected = "paso3", parent_session)
     }
+  })
+  
+  observeEvent(input$volverEmpezar, {
+    shinyalert::shinyalert(title = "¿Está seguro?", 
+                           text = glue::glue("Los cambios realizados hasta ahora se perderán y tendrá que volver a ingresar toda su información."),
+                           showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
+                           confirmButtonText = "Sí", 
+                           callbackR = function(x) if(x) {
+                             reseted$value <- T
+                             js$enableTab("paso1")
+                             js$enableTab("paso2")
+                             js$enableTab("paso3")
+                             shinyjs::hide(selector = paste0("#", ns("Paso3")))
+                             shinyjs::hide(selector = paste0("#", ns("Paso2")))
+                             shinyjs::hide(selector = paste0("#", ns("volverEmpezar")))
+                             gira$paso1 <- NULL
+                             gira$paso2 <- NULL
+                             gira$paso2Tiempos <- NULL
+                             gira$paso3 <- NULL
+                             updateTabsetPanel(inputId = "TabsGira", selected = "paso1", parent_session)
+                             #reseted$value <- F
+                           })
   })
 }
 

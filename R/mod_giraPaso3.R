@@ -23,7 +23,7 @@ mod_giraPaso3_ui <- function(id){
 #'
 #' @noRd 
 
-mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_session = NULL){
+mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_session = NULL, reseted){
   ns <- session$ns
   
   listaEventos <- reactiveValues(eventos = c())

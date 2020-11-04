@@ -63,7 +63,7 @@ mod_lugaresGira_ui <- function(id){
 #' lugaresGira Server Function
 #'
 #' @noRd 
-mod_lugaresGira_server <- function(input, output, session, gira = NULL){
+mod_lugaresGira_server <- function(input, output, session, gira = NULL, reseted){
   ns <- session$ns
   output$responsable <- renderText({gira$paso1$Responsable})
   output$descripcion <- renderText({gira$paso1$Descripcion})
@@ -138,6 +138,12 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
         criterio_participacion(DB_VISITAS = fake_visitas, n=5)
       temp <- temp[!(temp$CABECERA_MUNICIPAL== gira$paso1$LugarInicio | temp$CABECERA_MUNICIPAL== gira$paso1$LugarFinal),]
       DT::datatable(data = temp)
+    }
+  })
+  proxy = DT::dataTableProxy(ns("recomendaciones"))
+  observe({
+    if(reseted$value){
+      proxy %>% DT::selectRows(NULL)
     }
   })
   
