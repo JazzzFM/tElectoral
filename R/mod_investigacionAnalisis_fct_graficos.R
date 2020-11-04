@@ -1,4 +1,3 @@
-# Cometario para commit de prueba en tara
 # Temas
 tema_intCred <- function(){
   fuente <- "Georgia"   
@@ -160,7 +159,7 @@ hPollofPolls <- function(DB){
     hc_add_series(data = DB,
                   hcaes(x = fecha, y = votacion, fill = colores, color = colores,
                         group = candidato),
-                  type = "line") %>% 
+                  type = "scarret") %>% 
     hc_yAxis(title = list(text = "Porcentaje"), labels = list(format = "{value}%") ) %>%
     hc_xAxis(crosshair = T) %>% 
     hc_plotOptions(line = list(colorByPoint = F, showInLegend = F)) %>% 
@@ -171,7 +170,7 @@ hPollofPolls <- function(DB){
                pointFormat = tt, 
                useHTML = TRUE) %>%
     hc_add_theme(hc_theme_hcrt()) %>%
-    hc_legend(enabled = T) %>% 
+    hc_legend(enabled = F) %>% 
     hc_colors(DB$colores) 
   
   return(Graph)
