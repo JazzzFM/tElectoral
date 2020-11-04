@@ -153,13 +153,18 @@ hPollofPolls <- function(DB){
   Graph <- DB%>% 
     hchart(hcaes(x = fecha,  low = min,
                  high = max, group = candidato, fill = colores, color = colores),
-           type = "arearange", enableMouseTracking= F, fillOpacity = 0.15)%>% 
+           type = "arearange", enableMouseTracking= F, fillOpacity = 0.15,
+           color = c("#E29578", "#F05606", "#600B10",  "#00539B",
+                     "#7030A0", "#FED90E", "#00B83A", "#FD2017",
+                     "#00A453"))%>% 
     hc_title(text = "Poll of Polls") %>%
     hc_subtitle(text = "Data from Different Survey Houses") %>% 
     hc_add_series(data = DB,
                   hcaes(x = fecha, y = votacion, fill = colores, color = colores,
                         group = candidato),
-                  type = "scarret") %>% 
+                  type = "line", color = c("#E29578", "#F05606", "#600B10",  "#00539B",
+                                           "#7030A0", "#FED90E", "#00B83A", "#FD2017",
+                                           "#00A453")) %>% 
     hc_yAxis(title = list(text = "Porcentaje"), labels = list(format = "{value}%") ) %>%
     hc_xAxis(crosshair = T) %>% 
     hc_plotOptions(line = list(colorByPoint = F, showInLegend = F)) %>% 
@@ -170,7 +175,7 @@ hPollofPolls <- function(DB){
                pointFormat = tt, 
                useHTML = TRUE) %>%
     hc_add_theme(hc_theme_hcrt()) %>%
-    hc_legend(enabled = F) %>% 
+    hc_legend(enabled = T) %>% 
     hc_colors(DB$colores) 
   
   return(Graph)
