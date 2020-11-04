@@ -415,7 +415,6 @@ ggMapaEstado <- function(Estado){
 }
 
 llMapaEstado <- function(Estado){
-  Estado %<>% st_transform(st_crs(4326))
   Estado %<>% mutate(n = sample(1:200,size = nrow(.)))
   
   pal <- colorNumeric("Reds",domain = unique(Estado$n))

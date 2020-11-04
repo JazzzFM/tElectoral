@@ -92,8 +92,8 @@ procesamiento_graph <- function(DB){
     full_join(y = Vari, by = "fecha")
   
   BB <- BB %>% mutate(fecha = dmy(fecha),
-                      min = votacion - var/sqrt(30),
-                      max = votacion + var/sqrt(30))
+                      min = votacion - var/sqrt(50),
+                      max = votacion + var/sqrt(50))
   
   BB <- BB %>% arrange(fecha)
   BB <- BB %>% filter(!candidato %in% c('Aún no sabe',
@@ -105,7 +105,7 @@ procesamiento_graph <- function(DB){
                                         'Anulará su voto',
                                         'No ha tomado una decisión'))
   
-  BB <- filter(BB, votacion > 0.10)
+  BB <- filter(BB, votacion > 0.08)
 
   BAUX = tibble(candidato = c("PRI", "PAN", "MORENA", "PRD", "PES", "PVME",
                               "PT", "MC", "INDEPENDIENTE"), 
@@ -138,42 +138,41 @@ hPollofPolls <- function(DB){
   hcoptslang$months <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
   hcoptslang$thousandsSep <- c(",")
   options(highcharter.lang = hcoptslang)
+  
   # Formato redondeado
   DB <-DB %>% mutate(votacion_r = round(votacion*100),
                      votacion_min = round(min*100),
                      votacion_max = round(max*100),
-                     votacion = votacion*100,
+                     votacion = votacion *100,
                      min = min * 100,
                      max = max * 100)
   # Tooltip
   tt <- tooltip_table(c("{point.series.name}"),
-                      c("{point.votacion_r} %"))
+                      c("{point.votacion_r}%"))
   # Gráfica
-  Graph <- DB %>% 
+  Graph <- DB%>% 
     hchart(hcaes(x = fecha,  low = min,
-                 high = max, group = candidato, fill = candidato, color = colores),
-                 type = "arearange", fillOpacity = 0.15, 
-                 enableMouseTracking = F)%>%
-    hc_colors(colores) %>% 
+                 high = max, group = candidato, fill = colores, color = colores),
+           type = "arearange", enableMouseTracking= F, fillOpacity = 0.15)%>% 
     hc_title(text = "Poll of Polls") %>%
     hc_subtitle(text = "Data from Different Survey Houses") %>% 
     hc_add_series(data = DB,
-                  hcaes(x = fecha, y = votacion,
-                        group = candidato, fill = candidato, color = colores),
-                        type = "line") %>% 
-    hc_colors(colores) %>% 
+                  hcaes(x = fecha, y = votacion, fill = colores, color = colores,
+                        group = candidato),
+                  type = "line") %>% 
     hc_yAxis(title = list(text = "Porcentaje"), labels = list(format = "{value}%") ) %>%
     hc_xAxis(crosshair = T) %>% 
     hc_plotOptions(line = list(colorByPoint = F, showInLegend = F)) %>% 
     hc_tooltip(sort = F,
                share = F,
-               borderWidth = 0,
-               split = T,
+               borderWidth= 0,
+               split = F,
                pointFormat = tt, 
                useHTML = TRUE) %>%
     hc_add_theme(hc_theme_hcrt()) %>%
-     hc_legend(enabled = TRUE)
-    
+    hc_legend(enabled = T) %>% 
+    hc_colors(DB$colores) 
+  
   return(Graph)
 }
 

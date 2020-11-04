@@ -2,7 +2,6 @@
 library(tidyverse)
 library(magrittr)
 library(sf)
-
-MichGeograf <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp",options = "ENCODING=WINDOWS-1252")
-
+DB_MichGeograf <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp", options = "ENCODING=WINDOWS-1252") %>% 
+  st_transform(st_crs(4326))
 usethis::use_data(DB_MichGeograf, overwrite = TRUE)
