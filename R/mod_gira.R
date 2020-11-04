@@ -55,12 +55,15 @@ mod_gira_ui <- function(id){
 mod_gira_server <- function(input, output, session, parent_session){
   ns <- session$ns
   
+  hideTab(inputId = "TabsGira", target = "paso2", session = parent_session)
+  hideTab(inputId = "TabsGira", target = "paso3", session = parent_session)
+  
   gira <- reactiveValues(paso1 = NULL, paso2 = NULL, paso2Tiempos = NULL, paso3 = NULL)
   reseted <- reactiveValues(value = F)
   # Paso 1
   callModule(mod_giraPaso1_server, "giraPaso1_ui_1", gira, parent_session, reseted)
   # Lugares gira
-  callModule(mod_lugaresGira_server, "lugaresGira_ui_1", gira, reseted)
+  callModule(mod_lugaresGira_server, "lugaresGira_ui_1", gira, parent_session, reseted)
   # Paso 3
   callModule(mod_giraPaso3_server, "giraPaso3_ui_1", gira, parent_session, reseted)
   observe({

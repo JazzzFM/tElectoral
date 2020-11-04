@@ -69,6 +69,7 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL, parent_ses
     if(check){
       if(input$LugarInicio != input$LugarFinal){
         if(input$FechaInicio != input$FechaFinal){
+          showTab(inputId = "TabsGira", target = "paso2", session = parent_session)
           gira$paso1 <- tibble::tibble(
             Responsable = input$Responsable, 
             Descripcion = input$Descripcion, 
@@ -96,6 +97,7 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL, parent_ses
                                    showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
                                    confirmButtonText = "Sí", 
                                    callbackR = function(x) if(x) {
+                                     showTab(inputId = "TabsGira", target = "paso2", session = parent_session)
                                      gira$paso1 <- tibble::tibble(
                                        Responsable = input$Responsable, 
                                        Descripcion = input$Descripcion, 
