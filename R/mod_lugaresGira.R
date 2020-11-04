@@ -63,7 +63,7 @@ mod_lugaresGira_ui <- function(id){
 #' lugaresGira Server Function
 #'
 #' @noRd 
-mod_lugaresGira_server <- function(input, output, session, gira = NULL){
+mod_lugaresGira_server <- function(input, output, session, gira = NULL, parent_session){
   ns <- session$ns
   output$responsable <- renderText({gira$paso1$Responsable})
   output$descripcion <- renderText({gira$paso1$Descripcion})
@@ -115,6 +115,7 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL){
   })
   observeEvent(input$GuardarPaso2,{
     if(length(input$recomendaciones_rows_selected)>1){
+      showTab(inputId = "TabsGira", target = "paso3", session = parent_session)
       temp <- a()[[3]]
       temp <- prepend(temp,gira$paso1$LugarInicio)
       temp <- append(temp,gira$paso1$LugarFinal)
