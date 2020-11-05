@@ -77,9 +77,10 @@ promedioGauge <- function(bd, calificacion){
 lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
   bd <- bd %>%  mutate(lugar = {{lugar}}, asistentes={{asistentes}},
                        calificacion = {{calificacion}},
-                       fecha_tt =floor_date({{fecha}}, unit = "hour"),
-                       fecha =datetime_to_timestamp(fecha_tt)) 
-  p<- bd %>% hchart(hcaes(x = fecha, y  = calificacion), type = "area", color = "#F8737D") %>% 
+                       fecha_tt = floor_date({{fecha}}, unit = "hour"),
+                       fecha = datetime_to_timestamp(fecha_tt)) 
+  
+  Graph <- bd %>% hchart(hcaes(x = fecha, y  = calificacion), type = "area", color = "#F8737D") %>% 
     hc_yAxis(min = 0, max = 10, title = list(text = "Calificación"), 
              gridLineWidth =0,
              labels = list(style = list(fontSize = "15px", color = "#F8737D"))) %>% 
@@ -97,10 +98,11 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                                crisp=F, lineWidth = 5, marker = list(radius =0))) %>% 
     hc_title(text = "Calificación  ", align = "right", style = list(fontSize = "20px", color = "#0C4147")) %>% 
     hc_tooltip(borderWidth =0,shadow = F,
-               headerFormat = '',
-               pointFormat = '<span style="font-size: 18px">{point.fecha_tt}</span><br/></b><br>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
+               headerFormat = ' ',
+               useHTML = TRUE,
+               pointFormat = '<span style="font-size: 18px"> {point.fecha_tt} </span> <br/></b><br>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
                style = list(fontSize = "15px", color = "#14373B"))
-  return(p)
+  return(Graph)
 }
 # lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
 
@@ -229,13 +231,16 @@ burbujas <- function(bd, pregunta1, pregunta2){
            )) 
   
   p<- bd %>% ggplot( aes(x = etiqueta, y = etiqueta2, color = color, size = n) )+
-    geom_point(stat = "identity", alpha= .6)+
+    geom_point(stat = "identity", alpha= .7)+
     scale_color_identity()+ theme_minimal()+
     scale_size_area(max_size = 40)+
     labs(x = "Respuesta", y = "Aspecto", title = "")+
     theme(legend.position = "none",
           panel.grid = element_blank(),
-          text = element_text(size = 17))
+          text = element_text(size = 15),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank())
+    
   return(p)
 }
 # burbujas(bd, pregunta1 = asistentes, pregunta2 = duracion)
@@ -388,22 +393,23 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
   
   p<-bd %>% ggplot(aes(x= pregunta, y=pct)) +
     geom_segment( aes( xend=pregunta,y=0, yend=pct, color = colores) , size = 3, alpha=.8)+
-    geom_point(aes(y = pct,color = colores), size =18,stroke = 2,alpha=.85) +
+    geom_point(aes(y = pct,color = colores), size =20, stroke = 2,alpha=.85) +
     # coord_flip()+
     scale_color_identity()+
     geom_text( aes(label = pct %>%  percent(accuracy = 1), y = pct), 
-               color = "white", fontface="bold",size = 6) +
+               color = "white", fontface="bold", size = 8) +
     scale_y_continuous(labels=scales::percent,limits = c(0,max(bd$pct) + .1)) +
     labs(title =titulo, x = "", y = "" )+
     geom_hline(yintercept = 0, linetype = "solid", size = .6, color = "#395C6B")+
     theme_minimal()+
     theme(panel.grid = element_blank(),
           axis.text.y = element_blank(),
-          text = element_text(size = 22))
+          text = element_text(size = 14.5),
+          axis.text.x =element_text(size = 14.5) )
   
   return(p)
 }
-#paletaRecursos(bd, pregunta = calidad, titulo = "Nivel de calidad de los recursos tecnológicos empleados en el evento")
+#paletaRecursos(bd, pregunta = calidad, titulo = "Nivel de calidad de los recursos tecnológicos empleados")
 
 # MICH <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp",options = "ENCODING=WINDOWS-1252")
 ggMapaEstado <- function(Estado){

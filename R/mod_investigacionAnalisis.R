@@ -14,12 +14,14 @@ mod_investigacionAnalisis_ui <- function(id){
   tagList(
     # Letreros
     fluidRow(
-      column(width = 4,
+      column(width = 3,
              plotOutput(ns("caja1"))),
-      column(width = 4,
+      column(width = 3,
             plotOutput(ns("caja2"))),
-      column(width = 4,
-            plotOutput(ns("caja3")))
+      column(width = 3,
+            plotOutput(ns("caja3"))),
+      column(width = 3,
+             plotOutput(ns("caja4")))
     ),
     # Gráficos
     fluidRow(
@@ -48,31 +50,29 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   })
   # Probabilidad de triunfo
   output$intencion <- renderPlot({
-    # Temporal: Fake data!!!!!!
-    bd <- tibble(cand1 = rnorm(n = 30, sd = .06, mean = .3),
-                 cand2 = rnorm(n = 30, sd = .05, mean = .20),
-                 cand3 = rnorm(n = 30, sd = .06, mean = .10),
-                 cand4 = rnorm(n = 30, sd = .04, mean = .25),
-                 fecha = seq(from = as.Date("2020/12/01"),as.Date("2021/06/25"), by = "week" )) %>%
-      gather(candidato, votacion, cand1:cand4) %>%
-      mutate(min = votacion-rnorm(mean = .03, sd = .01, n =120),
-             max = votacion+rnorm(mean = .03, sd = .01, n =120))
-    
+    # Real Data
+    bd <- procesamiento_graph(DB_MichEncuesta)
     iVotoBarras(bd)
-  })
+    })
   #Probabilidad de triunfo
   
   output$gPdt <- renderPlot({
-    # Temporal: Fake data!!!!!!
+    # Temporal: Fake data!!!!!
     
     nCand <- 3 + rpois(1,2)
     cand <- tibble(prob = abs(rnorm(n = nCand, 18, 25))) %>% 
       mutate(prob=round(100*prob/sum(prob)), 
              rw=row_number(),
              cand=paste("Candidato", rw))
+    
+    #Real data, I cannot understant how does it works! ask him first!
+    # cand <- procesamiento_graph(DB_MichEncuesta) %>% 
+    #      group_by(candidato, colores) %>% summarise()
+    # cand <- cand %>% mutate(prob = runif(1, min = 0, max = 26))
+    
     # Función
     probGanar(cand, candidato = "Candidato 2", nCand)
-  })
+    })
   
   # output$votopopu <- renderPlot({
   #   # Temporal: Fake data!!!!!!
@@ -89,25 +89,19 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   # })
   
    output$caja1 <- renderPlot({
-     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-     cajaResume(BB, 1)
+    cajaResume(DB_MichEncuesta, 1)
    })
   
    output$caja2 <- renderPlot({
-     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-     
-     cajaResume(BB, 2)
+     cajaResume(DB_MichEncuesta, 2)
    })
    
    output$caja3 <- renderPlot({
-     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-     
-     cajaResume(BB, 3)
+     cajaResume(DB_MichEncuesta, 3)
    })
    
    output$caja4 <- renderPlot({
      BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-     
      cajaResume(BB, 4)
    })
 }

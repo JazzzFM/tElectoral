@@ -1,3 +1,66 @@
+#Preprocesamiento
+procesamiento_graph <- function(DB){
+  
+  BB <- select(DB, c("estado","fecha_final","partido","voto"))
+  BB <- BB %>% mutate(fecha = fecha_final,
+                      candidato = partido) %>%
+    group_by(fecha, candidato) %>% 
+    summarise(across(where(is.numeric), sum, na.rm=TRUE)) %>% 
+    ungroup()
+  
+  X <- BB %>% group_by(fecha) %>% 
+    summarise(across(where(is.numeric), sum, .names ="Tot_{col}", na.rm=TRUE)) %>% 
+    ungroup() %>% na.omit()
+  
+  
+  BB <- BB %>% 
+    full_join(y = X, by = "fecha")
+  
+  PROM <- BB %>% group_by(fecha) %>% 
+    summarise(across(c(where(is.numeric), -Tot_voto), mean, .names ="prom_r_{col}", na.rm=TRUE)) %>% 
+    ungroup() %>% na.omit()
+  
+  BB <- BB %>% 
+    full_join(y = PROM, by = "fecha")
+  
+  BB <- BB %>% mutate(votacion = voto/Tot_voto,
+                      prom_r_voto = prom_r_voto/Tot_voto,
+                      sigma = (votacion - prom_r_voto)^2)
+  
+  Vari <- BB %>% group_by(fecha) %>% 
+    summarise(across(sigma, sum, .names ="var", na.rm=TRUE)) %>% 
+    ungroup() %>% na.omit()
+  
+  BB <- BB %>% 
+    full_join(y = Vari, by = "fecha")
+  
+  BB <- BB %>% mutate(fecha = dmy(fecha),
+                      min = votacion - var/sqrt(50),
+                      max = votacion + var/sqrt(50))
+  
+  BB <- BB %>% arrange(fecha)
+  BB <- BB %>% filter(!candidato %in% c('Aún no sabe',
+                                        'Aún no decide',
+                                        'Otro', 'No respuesta',
+                                        'No declara', 'No votaré',
+                                        'No sabe', 'Ns/Nc',
+                                        'Indefinidos','Ninguno',
+                                        'Anulará su voto',
+                                        'No ha tomado una decisión'))
+  
+  BB <- filter(BB, votacion > 0.08)
+  
+  BAUX = tibble(candidato = c("PRI", "PAN", "MORENA", "PRD", "PES", "PVME",
+                              "PT", "MC", "INDEPENDIENTE"), 
+                colores = c("#00A453", "#00539B", "#600B10", "#FED90E",
+                            "#7030A0", "#FD2017", "#00B83A", "#F05606",
+                            "#E29578"))
+  
+  BB <- BB %>% full_join(y = BAUX, by = "candidato")
+  
+  return(BB)
+}
+
 # Temas
 tema_intCred <- function(){
   fuente <- "Georgia"   
@@ -56,80 +119,6 @@ probGanar <- function(bd, candidato, nCand){
   
 }
 
-procesamiento_graph <- function(DB){
-  
-  BB <- select(DB, c("estado","fecha_final","partido","voto"))
-  BB <- BB %>% mutate(fecha = fecha_final,
-                      candidato = partido) %>%
-    group_by(fecha, candidato) %>% 
-    summarise(across(where(is.numeric), sum, na.rm=TRUE)) %>% 
-    ungroup()
-  
-  X <- BB %>% group_by(fecha) %>% 
-    summarise(across(where(is.numeric), sum, .names ="Tot_{col}", na.rm=TRUE)) %>% 
-    ungroup() %>% na.omit()
-  
-  
-  BB <- BB %>% 
-    full_join(y = X, by = "fecha")
-  
-  PROM <- BB %>% group_by(fecha) %>% 
-    summarise(across(c(where(is.numeric), -Tot_voto), mean, .names ="prom_r_{col}", na.rm=TRUE)) %>% 
-    ungroup() %>% na.omit()
-  
-  BB <- BB %>% 
-    full_join(y = PROM, by = "fecha")
-  
-  BB <- BB %>% mutate(votacion = voto/Tot_voto,
-                      prom_r_voto = prom_r_voto/Tot_voto,
-                      sigma = (votacion - prom_r_voto)^2)
-  
-  Vari <- BB %>% group_by(fecha) %>% 
-    summarise(across(sigma, sum, .names ="var", na.rm=TRUE)) %>% 
-    ungroup() %>% na.omit()
-  
-  BB <- BB %>% 
-    full_join(y = Vari, by = "fecha")
-  
-  BB <- BB %>% mutate(fecha = dmy(fecha),
-                      min = votacion - var/sqrt(50),
-                      max = votacion + var/sqrt(50))
-  
-  BB <- BB %>% arrange(fecha)
-  BB <- BB %>% filter(!candidato %in% c('Aún no sabe',
-                                        'Aún no decide',
-                                        'Otro', 'No respuesta',
-                                        'No declara', 'No votaré',
-                                        'No sabe', 'Ns/Nc',
-                                        'Indefinidos','Ninguno',
-                                        'Anulará su voto',
-                                        'No ha tomado una decisión'))
-  
-  BB <- filter(BB, votacion > 0.08)
-
-  BAUX = tibble(candidato = c("PRI", "PAN", "MORENA", "PRD", "PES", "PVME",
-                              "PT", "MC", "INDEPENDIENTE"), 
-                colores = c("#00A453", "#00539B", "#600B10", "#FED90E",
-                           "#7030A0", "#FD2017", "#00B83A", "#F05606",
-                           "#E29578"))
-  
-  BB <- BB %>% full_join(y = BAUX, by = "candidato")
-
-  return(BB)
-}
-
-iVotoBarras <- function(DB){
-  barras <- DB %>% group_by(candidato) %>% summarise(voto = mean(votacion)*100)  %>% mutate(label = sprintf("%1.1f%%", voto))
-  Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = candidato))+ geom_bar(stat = "identity")+
-    coord_flip() + theme_minimal() + labs(title = "Intención de Voto",subtitle = "(2020)",caption = "Data from simulation",
-                                          y = "Porcentaje de voto",
-                                          x = "candidatos") +
-    geom_text(aes(label = label, hjust = 1.2), color = "white")+
-    theme(legend.position = "none",  axis.title.y = element_blank()) +
-    scale_fill_manual(values=(c("#685369","#849324", "#F7ACCF", "#4E8098", "#767347", "BEA07A", "6F6358", "#A396B4", "#798BA6")))
-  
-}
-
 hPollofPolls <- function(DB){
   # Funciones para volver al español
   hcoptslang <- getOption("highcharter.lang")
@@ -182,15 +171,26 @@ hPollofPolls <- function(DB){
 }
 
 iVotoBarras <- function(DB){
+
+  colores = c("INDEPENDIENTE" = "#E29578", "MC" = "#F05606",
+            "MORENA" = "#600B10", "PAN" = "#00539B",
+            "PES" = "#7030A0", "PRD" = "#FED90E",
+            "PVEM"= "#00B83A", "PT" = "#FD2017",
+            "PRI" = "#00A453")
   
-  barras <- DB %>% group_by(candidato) %>% summarise(voto = mean(votacion)*100)  %>% mutate(label = sprintf("%1.1f%%", voto))
-  Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = candidato))+ geom_bar(stat = "identity")+
-    coord_flip() + theme_minimal() + labs(title = "Intención de Voto",subtitle = "(2020)",caption = "Data from simulation",
-                                          y = "Porcentaje de voto",
-                                          x = "candidatos") +
+  barras <- DB %>% group_by(candidato)%>%
+    summarise(voto = mean(votacion)*100) %>% 
+    mutate(label = sprintf("%1.1f%%", voto)) %>% 
+    na.omit()
+  
+  Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = candidato))+
+    geom_bar(stat = "identity") + 
+    coord_flip() + theme_minimal() +
+    labs(title = "Intención de Voto", subtitle = "(2020)",caption = "Data from Different Survey Houses",
+         y = "Porcentaje de voto", x = "candidatos") +
     geom_text(aes(label = label, hjust = 1.2), color = "white")+
     theme(legend.position = "none",  axis.title.y = element_blank()) +
-    scale_fill_manual(values=(c("#685369","#849324", "#F7ACCF", "#4E8098")))
+    scale_fill_manual(values = colores)
   
   return(Graph)
 }
@@ -209,103 +209,99 @@ hVotoPopu <- function(DB){
 }
 
 cajaResume <- function(DB, x){
-
-  Graph <- ggplot(DB, aes(x, y)) +
-  geom_smooth(color = "white", se = FALSE, size = 1.5) + theme_light() +
-  theme(axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
-        axis.text = element_blank())
-  
   if(x == 1){
-    annotation <- data.frame(
-      x = c(0.29),
-      y = c(0.12),
-      label = c("Número de Encuestas")
-    )
-        Graph <- Graph +
+    X_1 <- DB %>%
+      nrow()
+    
+    annotation <- data.frame(x = c(2), y = c(3),
+                             label = paste(X_1, "de Encuestas", sep=' '))
+    
+    Graph <- ggplot(DB, aes(x = (1:5), y = (1:5))) +
+            theme_minimal() +
           theme(panel.background = element_rect(fill = "gray"),
                 panel.grid.major = element_blank(), 
-                panel.grid.minor = element_blank()) + 
-          geom_text(data = annotation, aes( x = x, y = y, label = label, weight = 2),
-                     color = "White", size = 8, angle = 0, fontface = "bold")
-               #  annotate("text", x = 0.36, y=0.13,
-               #           label= "82%",
-               #           colour = "White", size = 25) +
-               #  annotate("text", x = 0.32, y=0.10,
-               #     label = "Probabilidad",
-               #     colour = "White", size = 11) +
-               # annotate("text", x = 0.33, y=0.09,
-               #     label = "De Triunfo",
-               #     colour = "White", size = 11) 
+                panel.grid.minor = element_blank(),
+                axis.text.x = element_blank(),
+                axis.ticks.x = element_blank(),
+                axis.text.y = element_blank(),
+                axis.ticks.y = element_blank(),
+                axis.title.y = element_blank(),
+                axis.title.x = element_blank(),
+                axis.text = element_blank()) + 
+          geom_text(data = annotation, aes( x = x, y = y, label = label),
+              color = "White", size = 7, angle = 0, fontface = "bold")
+       
     return(Graph)
   }
   
   if(x == 2){
-    annotation <- data.frame(
-      x = c(0.29),
-      y = c(0.12),
-      label = c("Días para la Elección")
-    )
-    Graph <- Graph + 
+    start <- datetime <- ymd_hms(now("GMT"))
+    end <- ymd_hms("2021-06-06 5:21:00", tz = "GMT")
+    d <- as.numeric(round(end - start)) 
+    
+    annotation <- data.frame(x = c(2), y = c(3),
+                            label = paste(d, " Días para la Elección", sep=' '))
+    Graph <-  ggplot(DB, aes(x = (1:5), y = (1:5))) +
+      theme_minimal() + 
       theme(panel.background = element_rect(fill = "tomato"),
             panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank()) + 
-      geom_text(data = annotation, aes( x = x, y = y, label = label, weight = 2),
-                color = "White", size = 8, angle = 0, fontface = "bold") 
-      
-      # annotate("text", x = 0.36, y=0.13,
-      #          label= "22%",
-      #          colour = "White", size = 25) +
-      # annotate("text", x = 0.32, y=0.115,
-      #          label= "21 Municipios",
-      #          colour = "White", size = 11) +
-      # annotate("text", x = 0.32, y=0.099,
-      #          label= "96 Secciones",
-      #          colour = "White", size = 11)
-      # 
+            panel.grid.minor = element_blank(),
+            axis.text.x = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank(),
+            axis.title.y = element_blank(),
+            axis.title.x = element_blank(),
+            axis.text = element_blank()) + 
+      geom_text(data = annotation, aes( x = x, y = y, label = label),
+                color = "White", size = 7, angle = 0, fontface = "bold")
+  
     return(Graph)
   }
   
   if(x == 3){
-    annotation <- data.frame(
-      x = c(0.29),
-      y = c(0.12),
-      label = c("Última Encuesta Realizada")
-    )
-    Graph <- Graph + 
+    
+    v<-select((DB_MichEncuesta), fecha_final)
+    v <-tail(v, 1)
+    annotation <- data.frame(x = c(2), y = c(3),
+                             label = paste("Última Encuesta:", v, sep = ' '))
+    
+    Graph <- ggplot(DB, aes(x = (1:5), y = (1:5))) +
+    theme_minimal() +
       theme(panel.background = element_rect(fill = "brown"),
             panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank()) + 
+            panel.grid.minor = element_blank(),
+            axis.text.x = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank(),
+            axis.title.y = element_blank(),
+            axis.title.x = element_blank(),
+            axis.text = element_blank()) + 
       geom_text(data = annotation, aes( x = x, y = y, label = label, weight = 2),
-                color = "White", size = 8, angle = 0, fontface = "bold")
-      
-      # annotate("text", x = 0.36, y=0.14,
-      #          label= "22%",
-      #          colour = "White", size = 25) +
-      # annotate("text", x = 0.34, y=0.105,
-      #          label= "21 Municipios",
-      #          colour = "White", size = 11) +
-      # annotate("text", x = 0.34, y=0.095,
-      #          label= "96 Secciones",
-      #          colour = "White", size = 11)
+                color = "White", size = 7, angle = 0, fontface = "bold")
+    
     return(Graph)
   }
   if(x == 4){
-    Graph <- Graph + 
-      theme(panel.background = element_rect(fill = "green"),
+    annotation <- data.frame(x = c(0.32), y = c(0.12),
+                             label = c("Probabilidad de Triunfo"))
+    
+    Graph <- ggplot(DB, aes(x, y)) +
+      geom_smooth(color = "white", se = FALSE, size = 1.5) + theme_light() +
+      theme(panel.background = element_rect(fill = "#BFD5E3", colour = "#6D9EC1"),
             panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank()) + 
-      annotate("text", x = 0.36, y=0.14,
-               label= "22%",
-               colour = "White", size = 25) +
-      annotate("text", x = 0.32, y=0.115,
-               label= "21 Municipios",
-               colour = "White", size = 11) +
-      annotate("text", x = 0.32, y=0.109,
-               label= "96 Secciones",
-               colour = "White", size = 11)
+            panel.grid.minor = element_blank(),
+            axis.text.x = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank(),
+            axis.title.y = element_blank(),
+            axis.title.x = element_blank(),
+            axis.text = element_blank()) +
+      geom_text(data = annotation, aes( x = x, y = y, label = label),
+                color = "White", size = 7, angle = 0, fontface = "bold")
 
     return(Graph)
   }
 }
-  
