@@ -54,7 +54,12 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
       ))
     }
   })
-
+  observe({
+    if(reseted$value){
+      # Aquí no se realiza un reseteo, pero se mantiene la estructura para validar reseteo
+      reseted$resPaso3 <- T
+    }
+  })
   observeEvent(input$guardar, {
     browser()
     # if(is.null(seq_along(listaEventos$eventos) %>% detect(~is.null(listaEventos$eventos[[.x]]())))){

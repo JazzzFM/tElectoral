@@ -17,9 +17,12 @@ crearMD <- function(info){
 }
 
 # Calcular el camino más corto entre los municipios seleccionados
-camino_mas_corto <- function(municipios_seleccionados, info, municipios){
+camino_mas_corto <- function(municipios_seleccionados, info, municipios, inicio, fin){
   municipios_seleccionados <- municipios_seleccionados #%>% sort()
+  # Reservar info de origen y destino de paso 1
+  
   # Filtrar la matriz de información
+  globalInfo <- info
   info <- info %>%
     filter(origen %in% municipios_seleccionados,
            destino %in% municipios_seleccionados)
@@ -38,6 +41,20 @@ camino_mas_corto <- function(municipios_seleccionados, info, municipios){
                    ) %>%
             mutate(origen=municipios_seleccionados [.x],
                    destino=municipios_seleccionados [.y]))
+  # se obtienen origen de tramo 1 y destino de tramo final en los datos de la ruta más corta
+  lugarOrigen <-  top_n(ruta_info, -1)
+  lugarDestino <- top_n(ruta_info, 1)
+  
+  # se obtiene info geo de origen y destino con respecto a paso 1
+  infoOrigen <- globalInfo %>%
+    filter(origen %in% inicio,
+           destino %in% lugarOrigen$origen)
+  
+  infoDestino <- globalInfo %>%
+    filter(origen %in% lugarDestino$destino,
+           destino %in% fin)
+  ruta_info <- ruta_info %>% add_row(infoOrigen, .before = 1)
+  ruta_info <- ruta_info %>% add_row(infoDestino)
   # Gráficas
   # b <- map(.x=ruta_info$geojson,
   #          ~jsonlite::fromJSON(.x) %>% pluck("coordinates") %>% reduce(rbind)) %>%

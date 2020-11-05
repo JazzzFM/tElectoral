@@ -128,6 +128,7 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL, parent_ses
       updateSelectInput(session = parent_session, inputId = ns("LugarFinal"), selected = "")
       updateDateInput(session = parent_session, inputId = ns("FechaFinal"), value = Sys.Date())
       updateSelectizeInput(session = parent_session, inputId = ns("HorarioFinal"), selected = "")
+      reseted$resPaso1 <- T
     }
   })
 }

@@ -74,18 +74,18 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL, parent_s
   output$horaFinal <- renderText({gira$paso1$HorarioFinal})
   output$fechaInicio <- renderText({as.character(gira$paso1$FechaInicio)})
   output$fechaFinal <- renderText({as.character(gira$paso1$FechaFinal)})
-  
+  actualTableData <- reactiveValues(data = NULL)
   muns <- reactive({
     DB_Mich2 %>% select(CABECERA_MUNICIPAL, TOTAL_VOTOS)
   })
   
   a <- reactive({
-    temp <- muns()
-    temp <- temp[!(temp$CABECERA_MUNICIPAL== gira$paso1$LugarInicio | temp$CABECERA_MUNICIPAL== gira$paso1$LugarFinal),]
-    municipios <- temp %>% slice(input$recomendaciones_rows_selected) %>% pull(CABECERA_MUNICIPAL)
+    municipios <- actualTableData$data %>% slice(input$recomendaciones_rows_selected) %>% pull(CABECERA_MUNICIPAL)
     camino_mas_corto(municipios_seleccionados = municipios,
                      info=munRPAP,
-                     municipios = DB_Mich2)
+                     municipios = DB_Mich2,
+                     gira$paso1$LugarInicio,
+                     gira$paso1$LugarFinal)
   })
   # Mapa de gira
   output$mapa <- renderLeaflet({
@@ -118,12 +118,12 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL, parent_s
     if(length(input$recomendaciones_rows_selected)>1){
       showTab(inputId = "TabsGira", target = "paso3", session = parent_session)
       temp <- a()[[3]]
-      temp <- prepend(temp,gira$paso1$LugarInicio)
-      temp <- append(temp,gira$paso1$LugarFinal)
+      # temp <- prepend(temp,gira$paso1$LugarInicio)
+      # temp <- append(temp,gira$paso1$LugarFinal)
       
       tiempos <- a()[[4]]
-      tiempos <- prepend(tiempos, 0) # Se necesitan insertar tiempos de origen y destino. Mientras son vacíos
-      tiempos <- append(tiempos, 0)
+      # tiempos <- prepend(tiempos, 0) # Se necesitan insertar tiempos de origen y destino. Mientras son vacíos
+      # tiempos <- append(tiempos, 0)
       gira$paso2 <- tibble(lugares = temp)
       gira$paso2Tiempos <- tiempos
     }else{
@@ -139,6 +139,7 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL, parent_s
       temp <- muns() %>%
         criterio_participacion(DB_VISITAS = fake_visitas, n=5)
       temp <- temp[!(temp$CABECERA_MUNICIPAL== gira$paso1$LugarInicio | temp$CABECERA_MUNICIPAL== gira$paso1$LugarFinal),]
+      actualTableData$data <- temp
       DT::datatable(data = temp)
     }
   })
@@ -146,6 +147,7 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL, parent_s
   observe({
     if(reseted$value){
       proxy %>% DT::selectRows(NULL)
+      reseted$resPaso2 <- T
     }
   })
   
