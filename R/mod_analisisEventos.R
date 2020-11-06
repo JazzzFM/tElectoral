@@ -21,16 +21,38 @@ mod_analisisEventos_ui <- function(id){
   tagList(
     h3("Evaluación general de la gira"),
     fluidRow(
-      column(width = 4, plotOutput(outputId = ns("pGauge"))),
-      column(width = 4, 
-             div(class="topBoxInfo",
-                 p("52%"),
-                 p("Visitas prioritarias realizadas"),
-                 p("16 eventos")
+      column(width = 8,
+             fluidRow(
+               column(width = 6, 
+                      div(class="topBoxInfo bordered-green",
+                          p("26"),
+                          p("Eventos")
+                      )
+               ),
+               column(width = 6, 
+                      div(class="topBoxInfo default",
+                          p("52%"),
+                          p("Visitas prioritarias realizadas"),
+                          p("16 eventos")
+                      )
+               ),
+               column(width = 6, 
+                      div(class="topBoxInfo bordered-white ft-sm",
+                          plotOutput(outputId = ns("pGauge")),
+                          #p("4.5/10"),
+                          p("Calificación promedio")
+                      )
+                ),
+               column(width = 6, 
+                      div(class="topBoxInfo red",
+                          p("4"),
+                          p("Incidentes")
+                      )
+               ),
              )
-      ),
+       ),
       column(width = 4,
-             div(class="tableMunicipios",
+             div(class="topBoxInfo tableForAnalisisGira",
                  DT::DTOutput(ns("tableMun"))
              )
       )
@@ -93,6 +115,9 @@ mod_analisisEventos_server <- function(input, output, session){
     promedioGauge(bd, calificacion = x)
   })
   
+
+  a <- tibble(Municipio = c(a = "Municipio 1", b = "Municipio 2", c= "Municipio 3", d= "Prueba", e="Prueba 2", f="Prueba 3", g="Prueba 4", h="Prueba 5", i="Prueba 6", j="Prueba 7"), Calificación = c(a = 10, b = 5, c= 8, d=4, e=9, f=7, g=1, h=7, i=3,j=4),)
+
   output$tableMun <- DT::renderDT({
     tibble(Municipio = c(a = "Municipio 1", b = "Municipio 2", c= "Municipio 3"), Calificación = c(a = 10, b = 5, c= 8))
     

@@ -863,11 +863,11 @@ table.dataTable tr.selected td, table.dataTable td.selected{
   background-color: var(--m-semibrown-color) !important;
   
 }
-.dataTables_wrapper table tbody tr td:first-child{
+.dataTables_wrapper table tbody tr td:first-child, .dataTables_wrapper table thead tr th:first-child{
     border-top-left-radius: 5px !important;
     border-bottom-left-radius: 5px !important;
 }
-.dataTables_wrapper table tbody tr td:last-child{
+.dataTables_wrapper table tbody tr td:last-child, .dataTables_wrapper table thead tr th:last-child{
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
@@ -1316,7 +1316,7 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
   padding-top: 55px;
 }
 .topBoxInfo p:first-child {
-  font-size: 4.5em;
+  font-size: 4em;
   background-color: var(--m-red-color);
   color: #fff;
   width: 165px;
@@ -1327,6 +1327,23 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
   align-items: center;
   margin: 8px auto;
 }
+.topBoxInfo.bordered-green p:first-child{
+  background-color: #1cbea4;
+  border: 5px solid #333;
+}
+.topBoxInfo.bordered-white p:first-child{
+  background-color: #fff;
+  border: 5px solid #e39c91;
+  color: #e39c91;
+}
+.topBoxInfo.ft-sm p:first-child{
+  font-size: 3em;
+}
+.topBoxInfo.red p:first-child{
+  background-color: #c45947;
+  border: 5px solid #e39c91;
+  color: #fff;
+}
 .topBoxInfo p:nth-of-type(2) {
   font-size: 2em;
 }
@@ -1334,7 +1351,17 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
   font-size: 1.2em;
   margin-top: 15px;
 }
-
+.topBoxInfo.tableForAnalisisGira {
+    max-height: 578px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding-top: 0;
+    margin-top: 55px;
+    /* border: 1px solid #eaeaea; */
+    padding: 3px;
+    /* border-right: none; */
+    box-shadow: 0px 0px 5px 2px rgba(0,0,0,.1);
+}
 .ViewBoxCustom {
 width: 100%;
 border: 1px solid #ccc;
