@@ -1,3 +1,4 @@
+
 # bd <- select(DB_Mich, c(MUNICIPIO, lugar =CABECERA_MUNICIPAL)) %>%
 #   mutate(fecha= seq(from = dmy_hm("06-01-21 11:00"), to = dmy_hm("06-02-21 11:00"), length.out =113),
 #     asistentes = sample(c("Debían de haber sido más personas",
