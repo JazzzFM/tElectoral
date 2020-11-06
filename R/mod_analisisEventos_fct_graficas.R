@@ -104,7 +104,7 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                style = list(fontSize = "15px", color = "#14373B"))
   return(Graph)
 }
-# lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
+# lineaCalificacion(bd, fecha  = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
 
 # Radar 
 distRadar <- function(bd, pregunta, otro, x, titulo =""){
@@ -139,13 +139,13 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
   
   if(nrow(bd_1) != nrow(bd_2)){
     
-    Graph <- ggradar(bd_1, base.size = 25, font.radar = "Circular Air") +
+    Graph <- ggradar(bd_1, base.size = 25) +
       labs(title = titulo) +
       theme(plot.background = element_rect(fill = "white", color = "white"))
   }else{
   df <- data.frame(bd_1, bd_2)
 
-   Graph <- ggradar(df, base.size = 25, font.radar = "Circular Air") +
+   Graph <- ggradar(df, base.size = 25) +
      labs(title = titulo) +
      theme(plot.background = element_rect(fill = "white", color = "white"))
     }
