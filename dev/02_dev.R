@@ -97,6 +97,7 @@ golem::add_fct(name = "pollofpolls" )
 #Gira paso 3
 golem::add_fct(name = "validarHorarioOcupado" )
 golem::add_fct(name = "validarAlcanceTiempo" )
+golem::add_fct("pIntervalo")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
