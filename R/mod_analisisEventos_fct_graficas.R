@@ -238,7 +238,7 @@ burbujas <- function(bd, pregunta1, pregunta2){
     labs(x = "Respuesta", y = "Aspecto", title = "")+
     theme(legend.position = "none",
           panel.grid = element_blank(),
-          text = element_text(size = 21),
+          text = element_text(size = 18),
           axis.title.y = element_blank(),
           axis.title.x = element_blank())
     
@@ -410,6 +410,19 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
   
   return(p)
 }
+
+llMapaEstado <- function(Estado){
+  
+  pal <- colorNumeric("Reds",domain = unique(Estado$n))
+  Graph <- leaflet(Estado) %>%
+    addTiles() %>% 
+    addPolygons(popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
+                fillColor = ~pal(n), weight = 1, color = "black",opacity = 1,
+                fillOpacity = 1,label = ~MUNICIPIO) %>%
+    addLegend(pal = pal,values = ~n)
+  return(Graph)
+}
+
 #paletaRecursos(bd, pregunta = calidad, titulo = "Nivel de calidad de los recursos tecnológicos empleados")
 
 # MICH <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp",options = "ENCODING=WINDOWS-1252")
@@ -421,11 +434,4 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
 #   return(Graph)
 # }
 # 
-# llMapaEstado <- function(Estado){
-#   
-#   pal <- colorNumeric("Reds",domain = unique(Estado$n))
-#   Graph <- leaflet(Estado) %>% addTiles() %>% addPolygons(popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
-#                                                fillColor = ~pal(n), weight = 1, color = "black",opacity = 1,
-#                                                fillOpacity = 1,label = ~MUNICIPIO) %>% addLegend(pal = pal,values = ~n)
-#   return(Graph)
-# }
+

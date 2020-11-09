@@ -94,11 +94,11 @@ mod_analisisEventos_ui <- function(id){
              plotOutput(ns("cRecursos"))),
       column(width = 6,
              plotOutput(ns("nAsistentes")))
-    )#,
-    # fluidRow(
-    #   column(width = 12,
-    #          plotOutput(ns("ggmapa")))
-    # )
+    ),
+    fluidRow(
+      column(width = 10,
+             leafletOutput(ns("llmapa")))
+    )
   )
 }
 
@@ -334,15 +334,15 @@ mod_analisisEventos_server <- function(input, output, session){
     burbujas(bd, pregunta1 = asistentes, pregunta2 = duracion)
   })
   
+  output$llmapa <- renderLeaflet({
+    llMapaEstado(DB_MichGeograf)
+  })
+  
+}
   # output$ggmapa <- renderPlot({
   #   ggMapaEstado(DB_MichGeograf)
   # })
-  
-  # output$llmapa <- renderLeaflet({
-  #   
-  #   llMapaEstado(DB_MichGeograf)
-  # })
-}
+
 
 ## To be copied in the UI
 # 
