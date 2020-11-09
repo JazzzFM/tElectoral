@@ -104,7 +104,8 @@ mod_gira_server <- function(input, output, session, parent_session){
                              gira$paso2Tiempos <- NULL
                              gira$paso3 <- NULL
                              updateTabsetPanel(inputId = "TabsGira", selected = "paso1", parent_session)
-                             #reseted$value <- F
+                             hideTab(inputId = "TabsGira", target = "paso2", session = parent_session)
+                             hideTab(inputId = "TabsGira", target = "paso3", session = parent_session)
                            })
   })
 }

@@ -53,9 +53,9 @@ validarInfoEvento <- function(evt){
     mensaje <- paste(mensaje, "Debe escoger una hora para finalizar el evento", sep = "\n")
   }
   if(validarVacio(as.character(evt$inicioEvento)) && validarVacio(as.character(evt$finEvento))){
-    if(evt$finEvento < evt$inicioEvento){
+    if(evt$finEvento <= evt$inicioEvento){
       allValido <- FALSE
-      mensaje <- paste(mensaje, "La hora final del evento no puede ser menor a la hora de inicio", sep = "\n")
+      mensaje <- paste(mensaje, "La hora final del evento no puede ser menor o igual a la hora de inicio", sep = "\n")
     } 
   }
   if(mensaje != ""){
