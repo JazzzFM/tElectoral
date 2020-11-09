@@ -27,12 +27,11 @@ criterio_participacion <- function(DB_ESTADO, DB_VISITAS,n){
    
   # # # Arrange CP visitas
 
-<<<<<<< HEAD
   DB_AUX <- DB_AUX %>% arrange(desc(CRITERIOP))
-  DB_ORDENADA <- select(DB_AUX, c(MUNICIPIO, VISITAS, TOTAL_VOTOS, CRITERIOP))
+  # DB_ORDENADA <- select(DB_AUX, c(MUNICIPIO, VISITAS, TOTAL_VOTOS, CRITERIOP))
   
   # antes estaba return(DB_AUX) pero no está ordenada
-  return(DB_ORDENADA)
+  return(DB_AUX)
 }
 
 #R<-criterio_participacion(DB_Mich, fake_visitas)
@@ -73,13 +72,11 @@ criterio_participacion_pri <- function(DB_ESTADO, DB_VISITAS){
   
   # antes estaba return(DB_AUX) pero no está ordenada
   return(DB_ORDENADA)
-=======
-  DB_AUX <- DB_AUX %>% 
-    arrange(CRITERIOP) %>% 
-    select(CABECERA_MUNICIPAL,VISITAS, TOTAL_VOTOS, CRITERIOP)
-   
-  return(DB_AUX)
->>>>>>> Investigacion
+  # DB_AUX <- DB_AUX %>% 
+  #   arrange(CRITERIOP) %>% 
+  #   select(CABECERA_MUNICIPAL,VISITAS, TOTAL_VOTOS, CRITERIOP)
+  #  
+  # return(DB_AUX)
 }
 
 # R<-criterio_participacion(DB_Mich, fake_visitas)
