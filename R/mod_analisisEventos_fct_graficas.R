@@ -422,10 +422,8 @@ ggMapaEstado <- function(Estado){
 }
 
 llMapaEstado <- function(Estado){
-  Estado %<>% mutate(n = sample(1:200,size = nrow(.)))
   
   pal <- colorNumeric("Reds",domain = unique(Estado$n))
-  
   Graph <- leaflet(Estado) %>% addTiles() %>% addPolygons(popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
                                                fillColor = ~pal(n), weight = 1, color = "black",opacity = 1,
                                                fillOpacity = 1,label = ~MUNICIPIO) %>% addLegend(pal = pal,values = ~n)

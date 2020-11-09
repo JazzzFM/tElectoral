@@ -96,10 +96,8 @@ mod_analisisEventos_ui <- function(id){
              plotOutput(ns("nAsistentes")))
     ),
     fluidRow(
-      column(width = 6,
-             plotOutput(ns("ggmapa"))),
-      column(width = 6,
-             leafletOutput(ns("llmapa")))
+      column(width = 12,
+             plotOutput(ns("ggmapa")))
     )
   )
 }
@@ -337,14 +335,13 @@ mod_analisisEventos_server <- function(input, output, session){
   })
   
   output$ggmapa <- renderPlot({
-    
     ggMapaEstado(DB_MichGeograf)
   })
   
-  output$llmapa <- renderLeaflet({
-    
-    llMapaEstado(DB_MichGeograf)
-  })
+  # output$llmapa <- renderLeaflet({
+  #   
+  #   llMapaEstado(DB_MichGeograf)
+  # })
 }
 
 ## To be copied in the UI
