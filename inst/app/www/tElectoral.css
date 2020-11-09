@@ -1306,3 +1306,50 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
 #gira_ui_1-giraPaso3_ui_1-lugaresPaso3_ui_1-evento_ui_1-inputsEditar{
   width: 100%;
 }
+
+/* Tramos (específicamente para el paso 3 de gira) */
+.tramo{
+  display: block;
+  width: 100%;
+  position: relative;
+  text-align: center;
+  padding: 35px 0px;
+  clear: both;
+  transform: translateY(-8px);
+}
+.tramo::before {
+    width: 2px;
+    height: 30px;
+    background-color: #333;
+    position: absolute;
+    content: '';
+    left: 0;
+    right: 0;
+    top: -5px;
+    display: block;
+    margin: auto;
+}
+.tramo::after {
+    width: 2px;
+    height: 30px;
+    background-color: #333;
+    position: absolute;
+    content: '';
+    left: 0;
+    right: 0;
+    bottom: -5px;
+    display: block;
+    margin: auto;
+}
+.row:last-child .tramo {
+    display: none;
+}
+/* End Tramos */
+
+/* Deshabilitar tab */
+.nav li a.disabled {
+  background-color: #aaa !important;
+  color: #333 !important;
+  cursor: not-allowed !important;
+  border-color: #aaa !important;
+}

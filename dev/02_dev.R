@@ -43,7 +43,8 @@ usethis::use_package("dplyr")
 usethis::use_package("ggplot2")
 usethis::use_package("leaflet")
 usethis::use_package("tidyr")
-
+usethis::use_package("DescTools")
+usethis::use_package("V8")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -93,6 +94,10 @@ golem::add_utils( "alinear" )
 golem::add_fct("input_btns")
 # Modelo Poll of polls
 golem::add_fct(name = "pollofpolls" )
+#Gira paso 3
+golem::add_fct(name = "validarHorarioOcupado" )
+golem::add_fct(name = "validarAlcanceTiempo" )
+golem::add_fct("pIntervalo")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

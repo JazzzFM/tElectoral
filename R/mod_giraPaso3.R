@@ -23,45 +23,54 @@ mod_giraPaso3_ui <- function(id){
 #'
 #' @noRd 
 
-mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_session = NULL){
+mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_session = NULL, reseted){
   ns <- session$ns
   
-  listaEventos <- reactiveValues(eventos = NULL)
-  horariosOcupados <- reactiveValues(index = c(), lugar = c(), evento = c(), fecha = c(), horaInicio = c(), horaFinal = c())
-  tramoInfo <- reactiveValues(horas = c(), minutos = c())
+  listaEventos <- reactiveValues(eventos = c())
+  horariosOcupados <- reactiveValues()
+  eventos <- reactiveValues()
+  uiCount <- reactiveValues(val = 1)
   output$outEventos <- renderUI({
     if(!is.null(gira$paso2)){
       lapply(seq_along(gira$paso2$lugares), function(i) {
         mod_lugaresPaso3_ui(ns(glue::glue("lugaresPaso3_ui_{i}")), titulo = gira$paso2$lugares[i])
-        
-        # Reuniendo información de tramo (horas y minutos hacia cada lugar)
-        if(i != 1){
-          dbInfo <- DB_Mich2 %>% select(CABECERA_MUNICIPAL, TOTAL_VOTOS)
-        }
       }) 
     }
   })
   
   observe({
-    listaEventos$eventos <- seq_along(gira$paso2$lugares) %>% map(~callModule(mod_lugaresPaso3_server,
-                                                                      glue::glue("lugaresPaso3_ui_{.x}"),
-                                                                      lugar = gira$paso2$lugares[.x],
-                                                                      parent_session = parent_session,
-                                                                      horariosOcupados = horariosOcupados,
-                                                                      horariosPaso1 = gira$paso1,
-                                                                      index = .x))
-  })
-
-  observeEvent(input$guardar, {
-    if(is.null(seq_along(listaEventos$eventos) %>% detect(~is.null(listaEventos$eventos[[.x]]())))){
-      if(is.null(seq_along(listaEventos$eventos) %>% detect(~nrow(listaEventos$eventos[[.x]]()) == 0))){
-        seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.)  
-      }else{
-        shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")  
-      } 
-    }else{
-      shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")  
+    if(length(gira$paso2$lugares) > 0){
+      listaEventos$eventos <- seq_along(gira$paso2$lugares) %>% map(~callModule(mod_lugaresPaso3_server,
+                                                                                glue::glue("lugaresPaso3_ui_{.x}"),
+                                                                                lugar = gira$paso2$lugares[.x],
+                                                                                lugarAntes = ifelse(.x != 1, gira$paso2$lugares[sum(.x, -1)], ""),
+                                                                                parent_session = parent_session,
+                                                                                eventos = eventos,
+                                                                                uiCount = uiCount,
+                                                                                paso1 = gira$paso1,
+                                                                                tiempoActual = ifelse(.x != length(gira$paso2$lugares), gira$paso2Tiempos[.x], 0),
+                                                                                tiempoAntes = ifelse(.x != 1, gira$paso2Tiempos[sum(.x, -1)], 0),
+                                                                                index = .x
+      ))
     }
+  })
+  observe({
+    if(reseted$value){
+      # Aquí no se realiza un reseteo, pero se mantiene la estructura para validar reseteo
+      reseted$resPaso3 <- T
+    }
+  })
+  observeEvent(input$guardar, {
+    browser()
+    # if(is.null(seq_along(listaEventos$eventos) %>% detect(~is.null(listaEventos$eventos[[.x]]())))){
+    #   if(is.null(seq_along(listaEventos$eventos) %>% detect(~nrow(listaEventos$eventos[[.x]]()) == 0))){
+    #     seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.)  
+    #   }else{
+    #     shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")  
+    #   } 
+    # }else{
+    #   shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")  
+    # }
   })
 }
 
