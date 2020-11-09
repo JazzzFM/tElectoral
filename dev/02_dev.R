@@ -44,6 +44,7 @@ usethis::use_package("ggplot2")
 usethis::use_package("leaflet")
 usethis::use_package("tidyr")
 usethis::use_package("DescTools")
+usethis::use_package("V8")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -103,6 +104,7 @@ golem::add_fct(name = "validarEmail" )
 golem::add_fct(name = "validarSoloNumeros" )
 golem::add_fct(name = "validarSoloLetras" )
 golem::add_fct(name = "validarVacio" )
+golem::add_fct("pIntervalo")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

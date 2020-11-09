@@ -60,7 +60,7 @@ mod_giraPaso1_ui <- function(id){
 #' giraPaso1 Server Function
 #'
 #' @noRd 
-mod_giraPaso1_server <- function(input, output, session, gira = NULL){
+mod_giraPaso1_server <- function(input, output, session, gira = NULL, parent_session, reseted){
   ns <- session$ns
   
   observeEvent(input$guardar,{
@@ -68,6 +68,7 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL){
       mandatory(input = input, .)
     if(check){
         if(input$FechaInicio != input$FechaFinal){
+          showTab(inputId = "TabsGira", target = "paso2", session = parent_session)
           gira$paso1 <- tibble::tibble(
             Responsable = input$Responsable, 
             Descripcion = input$Descripcion, 
@@ -95,6 +96,7 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL){
                                    showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
                                    confirmButtonText = "Sí", 
                                    callbackR = function(x) if(x) {
+                                     showTab(inputId = "TabsGira", target = "paso2", session = parent_session)
                                      gira$paso1 <- tibble::tibble(
                                        Responsable = input$Responsable, 
                                        Descripcion = input$Descripcion, 
@@ -110,6 +112,19 @@ mod_giraPaso1_server <- function(input, output, session, gira = NULL){
         }
     } else{
       shinyalert::shinyalert(title = "Formato incompleto")
+    }
+  })
+  observe({
+    if(reseted$value){
+      updateTextInput(session = parent_session, inputId = ns("Responsable"), value = "")
+      updateTextAreaInput(session = parent_session, inputId = ns("Descripcion"), value = "")
+      updateSelectInput(session = parent_session, inputId = ns("LugarInicio"), selected = "")
+      updateDateInput(session = parent_session, inputId = ns("FechaInicio"), value = Sys.Date())
+      updateSelectizeInput(session = parent_session, inputId = ns("HorarioInicio"), selected = "")
+      updateSelectInput(session = parent_session, inputId = ns("LugarFinal"), selected = "")
+      updateDateInput(session = parent_session, inputId = ns("FechaFinal"), value = Sys.Date())
+      updateSelectizeInput(session = parent_session, inputId = ns("HorarioFinal"), selected = "")
+      reseted$resPaso1 <- T
     }
   })
 }
