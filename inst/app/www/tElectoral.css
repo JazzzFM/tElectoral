@@ -14,23 +14,28 @@
   /* Colores pan */
   /*--m-black-color: #2a2c2b;
   --m-red-color: #1e50a9;
-  --m-red-black-color: #1b2f9f;*/
+  --m-red-black-color: #1b2f9f;
+  --m-tr-selected: #1e50a9;*/
   
   /* Colores pri */
   
  /* --m-black-color: #2a2c2b;
   --m-red-color: #c00301;
-  --m-red-black-color: #005734;*/
+  --m-red-black-color: #005734;
+  --m-tr-selected: #005734;*/
   
   /* Colores movimiento */
   --m-black-color: #2a2c2b;
   --m-red-color: #ff8201;
   --m-red-black-color: #cc6900;
+  --m-blue-color: rgba(1, 111, 184,1);
+  --m-tr-selected: rgba(1, 111, 184,.4);
   
   /* Colores morena */
   /*--m-black-color: #2a2c2b;
   --m-red-color: #b92207;
-  --m-red-black-color: #a01d06;*/
+  --m-red-black-color: #a01d06;
+  --m-tr-selected: #b92207;*/
   
   --m-green-color: #0c231e;
   --m-semibrown-color: #ececec;
@@ -72,6 +77,9 @@ body{
 }
 .wrapper .content-wrapper{
   background-color: #fff ;
+}
+.skin-blue .left-side, .skin-blue .main-sidebar, .skin-blue .wrapper{
+  background-color: #fff;
 }
 .content-wrapper>.content{
   position: relative;
@@ -164,7 +172,8 @@ a{
 .btn-info,
 .btn-light,
 .btn-dark,
-.sweet-alert button{
+.sweet-alert button,
+.btn-definitive{
   background-color: var(--m-red-color);
   color: #fff;
   border-radius: 30px;
@@ -173,9 +182,46 @@ a{
   transform-origin: center;
   transition: ease all .3s;
 }
+
 .btn-default{
   background-color: #eaeaea !important;
   color: #333;
+}
+.btn-definitive{
+  display: block;
+  margin: 15px auto;
+  width: 50%;
+  min-width: 150px;
+  background-color: var(--m-blue-color) !important;
+  color: #fff !important;
+  position: relative;
+  overflow: hidden;
+}
+.btn-definitive::before,
+.btn-definitive::after{
+  content: '';
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  top: -10px;
+  position: absolute;
+  transition: ease all .3s;
+  transform-origin: center;
+}
+.btn-definitive::before{
+  left: 0;
+  transform: rotateZ(45deg) translateX(-50px);
+}
+.btn-definitive::after{
+  right: 0;
+  transform: rotateZ(45deg) translateX(50px);
+}
+.btn-definitive:hover{
+  transform: scale(1.1);
+}
+.btn-definitive:hover::before,
+.btn-definitive:hover::after{
+  transform: rotateZ(45deg) translateX(0px);
 }
 .sweet-alert button{
   background-color: var(--m-red-color) !important;
@@ -341,6 +387,8 @@ span.input-group-addon:empty{
 }
 .skin-blue .main-header .navbar{
   background-color: var(--m-green-color);
+  padding: 3px 10px;
+  height: 35px;
 }
 .skin-blue .main-header .logo{
   background-color: var(--m-red-color);
@@ -396,7 +444,7 @@ div#logo img{
     background-image: url(img/forma-cuadrado-redondo.svg);
     background-repeat: no-repeat;
     background-size: 110%;
-    background-position: -100px 150px;
+    background-position: -100px 185px;
 }
 
 .sidebar{
@@ -809,8 +857,11 @@ table.dataTable tr.selected td, table.dataTable td.selected{
 }
 .dataTables_wrapper table tbody tr:hover td{
     cursor: pointer;
-    background-color: #eaeaea !important;
     transform: translateY(2px)
+}
+table.dataTable tr.selected td, table.dataTable td.selected{
+  background-color: var(--m-semibrown-color) !important;
+  
 }
 .dataTables_wrapper table tbody tr td:first-child{
     border-top-left-radius: 5px !important;
@@ -895,7 +946,7 @@ table tbody tr [role="texto"]{
   display: flex;
 }
 
-.selectize-input.full{
+.custom .selectize-input.full{
   padding: 15px 10px;
   text-align: center;
   font-size: 1.5em;
@@ -1069,7 +1120,7 @@ z-index: 1;
 .FlexRadioButtons .shiny-input-container:not(.shiny-input-container-inline){
   width: 100%;
 }
-.FlexRadioButtons .shiny-input-checkboxgroup label ~ .shiny-options-group, .shiny-input-radiogroup label ~ .shiny-options-group{
+.FlexRadioButtons .shiny-input-checkboxgroup label ~ .shiny-options-group{
   margin-top: -10px;
     display: flex;
     justify-content: center;
@@ -1101,8 +1152,8 @@ z-index: 1;
   position: fixed;
   top: 58px;
   min-height: 150px;
-  width: 50%;
-  right: 0;
+  width: 75%;
+  right: -20%;
   z-index: 1;
   box-shadow: 0px 2px 4px 4px rgba(0,0,0,0.1);
   border-radius: 3px;
@@ -1112,6 +1163,12 @@ z-index: 1;
   transition: ease all .5s;
   background-color: #fff;
   padding: 20px;
+}
+@media only screen and (max-width: 748px) and (min-width: 300px){
+  .AyudasContainer{
+    width: 95%;
+  right: 0%;
+  }
 }
 .AyudasContainer.show{
   visibility: visible;
@@ -1204,4 +1261,95 @@ z-index: 1;
 .ButtonWDeleteAddon button:nth-of-type(2) {
 position: relative;
 min-width: 150px;
+padding-left: 45px;
+}
+
+/* Masonry effect */
+.masonryContent {
+display: flex;
+flex-wrap: wrap;
+}
+.masonryContent > * {
+width: calc(50% - 25px);
+margin-right: 25px;
+padding: 10px 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+box-shadow: 2px 2px 2px 0px rgba(0,0,0,.1);
+}
+/* End masonry effect */
+
+/* Box */
+.mt-25{
+  margin-top: 25px;
+}
+.box-header .box-title, .box-header>.fa, .box-header>.glyphicon, .box-header>.ion{
+  font-size: 15px;
+  padding-right: 55px;
+}
+/* End box */
+
+/* Alinear encabezado hacia la derecha (Verificar porqué se crean así algunos encabezados de tabla) */
+table.dataTable th.dt-right, table.dataTable td.dt-right{
+  text-align:center !important;
+}
+
+/* Checkbox input */
+.checkbox label{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Estilo para selectize en modales de evento gira */
+
+#gira_ui_1-giraPaso3_ui_1-lugaresPaso3_ui_1-evento_ui_1-inputsEditar{
+  width: 100%;
+}
+
+/* Tramos (específicamente para el paso 3 de gira) */
+.tramo{
+  display: block;
+  width: 100%;
+  position: relative;
+  text-align: center;
+  padding: 35px 0px;
+  clear: both;
+  transform: translateY(-8px);
+}
+.tramo::before {
+    width: 2px;
+    height: 30px;
+    background-color: #333;
+    position: absolute;
+    content: '';
+    left: 0;
+    right: 0;
+    top: -5px;
+    display: block;
+    margin: auto;
+}
+.tramo::after {
+    width: 2px;
+    height: 30px;
+    background-color: #333;
+    position: absolute;
+    content: '';
+    left: 0;
+    right: 0;
+    bottom: -5px;
+    display: block;
+    margin: auto;
+}
+.row:last-child .tramo {
+    display: none;
+}
+/* End Tramos */
+
+/* Deshabilitar tab */
+.nav li a.disabled {
+  background-color: #aaa !important;
+  color: #333 !important;
+  cursor: not-allowed !important;
+  border-color: #aaa !important;
 }
