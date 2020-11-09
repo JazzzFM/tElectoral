@@ -84,9 +84,9 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
   Graph <- bd %>% hchart(hcaes(x = fecha, y  = calificacion), type = "area", color = "#F8737D") %>% 
     hc_yAxis(min = 0, max = 10, title = list(text = "Calificación"), 
              gridLineWidth =0,
-             labels = list(style = list(fontSize = "15px", color = "#F8737D"))) %>% 
+             labels = list(style = list(fontSize = "18px", color = "#F8737D"))) %>% 
     hc_xAxis( title = list(text = "Fecha del evento"), type = "datetime",
-              labels = list(step = 2,style = list(fontSize = "15px", color = "#43515C")),
+              labels = list(step = 2,style = list(fontSize = "18px", color = "#43515C")),
               crosshair = list(ebabled= T, color= "#F8737D", dashStyle="shortdash",
                                width= 2, snap = F, zIndex= 5),
               lineWidth =0, tickWidth =0) %>%
@@ -102,7 +102,7 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                headerFormat = ' ',
                useHTML = TRUE,
                pointFormat = '<span style="font-size: 18px"> {point.fecha_tt} </span> <br/></b><br>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
-               style = list(fontSize = "15px", color = "#14373B"))
+               style = list(fontSize = "16px", color = "#14373B"))
   return(Graph)
 }
 # lineaCalificacion(bd, fecha  = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
@@ -217,7 +217,7 @@ burbujas <- function(bd, pregunta1, pregunta2){
     gather(grupo, resp, c({{pregunta1}}, {{pregunta2}})) %>% 
     group_by(grupo) %>%  count(resp) %>% 
     mutate(n = round(n/sum(n), 2), 
-           etiqueta = case_when(resp%in% c("Debían haber sido menos personas",
+             etiqueta = case_when(resp%in% c("Debían haber sido menos personas",
                                            "Debía de haber durado menos tiempo")~ "Debió haber sido menor",
                                 resp%in% c("Debían de haber sido más personas", 
                                            "Debía de haber durado más tiempo")~"Debió haber sido mayor",
@@ -238,7 +238,7 @@ burbujas <- function(bd, pregunta1, pregunta2){
     labs(x = "Respuesta", y = "Aspecto", title = "")+
     theme(legend.position = "none",
           panel.grid = element_blank(),
-          text = element_text(size = 15),
+          text = element_text(size = 21),
           axis.title.y = element_blank(),
           axis.title.x = element_blank())
     
@@ -369,7 +369,7 @@ lolipop_cRecursos <- function(DB, pregunta){
   Graph <- ggplot(cr, aes(x = porcentaje, y = reorder({{ pregunta }}, -n), label = labela, color = n, fill = n)) +
     geom_segment(aes(x = 0, y = {{ pregunta }}, xend = porcentaje, yend = {{ pregunta }})) +
     geom_point(size = 20) + tema_lolipop() +
-    geom_text(color = "white", size = 4.5) +
+    geom_text(color = "white", size = 8) +
     labs(title = "Calidad de Recursos")
   
   cr <- mutate(labela = {{ pregunta }})
@@ -405,8 +405,8 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
     theme_minimal()+
     theme(panel.grid = element_blank(),
           axis.text.y = element_blank(),
-          text = element_text(size = 14.5),
-          axis.text.x =element_text(size = 14.5) )
+          text = element_text(size = 25),
+          axis.text.x =element_text(size = 25) )
   
   return(p)
 }
