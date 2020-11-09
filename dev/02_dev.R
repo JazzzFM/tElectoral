@@ -45,6 +45,8 @@ usethis::use_package("leaflet")
 usethis::use_package("tidyr")
 usethis::use_package("DescTools")
 usethis::use_package("V8")
+usethis::use_package("ggfittex")
+usethis::use_package("scales")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -62,8 +64,7 @@ golem::add_module( name = "cuestionario_paso_2" )
 golem::add_module( name = "cuestionario_pregunta" )
 golem::add_module( name = "cuestionario_bloques" )
 # End Cuestionario
-# Registro
-golem::add_module( name = "registro" )
+
 # Gira
 golem::add_module( name = "registroGira" )
 golem::add_module( name = "gira" )
@@ -114,7 +115,7 @@ golem::add_css_file( "login")
 usethis::use_data_raw( name = "DB_Mich", open = TRUE ) 
 usethis::use_data_raw( name = "Distancias", open = TRUE ) 
 usethis::use_data_raw( name = "DB_MichEncuesta", open = TRUE ) 
-
+usethis::use_data_raw( name = "DB_MichGeograf", open = TRUE ) 
 
 ## Tests ----
 ## Add one line by test you want to create
