@@ -863,11 +863,11 @@ table.dataTable tr.selected td, table.dataTable td.selected{
   background-color: var(--m-semibrown-color) !important;
   
 }
-.dataTables_wrapper table tbody tr td:first-child{
+.dataTables_wrapper table tbody tr td:first-child, .dataTables_wrapper table thead tr th:first-child{
     border-top-left-radius: 5px !important;
     border-bottom-left-radius: 5px !important;
 }
-.dataTables_wrapper table tbody tr td:last-child{
+.dataTables_wrapper table tbody tr td:last-child, .dataTables_wrapper table thead tr th:last-child{
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
@@ -1307,6 +1307,7 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
   width: 100%;
 }
 
+
 /* Tramos (específicamente para el paso 3 de gira) */
 .tramo{
   display: block;
@@ -1353,3 +1354,127 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
   cursor: not-allowed !important;
   border-color: #aaa !important;
 }
+
+/* Analisis gira */
+
+.topBoxInfo {
+  text-align: center;
+  line-height: .8;
+  height: 100%;
+  padding-top: 55px;
+}
+.topBoxInfo p:first-child {
+  font-size: 4em;
+  background-color: var(--m-red-color);
+  color: #fff;
+  width: 165px;
+  height: 165px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 8px auto;
+}
+.topBoxInfo.bordered-green p:first-child{
+  background-color: #1cbea4;
+  border: 5px solid #333;
+}
+.topBoxInfo.bordered-white p:first-child{
+  background-color: #fff;
+  border: 5px solid #e39c91;
+  color: #e39c91;
+}
+.topBoxInfo.ft-sm p:first-child{
+  font-size: 3em;
+}
+.topBoxInfo.red p:first-child{
+  background-color: #c45947;
+  border: 5px solid #e39c91;
+  color: #fff;
+}
+.topBoxInfo p:nth-of-type(2) {
+  font-size: 2em;
+}
+.topBoxInfo p:last-child {
+  font-size: 1.2em;
+  margin-top: 15px;
+}
+.topBoxInfo.tableForAnalisisGira {
+    max-height: 350px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-top: 0;
+    margin-top: 55px;
+    /* border: 1px solid #eaeaea; */
+    padding: 3px;
+    /* border-right: none; */
+    /*box-shadow: 0px 0px 5px 2px rgba(0,0,0,.1);*/
+}
+.ViewBoxCustom {
+width: 100%;
+border: 1px solid #ccc;
+margin: 15px 0;
+border-radius: 5px;
+box-shadow: 2px 2px 2px 0px rgba(0,0,0,.1);
+text-align: center;
+padding: 15px;
+}
+
+.ViewBoxCustom .topInfo {
+border-bottom: 1px solid #ccc;
+}
+
+.ViewBoxCustom .topInfo p:first-child {
+font-size: 1.8em;
+}
+
+.ViewBoxCustom .topInfo p:last-child {
+max-width: 30%;
+padding: 7px;
+border-radius: 30px;
+display: block;
+margin: auto;
+margin-bottom: 15px;
+font-size: 1.2em;
+min-width: 120px;
+max-width: 35%;
+background-color: var(--m-red-color);
+color: #fff;
+}
+.wallInfo {
+display: flex;
+justify-content: center;
+align-content: center;
+margin-top: 10px;
+flex-wrap: wrap;
+}
+.wallInfo > * {
+margin: 10px 10px;
+padding: 6px 12px;
+border: 1px solid #ccc;
+border-radius: 30px;
+}
+.wallInfo.forOneItem {
+display: block;
+margin: 7px auto;
+font-size: 1.5em;
+}
+.wallInfo.forOneItem > * {
+border: none;
+display: block;
+}
+/* Ajustes columnas para navegador */
+.col-sm-6{
+  width: 49% !important;
+}
+@media (min-width: 768px){
+  .col-sm-4 {
+    width: 33% !important;
+  }
+}
+@media handheld, only screen and (max-width: 767px){
+  [class*='col-'] {
+    width: 100% !important;
+  }
+}
+
