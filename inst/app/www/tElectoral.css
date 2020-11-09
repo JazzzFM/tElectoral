@@ -1,5 +1,5 @@
 :root{
-  --white: #fff;
+  /*--white: #fff;
   --danger: #e44e44;
   --success: #00b963;
   --twitter-blue-primary: #00cdff;
@@ -9,7 +9,7 @@
   --twitter-red-primary: #c55b5b;
   --twitter-black-primary: #262525;
   --twitter-black-secondary: #263a5b;
-  --bg-primary: #f2f5fa;
+  --bg-primary: #f2f5fa;*/
   
   /* Colores pan */
   /*--m-black-color: #2a2c2b;
@@ -25,11 +25,11 @@
   --m-tr-selected: #005734;*/
   
   /* Colores movimiento */
-  --m-black-color: #2a2c2b;
+  /*--m-black-color: #2a2c2b;
   --m-red-color: #ff8201;
   --m-red-black-color: #cc6900;
   --m-blue-color: rgba(1, 111, 184,1);
-  --m-tr-selected: rgba(1, 111, 184,.4);
+  --m-tr-selected: rgba(1, 111, 184,.4);*/
   
   /* Colores morena */
   /*--m-black-color: #2a2c2b;
@@ -37,16 +37,101 @@
   --m-red-black-color: #a01d06;
   --m-tr-selected: #b92207;*/
   
-  --m-green-color: #0c231e;
+  /*--m-green-color: #0c231e;
   --m-semibrown-color: #ececec;
   --m-white-primary-color: #f2f2f2;
-  --m-white-secondary-color: #e0e0e0;
+  --m-white-secondary-color: #e0e0e0;*/
   
-  /* Colores de barras */
-  --cbar-red: #e44e44;
-  --cbar-yellow: #f1c410;
-  --cbar-green: #00b963;
-  --cbar-blue: #00cdff;
+  /* GENERAL */
+  --white: #fff;
+  --gray-primary: #ccc;
+  --gray-secondary: #eaeaea;
+  --black-primary: #333;
+  --black-secondary: #1b1e24;
+  --red-primary: #E04B4A;
+  --red-secondary: #e44e44;
+  
+  /* DEGRADADOS GENERALES*/
+  --gradient-button-info: linear-gradient(133deg, rgba(163,238,228,1) 4%, rgba(6,179,154,1) 61%);
+  --gradient-button-danger: linear-gradient(133deg, rgba(244,134,134,1) 4%, rgba(212,85,84,1) 61%);
+  --gradient-button-warning: linear-gradient(133deg, rgba(230,202,163,1) 4%, rgba(214,148,55,1) 61%);
+  --gradient-button-success: linear-gradient(133deg, rgba(47,152,103,1) 4%, rgba(0,185,99,1) 61%);
+  --gradient-button-default: linear-gradient(133deg, rgba(252,252,252,1) 4%, rgba(228,228,228,1) 61%);
+  --gradient-button-black: linear-gradient(133deg, rgba(11,20,38,1) 4%, rgba(22,28,41,1) 61%);
+  
+  /* DEGRADADOS DEFAULT */
+  /*--gray-third: #777;
+  --button-definitive: #777;
+  --gradient-sidebar: linear-gradient(0deg, rgba(97,97,97,1) 33%, rgba(167,167,167,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(167,167,167,1) 20%, rgba(97,97,97,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(97,97,97,1) -50%,rgba(167,167,167,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(135,135,135,1) 30%, rgba(97,97,97,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(170,170,170,1) 29%, rgba(97,97,97,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(167,167,167,1) 0%, rgba(97,97,97,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);
+  --gradient-button-definitive: linear-gradient(133deg, rgba(167,167,167,1) 0%, rgba(97,97,97,1) 55%);
+  */
+  
+  /* DEGRADADOS PAN */
+  /*--gray-third: #4d64cc;
+  --button-definitive: #3380c7;
+  --gradient-sidebar: linear-gradient(0deg, rgba(30,52,156,1) 33%, rgba(63,121,221,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(63,121,221,1) 20%, rgba(30,52,156,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(30,52,156,1) -50%,rgba(63,121,221,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(77,100,204,1) 30%, rgba(34,80,161,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(62,83,181,1) 29%, rgba(63,121,221,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(77,100,204,1) 0%, rgba(34,80,161,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);
+  --gradient-button-definitive: linear-gradient(107deg, rgba(51,128,199,1) 30%, rgba(17,66,198,1) 88%);*/
+  
+  /* DEGRADADOS MOVIMIENTO CIUDADANO */
+  /*--gray-third: #006fb8;
+  --button-definitive: #c79633;
+  --gradient-sidebar: linear-gradient(0deg, rgba(255,129,1,1) 33%, rgba(210,157,22,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(210,157,22,1) 20%, rgba(255,129,1,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(255,129,1,1) -50%,rgba(210,157,22,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(255,129,1,1) 30%, rgba(231,165,0,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(238,163,85,1) 29%, rgba(213,153,4,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(241,187,131,1) 0%, rgba(213,153,4,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);
+  --gradient-button-definitive: linear-gradient(107deg, rgba(199,150,51,1) 30%, rgba(198,165,17,1) 88%);*/
+  
+  /* DEGRADADOS MORENA */
+  /*--gray-third: #201915;
+  --button-definitive: #c76233;
+  --gradient-sidebar: linear-gradient(0deg, rgba(180,54,1,1) 33%, rgba(240,111,63,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(240,111,63,1) 20%, rgba(180,54,1,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(180,54,1,1) -50%,rgba(240,111,63,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(180,54,1,1) 30%, rgba(242,100,47,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(180,54,1,1) 29%, rgba(242,100,47,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(180,54,1,1) 0%, rgba(242,100,47,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);
+  --gradient-button-definitive: linear-gradient(107deg, rgba(199,98,51,1) 30%, rgba(157,81,27,1) 88%);*/
+  
+  /* DEGRADADOS PRD */
+  /*--gray-third: #c4a309;
+  --button-definitive: #bdc733;
+  --gradient-sidebar: linear-gradient(0deg, rgba(85,103,112,1) 33%, rgba(136,152,161,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(136,152,161,1) 20%, rgba(85,103,112,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(85,103,112,1) -50%,rgba(136,152,161,1) 0%);
+  --gradient-active-link: linear-gradient(194deg, rgba(85,103,112,1) 30%, rgba(116,126,131,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(85,103,112,1) 29%, rgba(116,126,131,1) 95%);
+  --gradient-button-primary: linear-gradient(107deg, rgba(223,197,74,1) 29%, rgba(207,172,12,1) 95%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);
+  --gradient-button-definitive: linear-gradient(107deg, rgba(189,199,51,1) 30%, rgba(157,151,27,1) 88%); */
+  
+  /* DEGRADADOS PRI */
+  --gray-third: #df5252;
+  --button-definitive: #15980c;
+  --gradient-sidebar: linear-gradient(0deg, rgba(120,7,7,1) 33%, rgba(228,66,66,1) 92%);
+  --gradient-topbar: linear-gradient(90deg, rgba(228,66,66,1) 20%, rgba(120,7,7,1) 97%);
+  --gradient-topbar-reversed: linear-gradient(90deg, rgba(120,7,7,1) -50%,rgba(228,66,66,1) 0%);
+  --gradient-active-link:linear-gradient(194deg, rgba(223,82,82,1) 30%, rgba(162,32,32,1) 88%);
+  --gradient-tr-selected: linear-gradient(107deg, rgba(150,18,18,1) 29%, rgba(176,33,33,1) 95%);
+  --gradient-button-primary: linear-gradient(133deg, rgba(223,82,82,1) 0%, rgba(162,32,32,1) 55%);
+  --gradient-button-secondary: linear-gradient(133deg, rgba(200,200,200,1) 4%, rgba(234,234,234,1) 61%);
+  --gradient-button-definitive: linear-gradient(107deg, rgba(21,152,12,1) 30%, rgba(33,107,15,1) 88%);
+  
 }
 /* General */
 @font-face {
@@ -158,7 +243,7 @@ body{
   color: #333;
 }
 .btn.btn-primary:focus{
-  color: #fff;
+  color: #333;
 }
 a{
   color: #333;
@@ -192,7 +277,7 @@ a{
   margin: 15px auto;
   width: 50%;
   min-width: 150px;
-  background-color: var(--m-blue-color) !important;
+  background: var(--gradient-button-definitive) !important;
   color: #fff !important;
   position: relative;
   overflow: hidden;
@@ -224,31 +309,34 @@ a{
   transform: rotateZ(45deg) translateX(0px);
 }
 .sweet-alert button{
-  background-color: var(--m-red-color) !important;
+  background: var(--gradient-button-black) !important;
 }
 .btn-primary{
-  background-color: var(--m-red-color) !important;
-  color: #fff;
+  background: var(--gradient-button-primary);
+  color: var(--white);
 }
 .btn-secondary{
-  background-color: var(--m-red-black-color) !important;
+  background: var(--gradient-button-secondary);
 }
 .btn-danger, .btn-danger:hover{
-  background-color: #e44e44 !important;
-  color: #fff !important;
+  background: var(--gradient-button-danger);
+  color: var(--white);
 }
 .btn-success{
-  background-color: #00b963;
+  background: var(--gradient-button-success);
+  color: var(--white);
 }
 .btn-info{
-  background-color: var(--m-green-color);
+  background: var(--gradient-button-info);
+  color: var(--white);
 }
 .btn-warning{
-  background-color: #ffc107;
-  color: #333;
+  background: var(--gradient-button-warning);
+  color: var(--white);
 }
 .btn-dark{
-  background-color: #333;
+  background: var(--gradient-button-black);
+  color: var(--white);
 }
 .btn-light{
   background-color: #eaeaea;
@@ -258,8 +346,8 @@ a{
   color: #333;
 }
 .btn-primary:hover{
-  background-color: var(--m-red-black-color);
-  color: #fff;
+  background: var(--gradient-button-secondary);
+  color: var(--black-primary);
   transform: translateY(2px);
 }
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show>.btn-primary.dropdown-toggle,
@@ -283,11 +371,11 @@ a{
 .bg-yellow{ background-color: #FFC857 !important; color: #000000 !important; }
 
 .dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover{
-  background-color: var(--m-red-color);
+  background-color: var(--gray-third);
   color: #fff;
 }
 .form-control:focus {
-        border-color: var(--m-red-color);
+        border-color: var(--gray-third);
         box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1);
     } 
     /*drop-down override*/
@@ -318,10 +406,10 @@ div.btn-group.show div.dropdown-menu.show button.dropdown-item:focus {
     }
     .dropdown-item.active, .dropdown-item:active,
     .datepicker table tr td.active.active{
-      background-color: var(--m-red-color);
+      background-color: var(--gray-third);
     }
     .btn-primary:active:hover, .btn-primary.active:hover, .open>.dropdown-toggle.btn-primary:hover, .btn-primary:active:focus, .btn-primary.active:focus, .open>.dropdown-toggle.btn-primary:focus, .btn-primary:active.focus, .btn-primary.active.focus, .open>.dropdown-toggle.btn-primary.focus{
-      background-color: var(--m-red-color) !important;
+      background-color: var(--gray-third) !important;
       color: #fff !important;
     }
 /* Input Addon */
@@ -386,12 +474,12 @@ span.input-group-addon:empty{
     box-shadow: 2px 2px 2px 0px rgba(0,0,0,.3);
 }
 .skin-blue .main-header .navbar{
-  background-color: var(--m-green-color);
+  background: var(--gradient-topbar);
   padding: 3px 10px;
   height: 35px;
 }
 .skin-blue .main-header .logo{
-  background-color: var(--m-red-color);
+  background: var(--gradient-topbar-reversed);
 }
 .skin-blue .main-header .logo:hover{
   background-color: var(--m-red-black-color);
@@ -429,7 +517,7 @@ div#logo img{
   margin: auto;
 }
 .main-sidebar{
-  background-color: var(--m-red-color) !important;
+  background: var(--gradient-sidebar) !important;
   position: fixed !important;
   overflow: visible;
   padding: 65px 5px;
@@ -461,7 +549,7 @@ div#logo img{
   border: none;
 }
 .skin-blue .sidebar-menu>li.active>a{
-  background-color: var(--m-red-black-color);
+  background: var(--gradient-active-link);
   border: none;
   color: #fff;
   box-shadow: 2px 2px 2px 0px rgba(0,0,0,.3) !important;
@@ -501,7 +589,7 @@ div#logo img{
   background-color: var(--m-red-black-color);
   margin-top: 5px;
   border-radius: 5px;
-  box-shadow: inset 2px 2px 4px 1px rgba(0,0,0,0.1);
+  box-shadow: inset 2px 2px 5px 2px rgba(0,0,0,0.3)
 }
 /*
 .skin-blue .sidebar-menu>li.active>a::before,
@@ -826,8 +914,8 @@ table i{
     text-align: center;
     text-transform: capitalize;
     line-height: 0;
-    background-color: var(--m-red-color);
-    color: #fff;
+    background-color: #fff;
+    color: var(--black-primary)
 }
 .dataTables_scrollBody table thead tr th{
   background-color: transparent;
@@ -1112,7 +1200,7 @@ z-index: 1;
   padding: 15px 0;
 }
 .pretty input:checked~.state.p-primary label:after, .pretty.p-toggle .state.p-primary label:after {
-  background-color: var(--m-red-color) !important;
+  background: var(--gradient-button-primary) !important;
 }
 .FlexRadioButtons{
   margin-bottom: 15px;
