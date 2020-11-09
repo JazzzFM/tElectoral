@@ -40,8 +40,6 @@ mod_lugaresPaso3_ui <- function(id, titulo){
 
 mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, parent_session, eventos, uiCount, paso1, tiempoActual, tiempoAntes, index){
   ns <- session$ns
-  #eventos <- reactiveValues()
-  #uiCount <- reactiveValues(val = 1)
   # Add evento
   observeEvent(input$addEvento, {
     showModal(modalDialog(title = "Evento",
@@ -59,43 +57,47 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
   })
   observeEvent(input$agregar, {
     evt <- callModule(mod_evento_server, glue::glue("evento_ui_{uiCount$val}"), parent_session = parent_session, valores = NULL, paso1 = paso1, editar = as.logical(F), index = as.numeric(uiCount$val), lugar = lugar)
-    allValido <- TRUE
-    if(uiCount$val > 1){
-      allValido <- validarHorarioOcupado(evt, eventos, uiCount) # Retorna false si está ocupado
-      if(index != 1 && allValido){
-        res <- validarAlcanceTiempo(evt,eventos,tiempoAntes, lugarAntes, lugar, uiCount) # Retorna false si no alcanza el tiempo y el tiempo
-        allValido <- as.logical(res[1])
-        if(!allValido){
-          shinyalert::shinyalert(title = "Advertencia", 
-                                 text = glue::glue("La duración del tramo para llegar a {lugar} es de {floor(tiempoAntes/60)} hrs. con {round(tiempoAntes %% 60)} minuto(s), y de acuerdo al inicio de este evento solo tendrás {floor(res[2] / 60)} hrs. y {round(res[2] %% 60)} mins. para llegar a tu destino. ¿Deseas continuar?"),
-                                 showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
-                                 confirmButtonText = "Sí",
-                                 callbackR = function(x) if(x) {
-                                   eventos[[as.character(uiCount$val)]] <- evt()
-                                   insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
-                                            ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
-                                              input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "danger"),
-                                              input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
-                                            ))
-                                   )
-                                   uiCount$val <- uiCount$val+1
-                                   removeModal()
-                                 }
-          )
+    if(validarInfoEvento(evt())){
+      allValido <- TRUE
+      if(uiCount$val > 1){
+        allValido <- validarHorarioOcupado(evt, eventos, uiCount) # Retorna false si está ocupado
+        if(allValido)
+          allValido <- validarAscendenciaHorario(evt, eventos, uiCount) # Retorna false si después de tantas fechas, hay una fecha menor a ellas
+        if(index != 1 && allValido){
+          res <- validarAlcanceTiempo(evt,eventos,tiempoAntes, lugarAntes, lugar, uiCount) # Retorna false si no alcanza el tiempo y el tiempo
+          allValido <- as.logical(res[1])
+          if(!allValido){
+            shinyalert::shinyalert(title = "Advertencia", 
+                                   text = glue::glue("La duración del tramo para llegar a {lugar} es de {floor(tiempoAntes/60)} hrs. con {round(tiempoAntes %% 60)} minuto(s), y de acuerdo al inicio de este evento solo tendrás {floor(res[2] / 60)} hrs. y {round(res[2] %% 60)} mins. para llegar a tu destino. ¿Deseas continuar?"),
+                                   showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
+                                   confirmButtonText = "Sí",
+                                   callbackR = function(x) if(x) {
+                                     eventos[[as.character(uiCount$val)]] <- evt()
+                                     insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
+                                              ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
+                                                input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "danger"),
+                                                input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
+                                              ))
+                                     )
+                                     uiCount$val <- uiCount$val+1
+                                     removeModal()
+                                   }
+            )
+          }
         }
       }
-    }
-    
-    if(allValido == T){
-      eventos[[as.character(uiCount$val)]] <- evt()
-      insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
-               ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
-                 input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "danger"),
-                 input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
-               ))
-      )
-      uiCount$val <- uiCount$val+1
-      removeModal()
+      
+      if(allValido == T){
+        eventos[[as.character(uiCount$val)]] <- evt()
+        insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
+                 ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
+                   input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "danger"),
+                   input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
+                 ))
+        )
+        uiCount$val <- uiCount$val+1
+        removeModal()
+      } 
     }
   })
   
@@ -115,46 +117,52 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
   
   observeEvent(input$editarModal, {
     evt <- callModule(mod_evento_server, glue::glue("evento_ui_{actualEditable$value}"), parent_session = parent_session, valores = NULL, paso1 = paso1, editar = as.logical(F), index = as.numeric(uiCount$val), lugar = lugar)
-    allValido <- TRUE
-    if(uiCount$val > 1){
-      allValido <- validarHorarioOcupado(evt, eventos, uiCount, actualEditable$value) # Retorna false si está ocupado
-      if(index != 1 && allValido){
-        res <- validarAlcanceTiempo(evt,eventos,tiempoAntes, lugarAntes, lugar, uiCount) # Retorna false si no alcanza el tiempo y el tiempo
-        allValido <- as.logical(res[1])
-        if(!allValido){
-          shinyalert::shinyalert(title = "Advertencia", 
-                                 text = glue::glue("La duración del tramo para llegar a {lugar} es de {floor(tiempoAntes/60)} hrs. con {round(tiempoAntes %% 60)} minuto(s), y de acuerdo al inicio de este evento solo tendrás {floor(res[2] / 60)} hrs. y {round(res[2] %% 60)} mins. para llegar a tu destino. ¿Deseas continuar?"),
-                                 showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
-                                 confirmButtonText = "Sí",
-                                 callbackR = function(x) if(x) {
-                                   eventos[[as.character(actualEditable$value)]] <- evt()
-                                   removeUI(selector = paste0("#evento-", actualEditable$value))
-                                   insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
-                                            ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",actualEditable$value),HTML(
-                                              input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "danger"),
-                                              input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", eventos[[as.character(actualEditable$value)]]$nombre), label = eventos[[as.character(actualEditable$valuel)]]$nombre)
-                                            ))
-                                   )
-                                   removeModal()
-                                 }
-          )
+    if(validarInfoEvento(evt())){
+      allValido <- TRUE
+      if(uiCount$val > 1){
+        allValido <- validarHorarioOcupado(evt, eventos, uiCount, actualEditable$value) # Retorna false si está ocupado
+        if(allValido)
+          allValido <- validarAscendenciaHorario(evt, eventos, uiCount, actualEditable$value) # Retorna false si después de tantas fechas, hay una fecha menor a ellas
+        if(index != 1 && allValido){
+          res <- validarAlcanceTiempo(evt,eventos,tiempoAntes, lugarAntes, lugar, uiCount) # Retorna false si no alcanza el tiempo y el tiempo
+          allValido <- as.logical(res[1])
+          if(!allValido){
+            shinyalert::shinyalert(title = "Advertencia", 
+                                   text = glue::glue("La duración del tramo para llegar a {lugar} es de {floor(tiempoAntes/60)} hrs. con {round(tiempoAntes %% 60)} minuto(s), y de acuerdo al inicio de este evento solo tendrás {floor(res[2] / 60)} hrs. y {round(res[2] %% 60)} mins. para llegar a tu destino. ¿Deseas continuar?"),
+                                   showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
+                                   confirmButtonText = "Sí",
+                                   callbackR = function(x) if(x) {
+                                     eventos[[as.character(actualEditable$value)]] <- evt()
+                                     removeUI(selector = paste0("#evento-", actualEditable$value))
+                                     insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
+                                              ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",actualEditable$value),HTML(
+                                                input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "danger"),
+                                                input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", eventos[[as.character(actualEditable$value)]]$nombre), label = eventos[[as.character(actualEditable$valuel)]]$nombre)
+                                              ))
+                                     )
+                                     removeModal()
+                                   }
+            )
+          }
         }
       }
-    }
-    
-    if(allValido == T){
-      eventos[[as.character(actualEditable$value)]] <- evt()
-      removeUI(selector = paste0("#evento-", actualEditable$value))
-      insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
-               ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",actualEditable$value),HTML(
-                 input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "danger"),
-                 input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", eventos[[as.character(actualEditable$value)]]$nombre), label = eventos[[as.character(actualEditable$value)]]$nombre)
-               ))
-      )
-      removeModal()
+      
+      if(allValido == T){
+        eventos[[as.character(actualEditable$value)]] <- evt()
+        removeUI(selector = paste0("#evento-", actualEditable$value))
+        insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
+                 ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",actualEditable$value),HTML(
+                   input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "danger"),
+                   input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", eventos[[as.character(actualEditable$value)]]$nombre), label = eventos[[as.character(actualEditable$value)]]$nombre)
+                 ))
+        )
+        removeModal()
+      } 
     }
   })
+  # End editar
   
+  # Eliminar section
   observeEvent(input$eliminar,{
     shinyalert::shinyalert(title = "Eliminar", 
                            text = glue::glue("¿Está seguro que desea eliminar el evento: {eventos[[as.character(input$eliminar)]]$nombre}?"),
@@ -175,7 +183,6 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
                              removeUI(selector = paste0("#evento-",input$eliminar))
                            })
   })
-  # End editar
   ev <- reactive({
     seq_len(uiCount$val-1) %>% map(~eventos[[as.character(.x)]]() %>% mutate(lugar = lugar)) %>% do.call(rbind,.) %>% na.omit()
   })

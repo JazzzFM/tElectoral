@@ -15,7 +15,7 @@ mod_lugaresGira_ui <- function(id){
       class = "mt-25",
       column(width = 12,
              class = "col-lg-6",
-             tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {background-color: var(--m-tr-selected) !important;}')),
+             tags$style(HTML('table.dataTable tbody tr.selected {background: var(--gradient-tr-selected) !important; background-attachment: fixed !important; color: #fff} table.dataTable tbody tr.selected td {background-color: transparent !important}')),
              DT::DTOutput(ns("recomendaciones"))
       ),
       column(
@@ -118,12 +118,8 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL, parent_s
     if(length(input$recomendaciones_rows_selected)>1){
       showTab(inputId = "TabsGira", target = "paso3", session = parent_session)
       temp <- a()[[3]]
-      # temp <- prepend(temp,gira$paso1$LugarInicio)
-      # temp <- append(temp,gira$paso1$LugarFinal)
       
       tiempos <- a()[[4]]
-      # tiempos <- prepend(tiempos, 0) # Se necesitan insertar tiempos de origen y destino. Mientras son vacíos
-      # tiempos <- append(tiempos, 0)
       gira$paso2 <- tibble(lugares = temp)
       gira$paso2Tiempos <- tiempos
     }else{
