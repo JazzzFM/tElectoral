@@ -21,64 +21,40 @@ mod_analisisEventos_ui <- function(id){
   tagList(
     h3("Evaluación general de la gira"),
     fluidRow(
-      column(width = 8,
+      column(width = 12,
              fluidRow(
-               column(width = 6, 
+               column(width = 12, 
+                      div(class="topBoxInfo bordered-white ft-sm",
+                          plotOutput(outputId = ns("pGauge")),
+                          p("Calificación promedio")
+                      )
+               ),
+               column(width = 4, 
                       div(class="topBoxInfo bordered-green",
                           p("26"),
                           p("Eventos")
                       )
                ),
-               column(width = 6, 
+               column(width = 4, 
                       div(class="topBoxInfo default",
                           p("52%"),
                           p("Visitas prioritarias realizadas"),
                           p("16 eventos")
                       )
                ),
-               column(width = 6, 
-                      div(class="topBoxInfo bordered-white ft-sm",
-                          plotOutput(outputId = ns("pGauge")),
-                          #p("4.5/10"),
-                          p("Calificación promedio")
-                      )
-                ),
-               column(width = 6, 
+               column(width = 4, 
                       div(class="topBoxInfo red",
                           p("4"),
                           p("Incidentes")
                       )
                ),
              )
-       ),
-      column(width = 4,
-             div(class="topBoxInfo tableForAnalisisGira",
-                 DT::DTOutput(ns("tableMun"))
-             )
-      )
+       )
     ),
     fluidRow(
       column(width = 6,
-             div(class="ViewBoxCustom",
-                 div(class="topInfo",
-                     p("Eventos"),
-                     p("32")
-                 ),
-                 div(class="wallInfo forOneItem",
-                     p("100% de los municipios")
-                 )
-             ),
-             div(class="ViewBoxCustom",
-                 div(class="topInfo",
-                     p("Incidentes"),
-                     p("4")
-                 ),
-                 div(class="wallInfo",
-                     p("Evento 1"),
-                     p("Evento 3"),
-                     p("Evento 8"),
-                     p("Evento 12"),
-                 )
+             div(class="topBoxInfo tableForAnalisisGira",
+                 DT::DTOutput(ns("tableMun"))
              )
       ),
       column(width = 6, plotOutput(ns("eAnimo")))
@@ -96,7 +72,7 @@ mod_analisisEventos_ui <- function(id){
              plotOutput(ns("nAsistentes")))
     ),
     fluidRow(
-      column(width = 10,
+      column(width = 12,
              leafletOutput(ns("llmapa")))
     )
   )

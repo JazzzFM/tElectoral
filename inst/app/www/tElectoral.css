@@ -1352,15 +1352,15 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
   margin-top: 15px;
 }
 .topBoxInfo.tableForAnalisisGira {
-    max-height: 578px;
+    max-height: 350px;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-top: 0;
     margin-top: 55px;
     /* border: 1px solid #eaeaea; */
     padding: 3px;
     /* border-right: none; */
-    box-shadow: 0px 0px 5px 2px rgba(0,0,0,.1);
+    /*box-shadow: 0px 0px 5px 2px rgba(0,0,0,.1);*/
 }
 .ViewBoxCustom {
 width: 100%;
