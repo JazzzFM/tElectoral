@@ -1,5 +1,3 @@
-
-
 # Se crea una base de datos temporal: Informacion falsa (la intención es que se actualice con datos reales)
 # Extraer una muestra aleatoria de tamaño 10 de nombres de municipio
 # Vector de visitas=simulaciones de una poisson
