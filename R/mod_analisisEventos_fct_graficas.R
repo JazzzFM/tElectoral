@@ -413,19 +413,19 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
 #paletaRecursos(bd, pregunta = calidad, titulo = "Nivel de calidad de los recursos tecnológicos empleados")
 
 # MICH <- st_read("~/GerenciaPoder/Mapa/MUNICIPIO.shp",options = "ENCODING=WINDOWS-1252")
-ggMapaEstado <- function(Estado){
-  Graph <- ggplot(Estado) + geom_sf(fill = "#F2D479", color = "#FFFFF7") + theme_minimal() + 
-           theme(axis.text = element_blank(),panel.grid.major = element_blank(),
-           plot.background = element_rect(fill = "#FFFFF7",linetype = 0))
-  
-  return(Graph)
-}
-
-llMapaEstado <- function(Estado){
-  
-  pal <- colorNumeric("Reds",domain = unique(Estado$n))
-  Graph <- leaflet(Estado) %>% addTiles() %>% addPolygons(popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
-                                               fillColor = ~pal(n), weight = 1, color = "black",opacity = 1,
-                                               fillOpacity = 1,label = ~MUNICIPIO) %>% addLegend(pal = pal,values = ~n)
-  return(Graph)
-}
+# ggMapaEstado <- function(Estado){
+#   Graph <- ggplot(Estado) + geom_sf(fill = "#F2D479", color = "#FFFFF7") + theme_minimal() + 
+#            theme(axis.text = element_blank(),panel.grid.major = element_blank(),
+#            plot.background = element_rect(fill = "#FFFFF7",linetype = 0))
+#   
+#   return(Graph)
+# }
+# 
+# llMapaEstado <- function(Estado){
+#   
+#   pal <- colorNumeric("Reds",domain = unique(Estado$n))
+#   Graph <- leaflet(Estado) %>% addTiles() %>% addPolygons(popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
+#                                                fillColor = ~pal(n), weight = 1, color = "black",opacity = 1,
+#                                                fillOpacity = 1,label = ~MUNICIPIO) %>% addLegend(pal = pal,values = ~n)
+#   return(Graph)
+# }
