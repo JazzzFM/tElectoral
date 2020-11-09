@@ -2,7 +2,6 @@ validarAscendenciaHorario <- function(evt, eventos, uiCount, editableIndex = 0){
   valido <- TRUE
   for(i in 1:sum(uiCount$val,-1)){
     if(editableIndex != i && !is.na(eventos[[as.character(i)]]$inicioEvento)){
-      browser()
       if(evt()$fechaEvento < eventos[[as.character(i)]]$fechaEvento){
         valido <- FALSE
       }
