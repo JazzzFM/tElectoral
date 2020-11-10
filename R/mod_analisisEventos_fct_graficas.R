@@ -413,12 +413,16 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
 
 llMapaEstado <- function(Estado){
   
-  pal <- colorNumeric("Reds",domain = unique(Estado$n))
+  pal <- colorNumeric("Reds", domain = unique(Estado$n))
+  
   Graph <- leaflet(Estado) %>%
     addTiles() %>% 
-    addPolygons(popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
-                fillColor = ~pal(n), weight = 1, color = "black",opacity = 1,
-                fillOpacity = 1,label = ~MUNICIPIO) %>%
+    addPolygons(stroke = FALSE, smoothFactor = 0.5,
+                opacity = 1.0, popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
+                fillColor = ~pal(n), weight = 1, color = "black",
+                fillOpacity = 1,label = ~MUNICIPIO, 
+                highlightOptions = highlightOptions(color = "white", weight = 2,
+                                                    bringToFront = TRUE)) %>%
     addLegend(pal = pal,values = ~n)
   return(Graph)
 }
