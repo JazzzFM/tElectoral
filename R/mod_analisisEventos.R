@@ -14,6 +14,7 @@
 #' @import glue
 #' @import leaflet
 #' @import magrittr
+#' @import stringr
 
 mod_analisisEventos_ui <- function(id){
   ns <- NS(id)

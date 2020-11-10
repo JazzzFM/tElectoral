@@ -47,11 +47,11 @@
 #          calif = sample(c(0:10), size = 113, replace = T,
 #                       prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
 #   )
-
-# lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
-
-## gauge
-
+# 
+# # lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
+# 
+# ## gauge
+# 
 promedioGauge <- function(bd, calificacion){
   aux <- bd %>% summarise(promedio = round(mean({{calificacion}}, na.rm = T), 1)) %>%
     mutate(color= case_when(promedio>= 6 ~"#2E8087", T ~"#C93446"))
@@ -72,21 +72,21 @@ promedioGauge <- function(bd, calificacion){
           axis.text = element_blank(),
           axis.title = element_blank()
     )
-} 
+}
 # promedioGauge(bd, calif)
 
 lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
-  bd <- bd %>%  mutate(lugar = {{lugar}}, asistentes={{asistentes}},
+  bd <- bd %>%  mutate(lugar =str_to_title({{lugar}}), asistentes={{asistentes}},
                        calificacion = {{calificacion}},
-                       fecha_tt = floor_date({{fecha}}, unit = "hour"),
+                       fecha_tt =floor_date({{fecha}}, unit = "hour"),
                        fecha = datetime_to_timestamp(fecha_tt)) 
   
   Graph <- bd %>% hchart(hcaes(x = fecha, y  = calificacion), type = "area", color = "#F8737D") %>% 
-    hc_yAxis(min = 0, max = 10, title = list(text = "Calificación"), 
+    hc_yAxis(min = 0, max = 10, title = list(text = "Calificación" , style = list( fontSize = "16px", color = "#41657A")), 
              gridLineWidth =0,
-             labels = list(style = list(fontSize = "18px", color = "#F8737D"))) %>% 
-    hc_xAxis( title = list(text = "Fecha del evento"), type = "datetime",
-              labels = list(step = 2,style = list(fontSize = "18px", color = "#43515C")),
+             labels = list(style = list(fontSize = "18px", color = "#41657A"))) %>% 
+    hc_xAxis( title = list(text = "Fecha del evento", style = list( fontSize = "16px", color = "#41657A")), type = "datetime",
+              labels = list(step = 2,style = list(fontSize = "18px",color = "#41657A")),
               crosshair = list(ebabled= T, color= "#F8737D", dashStyle="shortdash",
                                width= 2, snap = F, zIndex= 5),
               lineWidth =0, tickWidth =0) %>%
@@ -96,13 +96,14 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                                  stops = list(
                                    c(0, '#F8737D'),
                                    c(1, '#FFF')   ) ),
-                               crisp=F, lineWidth = 5, marker = list(radius =0))) %>% 
-    hc_title(text = "Calificación  ", align = "right", style = list(fontSize = "20px", color = "#0C4147")) %>% 
+                               crisp=F, lineWidth = 4, marker = list(radius =0))) %>% 
+    hc_title(text = "Calificación  ", align = "right", style = list(fontSize = "20px", color = "#41657A")) %>% 
     hc_tooltip(borderWidth =0,shadow = F,
-               headerFormat = ' ',
+               headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
                useHTML = TRUE,
-               pointFormat = '<span style="font-size: 18px"> {point.fecha_tt} </span> <br/></b><br>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
-               style = list(fontSize = "16px", color = "#14373B"))
+               pointFormat = '<span style="font-size: 18px"> </span></b>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
+               style = list(fontSize = "16px", color = "#41657A")) %>% 
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next Condensed"))
   return(Graph)
 }
 # lineaCalificacion(bd, fecha  = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
