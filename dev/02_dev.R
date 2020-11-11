@@ -111,6 +111,7 @@ golem::add_fct(name = "validarVacio" )
 golem::add_fct("pIntervalo")
 #Investigación
 golem::add_fct(name = "validarFormularioGeneral" )
+golem::add_fct(name = "validarFormularioDisMuestral")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

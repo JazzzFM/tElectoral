@@ -24,7 +24,7 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
                         placeholder = "Respuesta libre ...")
             ),
       column(width = 6, 
-             numericInputIcon(inputId = ns("numeroEntrevistas"),
+             numericInput(inputId = ns("numeroEntrevistas"),
                               label = "Sólo ingrese números enteros",
                               value = 0,
                               min = 0)
@@ -46,19 +46,19 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
                                 inputId = ns("conglo"), selected = 0)
       ),
       column(width = 4, 
-             numericInputIcon(inputId = ns("nivelPolietap"),
+             numericInput(inputId = ns("nivelPolietap"),
                               label = "¿Cuántos niveles?",
                               value = 0,
                               min = 0)
       ), 
       column(width = 4, 
-             numericInputIcon(inputId = ns("nivelEstrat"),
+             numericInput(inputId = ns("nivelEstrat"),
                               label = "¿Cuántos niveles?",
                               value = 0,
                               min = 0)
       ),
       column(width = 4, 
-                numericInputIcon(inputId = ns("nivelConglo"),
+                numericInput(inputId = ns("nivelConglo"),
                                  label = "¿Cuántos niveles?",
                                  value = 0,
                                  min = 0)
@@ -85,7 +85,32 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
 #' @noRd 
 mod_investigacionFormularioDisMuestral_server <- function(input, output, session){
   ns <- session$ns
- 
+  
+  observeEvent(input$guardar, {
+  if(validarFormularioDisMuestral(input$modoLevantamiento, input$marcoMuestral, input$numeroEntrevistas,
+                               input$aleatoria, input$poliEtapa, input$estrat, input$conglo,
+                               input$nivelPolietap, input$nivelEstrat, input$nivelConglo,
+                               input$unidadMuestral, input$nivelConfianza, input$margenError)){
+    return (
+      tibble::tibble(
+        modoLevanamiento = input$modoLevantamiento,
+        marcoMuestral = input$marcoMuestral,
+        numeroEntrevistas = input$numeroEntrevistas,
+        aleatoria = input$aleatoria, 
+        poliEtap = input$poliEtapa,
+        nivelPolietap = input$nivelPolietap, 
+        estrat = input$estrat,
+        nivelEstrat = input$nivelEstrat, 
+        conglo = input$conglo,
+        nivelConglo = input$nivelConglo,
+        unidadMuestral = input$unidadMuestral,
+        nivelConfianza = input$nivelConfianza,
+        margenError = input$margenError
+        )
+      )
+    }
+  })
+     
 }
     
 ## To be copied in the UI
@@ -93,4 +118,3 @@ mod_investigacionFormularioDisMuestral_server <- function(input, output, session
     
 ## To be copied in the server
 # callModule(mod_investigacionFormularioDisMuestral_server, "investigacionFormularioDisMuestral_ui_1")
- 

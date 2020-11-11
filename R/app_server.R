@@ -17,6 +17,7 @@ app_server <- function( input, output, session ) {
   # Investigación
   callModule(mod_investigacionAnalisis_server, "investigacionAnalisis_ui_1")
   callModule(mod_investigacionFormularioGeneral_server, "investigacionFormularioGeneral_ui_1", parent_session = session)
+  callModule(mod_investigacionFormularioDisMuestral_server, "investigacionFormularioDisMuestral_ui_1")
   # End Investigación
   # Protocolo de cuestionarios
   callModule(mod_comunicacion_server, "comunicacion_ui_1", session)
