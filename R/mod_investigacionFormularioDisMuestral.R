@@ -10,7 +10,73 @@
 mod_investigacionFormularioDisMuestral_ui <- function(id){
   ns <- NS(id)
   tagList(
-    h3("Form diseño muestral")
+    h3("Formulario de Diseño Muestral"),
+    tags$hr(),
+    p("Llene los siguientes campos ..."),
+    fluidRow(
+      column(width = 6,
+             pickerInput(label = "Modo de levantamiento",
+                         choices = c("Seleccione" = '',"Vivienda","Telefónica","Internet"),
+                         inputId = ns("modoLevantamiento"), selected = 0)
+             ),
+      column(width = 6,
+              textInput(inputId = ns("marcoMuestral"), label = "Marco Muestral",
+                        placeholder = "Respuesta libre ...")
+            ),
+      column(width = 6, 
+             numericInputIcon(inputId = ns("numeroEntrevistas"),
+                              label = "Sólo ingrese números enteros",
+                              value = 0,
+                              min = 0)
+            ),
+      column(width = 6,
+        prettyRadioButtons(label = "Aleatoria", choices = c("Sí", "No"),
+                           inputId = ns("aleatoria"), selected = 0)
+      ),
+      column(width = 4,
+             prettyRadioButtons(label = "Poloetápica", choices = c("Sí", "No"),
+                                inputId = ns("poliEtapa"), selected = 0)
+      ),
+      column(width = 4,
+             prettyRadioButtons(label = "Estratificada", choices = c("Sí", "No"),
+                                inputId = ns("estrat"), selected = 0)
+      ),
+      column(width = 4,
+             prettyRadioButtons(label = "Conglomerados", choices = c("Sí", "No"),
+                                inputId = ns("conglo"), selected = 0)
+      ),
+      column(width = 4, 
+             numericInputIcon(inputId = ns("nivelPolietap"),
+                              label = "¿Cuántos niveles?",
+                              value = 0,
+                              min = 0)
+      ), 
+      column(width = 4, 
+             numericInputIcon(inputId = ns("nivelEstrat"),
+                              label = "¿Cuántos niveles?",
+                              value = 0,
+                              min = 0)
+      ),
+      column(width = 4, 
+                numericInputIcon(inputId = ns("nivelConglo"),
+                                 label = "¿Cuántos niveles?",
+                                 value = 0,
+                                 min = 0)
+      ),
+      column(width = 12,
+             textInput(inputId = ns("unidadMuestral"), label = "Unidad muestral",
+                       placeholder = "Respuesta libre ...")
+      ),
+      column(width = 12,
+             textInput(inputId = ns("nivelConfianza"), label = "Nivel de confianza",
+                       placeholder = "Respuesta libre ...")
+      ),
+      column(width = 12,
+             textInput(inputId = ns("margenError"), label = "Margen de error",
+                       placeholder = "Respuesta libre ...")
+      ),
+      actionButton(inputId = ns("guardar"), "Guardar", class = "btn btn-definitive")
+    )
   )
 }
     
