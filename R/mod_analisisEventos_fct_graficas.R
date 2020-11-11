@@ -49,7 +49,6 @@
 # 
 # # lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
 #Tema ggplots
-
 tema <- function(){
     theme(text = element_text(family = "Avenir Next", size = 2*18/.pt),
           plot.title = element_text(size = 2*22/.pt,
