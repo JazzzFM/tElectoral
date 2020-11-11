@@ -122,14 +122,14 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                                  stops = list(
                                    c(0, '#F8737D'),
                                    c(1, '#FFF')   ) ),
-                               crisp=F, lineWidth = 2, marker = list(radius =0))) %>% 
+                               crisp=F, lineWidth = 1, marker = list(radius =0))) %>% 
     hc_title(text = "<b>Calificación  </b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
     hc_tooltip(borderWidth =0,shadow = F,
                headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
                useHTML = TRUE,
                pointFormat = '<span style="font-size: 18px"> </span></b>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
                style = list(fontSize = "16px", color = "#41657A")) %>% 
-    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"))
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"),zoomType = "x")
   return(Graph)
 }
 # lineaCalificacion(bd, fecha  = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
@@ -172,8 +172,13 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
       theme(plot.background = element_rect(fill = "white", color = "white"))
   }else{
     df <- data.frame(bd_1, bd_2)
-    
-    Graph <- ggradar(df, base.size = 25) +
+    titulos <- df %>%  colnames() %>%  str_to_sentence()
+    df <- df %>%  set_names(titulos)
+    Graph <- ggradar(df, base.size = 25,
+                     axis.label.size = 6, 
+                     background.circle.colour = "#DFE5EB", 
+                     gridline.max.linetype = "solid", 
+                     values.radar = c("0%","50%")) +
       labs(title = titulo) +
       # theme(plot.background = element_rect(fill = "white", color = "white")) +
       theme_minimal()+
@@ -181,7 +186,7 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
             panel.grid = element_blank(),
             axis.text.y = element_blank(),
             axis.text.x =element_blank(),
-            text = element_text(family = "Avenir Next", size = 20),
+            text = element_text(family = "Avenir Next", size = 20, color = "#41657A"),
             plot.title = element_text(size = 22,
                                       colour =  "#13384D",
                                       hjust = 0, face="bold"),
