@@ -45,8 +45,12 @@ usethis::use_package("leaflet")
 usethis::use_package("tidyr")
 usethis::use_package("DescTools")
 usethis::use_package("V8")
-usethis::use_package("ggfittex")
+usethis::use_package("ggfittext")
 usethis::use_package("scales")
+usethis::use_package("ggradar")
+usethis::use_package("highcharter")
+usethis::use_package("lubridate")
+usethis::use_package("sf")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
