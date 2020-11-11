@@ -55,6 +55,9 @@ golem::add_module( name = "portada" ) # Name of the module
 # Investigación
 golem::add_module( name = "investigacionAnalisis",
                    fct = "graficos") # Name of the module
+golem::add_module( name = "investigacionFormularioGeneral" )
+golem::add_module( name = "investigacionFormularioDisMuestral" )
+golem::add_module( name = "investigacionFormularioIntVoto" )
 # Comunicación
 golem::add_module( name = "comunicacion" )
 
@@ -106,6 +109,8 @@ golem::add_fct(name = "validarSoloNumeros" )
 golem::add_fct(name = "validarSoloLetras" )
 golem::add_fct(name = "validarVacio" )
 golem::add_fct("pIntervalo")
+#Investigación
+golem::add_fct(name = "validarFormularioGeneral" )
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

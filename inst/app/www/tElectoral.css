@@ -565,15 +565,14 @@ div#logo img{
 .sidebar-menu .treeview-menu>li.active::before,
 .sidebar-menu .treeview-menu>li.active::after{
     content: '';
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    top: 0;
-    bottom: 0;
-    display: block;
-    margin: auto;
-    right: 15px;
-    border-radius: 50%;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 10px;
+  display: block;
+  margin: auto;
+  left: 0px;
+  border-radius: 50%;
 }
 .sidebar-menu .treeview-menu>li.active::before{
   background-color: #fff;

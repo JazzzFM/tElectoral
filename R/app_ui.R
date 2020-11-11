@@ -19,9 +19,16 @@ app_ui <- function(request) {
                    tabName = "inicio", 
                    icon = icon("dashboard")
           ),
-          menuItem("Investigación",
+          convertMenuItem(menuItem("Investigación",
                    tabName = "investigacion",
-                   icon = icon("dashboard")),
+                   icon = icon("dashboard"),
+                   menuItem("Registro", tabName="invRegistro",
+                               menuItem("Formulario General", tabName="formGeneral"),
+                               menuItem("Formulario Diseño Muestral", tabName="formDisMuestral"),
+                               menuItem("Formulario Intención de Voto", tabName="formIntVoto")
+                               ),
+                   menuItem("Resultados", tabName="invResultados")
+                   ), "global"),
           menuItem("Protocolo de cuestionarios",
                    tabName = "comunicacion",
                    icon = icon("dashboard")),
@@ -58,8 +65,14 @@ app_ui <- function(request) {
         tabItems(
           tabItem(tabName = "inicio", 
                   mod_portada_ui("portada_ui_1")),
-          tabItem(tabName = "investigacion",
+          tabItem(tabName = "invResultados",
                   mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1")),
+          tabItem(tabName = "formGeneral",
+                  mod_investigacionFormularioGeneral_ui("investigacionFormularioGeneral_ui_1")),
+          tabItem(tabName = "formDisMuestral",
+                  mod_investigacionFormularioDisMuestral_ui("investigacionFormularioDisMuestral_ui_1")),
+          tabItem(tabName = "formIntVoto",
+                  mod_investigacionFormularioIntVoto_ui("investigacionFormularioIntVoto_ui_1")),
           tabItem(tabName = "comunicacion",
                   mod_comunicacion_ui("comunicacion_ui_1")),
           tabItem(tabName = "analisisEventos",
@@ -80,6 +93,15 @@ app_ui <- function(request) {
       )
     )
   )
+}
+
+convertMenuItem <- function(mi,tabName) {
+  # mi$children[[1]]$attribs['data-toggle']="tab"
+  # mi$children[[1]]$attribs['data-value'] = tabName
+  if(length(mi$attribs$class)>0 && mi$attribs$class=="treeview"){
+    mi$attribs$class=NULL
+  }
+  mi
 }
 
 #' Add external Resources to the Application
