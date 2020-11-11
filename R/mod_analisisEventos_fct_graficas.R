@@ -47,11 +47,28 @@
 #          calif = sample(c(0:10), size = 113, replace = T,
 #                       prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
 #   )
+# 
+# # lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
+#Tema ggplots
 
-# lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
+tema <- function(){
+    theme(text = element_text(family = "Avenir Next", size = 2*18/.pt),
+          plot.title = element_text(size = 2*22/.pt,
+                                    colour =  "#13384D",
+                                    hjust = 0),
+          axis.text.y = element_text(color = "#F8737D"),
+          axis.text.x = element_text(color = "#13384D"),
+          axis.line.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none",
+          panel.grid = element_blank()
+    )
+}
 
-## gauge
 
+# ## gauge
+# 
 promedioGauge <- function(bd, calificacion){
   aux <- bd %>% summarise(promedio = round(mean({{calificacion}}, na.rm = T), 1)) %>%
     mutate(color= case_when(promedio>= 6 ~"#2E8087", T ~"#C93446"))
@@ -72,21 +89,21 @@ promedioGauge <- function(bd, calificacion){
           axis.text = element_blank(),
           axis.title = element_blank()
     )
-} 
+}
 # promedioGauge(bd, calif)
 
 lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
-  bd <- bd %>%  mutate(lugar = {{lugar}}, asistentes={{asistentes}},
+  bd <- bd %>%  mutate(lugar =str_to_title({{lugar}}), asistentes={{asistentes}},
                        calificacion = {{calificacion}},
-                       fecha_tt = floor_date({{fecha}}, unit = "hour"),
+                       fecha_tt =floor_date({{fecha}}, unit = "hour"),
                        fecha = datetime_to_timestamp(fecha_tt)) 
   
   Graph <- bd %>% hchart(hcaes(x = fecha, y  = calificacion), type = "area", color = "#F8737D") %>% 
-    hc_yAxis(min = 0, max = 10, title = list(text = "Calificación"), 
+    hc_yAxis(min = 0, max = 10, title = list(text = "Calificación" , style = list( fontSize = "16px", color = "#41657A")), 
              gridLineWidth =0,
-             labels = list(style = list(fontSize = "18px", color = "#F8737D"))) %>% 
-    hc_xAxis( title = list(text = "Fecha del evento"), type = "datetime",
-              labels = list(step = 2,style = list(fontSize = "18px", color = "#43515C")),
+             labels = list(style = list(fontSize = "18px", color = "#41657A"))) %>% 
+    hc_xAxis( title = list(text = "Fecha del evento", style = list( fontSize = "16px", color = "#41657A")), type = "datetime",
+              labels = list(step = 2,style = list(fontSize = "18px",color = "#13384D")),
               crosshair = list(ebabled= T, color= "#F8737D", dashStyle="shortdash",
                                width= 2, snap = F, zIndex= 5),
               lineWidth =0, tickWidth =0) %>%
@@ -96,13 +113,14 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                                  stops = list(
                                    c(0, '#F8737D'),
                                    c(1, '#FFF')   ) ),
-                               crisp=F, lineWidth = 5, marker = list(radius =0))) %>% 
-    hc_title(text = "Calificación  ", align = "right", style = list(fontSize = "20px", color = "#0C4147")) %>% 
+                               crisp=F, lineWidth = 4, marker = list(radius =0))) %>% 
+    hc_title(text = "<b>Calificación  </b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
     hc_tooltip(borderWidth =0,shadow = F,
-               headerFormat = ' ',
+               headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
                useHTML = TRUE,
-               pointFormat = '<span style="font-size: 18px"> {point.fecha_tt} </span> <br/></b><br>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
-               style = list(fontSize = "16px", color = "#14373B"))
+               pointFormat = '<span style="font-size: 18px"> </span></b>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
+               style = list(fontSize = "16px", color = "#41657A")) %>% 
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"))
   return(Graph)
 }
 # lineaCalificacion(bd, fecha  = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
@@ -148,7 +166,20 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
 
    Graph <- ggradar(df, base.size = 25) +
      labs(title = titulo) +
-     theme(plot.background = element_rect(fill = "white", color = "white"))
+     # theme(plot.background = element_rect(fill = "white", color = "white")) +
+     theme_minimal()+
+     theme(plot.background = element_rect(fill = "white", color = "white"),
+           panel.grid = element_blank(),
+           axis.text.y = element_blank(),
+           axis.text.x =element_blank(),
+           text = element_text(family = "Avenir Next", size = 20),
+           plot.title = element_text(size = 22,
+                                     colour =  "#13384D",
+                                     hjust = 0, face="bold"),
+           axis.line = element_blank(),
+           legend.title = element_blank(),
+           legend.position = "none" )
+   
     }
   return(Graph)
 }
@@ -226,21 +257,27 @@ burbujas <- function(bd, pregunta1, pregunta2){
            etiqueta2 = case_when(grupo == "duracion"~"Duración del evento", 
                                  grupo == "asistentes"~"Número de asistentes"
            ),
-           color = case_when(etiqueta == "Debió haber sido menor" ~"#EB6A8A",
-                             etiqueta == "Debió haber sido mayor" ~"#18658C",
-                             etiqueta == "Adecuado" ~"#3C908B",
-           )) 
+           color = case_when(etiqueta == "Debió haber sido menor" ~"#B8D8D8",
+                             etiqueta == "Debió haber sido mayor" ~"#7A9E9F",
+                             etiqueta == "Adecuado" ~"#4F6367",
+           ),etiqueta = str_wrap(etiqueta, 15), etiqueta2 = str_wrap(etiqueta2, 15)) 
   
   p<- bd %>% ggplot( aes(x = etiqueta, y = etiqueta2, color = color, size = n) )+
-    geom_point(stat = "identity", alpha= .7)+
+    geom_point(stat = "identity", alpha= .6)+
     scale_color_identity()+ theme_minimal()+
-    scale_size_area(max_size = 40)+
-    labs(x = "Respuesta", y = "Aspecto", title = "")+
-    theme(legend.position = "none",
-          panel.grid = element_blank(),
-          text = element_text(size = 18),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank())
+    scale_size_area(max_size = 70)+
+    labs(x = "Respuesta", y = "Aspecto", title = str_wrap("Cantidad de Asistentes y Duración de Evento", 30))+
+    theme(text = element_text(family = "Avenir Next", size = 20),
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
+                                    hjust = 0, face="bold"),
+          axis.text.y = element_text(color = "#41657A"),
+          axis.text.x = element_text(color = "#41657A"),
+          axis.line.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none",
+          panel.grid = element_blank() )
     
   return(p)
 }
@@ -386,27 +423,33 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
     count({{pregunta}}) %>% na.omit() %>%
     mutate(pct = n/sum(n),
            pregunta = gsub({{pregunta}}, pattern = " calidad", replacement = ""),
-           colores  = case_when(pregunta  == "Muy buena"~"#0C4147",
-                                pregunta  == "Buena"~"#3C908B",
-                                pregunta  == "Mala"~"#EB6A8A",
-                                pregunta  == "Muy mala"~"#C42751"),
+           colores  = case_when(pregunta  == "Muy buena"~"#0B3954",
+                                pregunta  == "Buena"~"#087E8B",
+                                pregunta  == "Mala"~"#FF5A5F",
+                                pregunta  == "Muy mala"~"#C81D25"),
            pregunta = factor(pregunta, c("Muy buena", "Buena", "Mala", "Muy mala")))
   
   p<-bd %>% ggplot(aes(x= pregunta, y=pct)) +
     geom_segment( aes( xend=pregunta,y=0, yend=pct, color = colores) , size = 3, alpha=.8)+
-    geom_point(aes(y = pct,color = colores), size =20, stroke = 2,alpha=.85) +
+    geom_point(aes(y = pct,color = colores), size =25, stroke = 2,alpha=.8) +
     # coord_flip()+
     scale_color_identity()+
     geom_text( aes(label = pct %>%  percent(accuracy = 1), y = pct), 
                color = "white", fontface="bold", size = 8) +
     scale_y_continuous(labels=scales::percent,limits = c(0,max(bd$pct) + .1)) +
     labs(title =titulo, x = "", y = "" )+
-    geom_hline(yintercept = 0, linetype = "solid", size = .6, color = "#395C6B")+
+    geom_hline(yintercept = 0, linetype = "solid", size = .4, color = "#BFD7EA")+
     theme_minimal()+
     theme(panel.grid = element_blank(),
           axis.text.y = element_blank(),
-          text = element_text(size = 25),
-          axis.text.x =element_text(size = 25) )
+          axis.text.x =element_text(size = 20, colour =  "#13384D"),
+          text = element_text(family = "Avenir Next", size = 20),
+        plot.title = element_text(size = 22,
+                                  colour =  "#13384D",
+                                  hjust = 0, face="bold"),
+        axis.line = element_blank(),
+        legend.title = element_blank(),
+        legend.position = "none" )
   
   return(p)
 }
