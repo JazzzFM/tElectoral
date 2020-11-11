@@ -14,6 +14,7 @@
 #' @import glue
 #' @import leaflet
 #' @import magrittr
+#' @import stringr
 
 mod_analisisEventos_ui <- function(id){
   ns <- NS(id)
@@ -203,7 +204,8 @@ mod_analisisEventos_server <- function(input, output, session){
              calif = sample(c(0:10), size = 113, replace = T,
                             prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
       )
-    paletaRecursos(bd, pregunta = calidad, titulo = "Calidad de los Recursos Tecnológicos")
+
+    paletaRecursos(bd, pregunta = calidad, titulo = str_wrap("Nivel de calidad de los recursos tecnológicos", 30))
   })
   
   output$lCalif <- renderHighchart({
