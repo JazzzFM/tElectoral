@@ -91,7 +91,7 @@ mod_investigacionFormularioDisMuestral_server <- function(input, output, session
                                input$aleatoria, input$poliEtapa, input$estrat, input$conglo,
                                input$nivelPolietap, input$nivelEstrat, input$nivelConglo,
                                input$unidadMuestral, input$nivelConfianza, input$margenError)){
-    return (
+    print(
       tibble::tibble(
         modoLevanamiento = input$modoLevantamiento,
         marcoMuestral = input$marcoMuestral,
