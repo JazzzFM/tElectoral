@@ -19,10 +19,10 @@ mod_investigacionFormularioGeneral_ui <- function(id){
       column(width = 12,
              textInput(inputId = ns("poblacionObjetivo"), label = "Población objetivo", placeholder = "...")
       ),
-      column(width = 12,
+      column(width = 6,
              dateInput(inputId = ns("fechaInicio"), label = "Fecha de inicio", value = Sys.Date(), min = Sys.Date())
       ),
-      column(width = 12,
+      column(width = 6,
              dateInput(inputId = ns("fechaFin"), label = "Fecha de finalización", value = Sys.Date(), min = Sys.Date())
       ),
       actionButton(inputId = ns("guardar"), "Guardar", class = "btn btn-definitive")
@@ -37,7 +37,7 @@ mod_investigacionFormularioGeneral_server <- function(input, output, session, pa
   ns <- session$ns
   observeEvent(input$guardar, {
     if(validarFormularioGeneral(input$casaEncuestadora, input$poblacionObjetivo, input$fechaInicio, input$fechaFin)){
-      return (
+      print(
         tibble::tibble(
           casaEncuestadora = input$casaEncuestadora,
           poblacionObjetivo = input$poblacionObjetivo,

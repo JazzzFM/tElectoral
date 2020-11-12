@@ -1565,3 +1565,32 @@ display: block;
   }
 }
 
+/* Formulario de intención de voto */
+.flexTable > * {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.flexTable h4{
+  text-align: center;
+}
+.four-columns {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+.four-columns > * {
+width: calc(100% / 4) !important;
+}
+.flexTable .form-group.shiny-input-container > div{
+  width: 100% !important;
+}
+.four-columns button {
+    align-self: center;
+}
+.four-columns .form-group {
+  height: 54px;
+}
