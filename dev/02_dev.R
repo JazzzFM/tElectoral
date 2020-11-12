@@ -58,7 +58,6 @@ golem::add_module( name = "investigacionAnalisis",
 golem::add_module( name = "investigacionFormularioGeneral" )
 golem::add_module( name = "investigacionFormularioDisMuestral" )
 golem::add_module( name = "investigacionFormularioIntVoto" )
-golem::add_module( name = "investigacionCandidato" )
 golem::add_module( name = "investigacionEncuestas" )
 # Comunicación
 golem::add_module( name = "comunicacion" )
@@ -114,6 +113,7 @@ golem::add_fct("pIntervalo")
 #Investigación
 golem::add_fct(name = "validarFormularioGeneral" )
 golem::add_fct(name = "validarFormularioDisMuestral")
+golem::add_fct(name = "validarFormularioIntVoto")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
