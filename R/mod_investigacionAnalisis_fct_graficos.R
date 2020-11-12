@@ -1,4 +1,12 @@
+#Colores
+# colores <- tibble(partido = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES", 
+#                               "PRD", "PRI", "PT"),
+#                   color = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
+#                             "#FAB855", "#EB0E0E", "#D63131"))
+
+
 #Preprocesamiento
+
 procesamiento_graph <- function(DB){
   
   BB <- select(DB, c("estado","fecha_final","partido","voto"))
