@@ -30,7 +30,7 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_eventos (
 );" )
 
 # DBI::dbRemoveTable(pool,"tElectoralTest_eventos")
-DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_gira (
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_giras (
   idGira INT AUTO_INCREMENT PRIMARY KEY,
   responsable VARCHAR(100),
   descripcion TEXT,
