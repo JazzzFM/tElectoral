@@ -1,8 +1,8 @@
 #Colores
-# colores <- tibble(partido = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES", 
-#                               "PRD", "PRI", "PT"),
+# colores <- tibble(partido = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
+#                               "PRD", "PRI", "PT", "PVEM"),
 #                   color = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
-#                             "#FAB855", "#EB0E0E", "#D63131"))
+#                             "#FAB855", "#EB0E0E", "#D63131", "#199121"))
 
 
 #Preprocesamiento
@@ -150,31 +150,34 @@ hPollofPolls <- function(DB){
   options(highcharter.lang = hcoptslang)
   
   # Formato redondeado
+  paleta <- tibble(candidato = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
+                                "PRD", "PRI", "PT", "PVEM"),
+                    colores = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
+                              "#FAB855", "#EB0E0E", "#D63131", "#199121")) %>%  
+    arrange(candidato)
   DB <-DB %>% mutate(votacion_r = round(votacion*100),
                      votacion_min = round(min*100),
                      votacion_max = round(max*100),
                      votacion = votacion *100,
                      min = min * 100,
-                     max = max * 100)
+                     max = max * 100) %>% 
+    na.omit() %>% 
+    left_join(paleta) 
   # Tooltip
   tt <- tooltip_table(c("{point.series.name}: "),
                       c("{point.votacion_r}%"))
+  # browser()
   # Gráfica
   Graph <- DB%>% 
-    hchart(hcaes(x = fecha,  low = min,
-                 high = max, group = candidato, fill = colores, color = colores),
-           type = "arearange", enableMouseTracking= F, fillOpacity = 0.15,
-           color = c("#E29578", "#F05606", "#600B10",  "#00539B",
-                     "#7030A0", "#FED90E", "#00B83A", "#FD2017",
-                     "#00A453"))%>% 
+    hchart(hcaes(x = fecha,  low = min, 
+                 high = max, group = candidato),
+           type = "arearange", enableMouseTracking= F, fillOpacity = 0.15)%>% 
     hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>%
     # hc_subtitle(text = "Data from Different Survey Houses") %>% 
     hc_add_series(data = DB,
-                  hcaes(x = fecha, y = votacion, fill = colores, color = colores,
-                        group = candidato),
-                  type = "line", color = c("#E29578", "#F05606", "#600B10",  "#00539B",
-                                           "#7030A0", "#FED90E", "#00B83A", "#FD2017",
-                                           "#00A453")) %>% 
+                  hcaes(x = fecha, y = votacion,
+                        group = candidato)) %>% 
+    hc_colors(colors =unique(DB$colores)) %>% 
     hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
     hc_xAxis(crosshair = T, 
              labels = list(step = 2,style = list(fontSize = "18px",color = "#13384D")),
@@ -191,7 +194,7 @@ hPollofPolls <- function(DB){
                useHTML = TRUE) %>%
     # hc_add_theme(hc_theme_hcrt()) %>%
     hc_legend(enabled = T) %>% 
-    hc_colors(DB$colores) %>% 
+    # hc_colors(DB$colores) %>% 
     hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"),zoomType = "x")
   
   
