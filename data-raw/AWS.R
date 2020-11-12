@@ -1,5 +1,5 @@
 ## code to prepare `AWS` dataset goes here
-config <- config::get(file = system.file("app/data/config.yml",package = "tElectoral"))
+config <- config::get(file = "inst/app/data/config.yml")
 pool <- pool::dbPool(
   drv = RMariaDB::MariaDB(),
   dbname = config$database,
@@ -9,8 +9,9 @@ pool <- pool::dbPool(
   port = config$port
 )
 
-DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_crear_giras (
-  idGira INT AUTO_INCREMENT PRIMARY KEY,
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_eventos (
+  idEvento INT AUTO_INCREMENT PRIMARY KEY,
+  idGira INT,
   nombre VARCHAR(100),
   lugar VARCHAR(100),
   direccion VARCHAR(200),
@@ -28,8 +29,37 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_crear_giras (
   activo TINYINT
 );" )
 
-# DBI::dbRemoveTable(pool,"tElectoralTest_crear_giras")
-# tbl(pool,"tElectoralTest_crear_giras") %>% select(idGira) %>% filter(idGira == 1)
+# DBI::dbRemoveTable(pool,"tElectoralTest_eventos")
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_gira (
+  idGira INT AUTO_INCREMENT PRIMARY KEY,
+  responsable VARCHAR(100),
+  descripcion TEXT,
+  lugarInicio VARCHAR(100),
+  inicio DATETIME,
+  fin DATETIME,
+  fechaAlta DATETIME,
+  fechaEdicion DATETIME,
+  usuarioCrea VARCHAR(100),
+  usuarioEdicion VARCHAR(100),
+  activo TINYINT
+);" )
+
+
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_evaluacionEventos (
+  idEvento INT,
+  asistentes VARCHAR(50),
+  actitud VARCHAR(50),
+  duracion VARCHAR(50),
+  calidadTecno VARCHAR(50),
+  expectativas INT,
+  fechaAlta DATETIME,
+  fechaEdicion DATETIME,
+  usuarioCrea VARCHAR(100),
+  usuarioEdicion VARCHAR(100),
+  activo TINYINT
+);" )
+
+# tbl(pool,"tElectoralTest_eventos") %>% select(idGira) %>% filter(idGira == 1)
 # sandbox -----------------------------------------------------------------
 
 
