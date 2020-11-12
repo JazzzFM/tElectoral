@@ -106,6 +106,8 @@ golem::add_fct(name = "validarSoloNumeros" )
 golem::add_fct(name = "validarSoloLetras" )
 golem::add_fct(name = "validarVacio" )
 golem::add_fct("pIntervalo")
+golem::add_fct("pool")
+golem::add_fct("leerBd")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
