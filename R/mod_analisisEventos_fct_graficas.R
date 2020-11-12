@@ -52,18 +52,18 @@
 #Tema ggplots
 
 tema <- function(){
-    theme(text = element_text(family = "Avenir Next", size = 2*18/.pt),
-          plot.title = element_text(size = 2*22/.pt,
-                                    colour =  "#13384D",
-                                    hjust = 0),
-          axis.text.y = element_text(color = "#F8737D"),
-          axis.text.x = element_text(color = "#13384D"),
-          axis.line.x = element_blank(),
-          panel.grid.major.y = element_blank(),
-          legend.title = element_blank(),
-          legend.position = "none",
-          panel.grid = element_blank()
-    )
+  theme(text = element_text(family = "Avenir Next", size = 2*18/.pt),
+        plot.title = element_text(size = 2*22/.pt,
+                                  colour =  "#13384D",
+                                  hjust = 0),
+        axis.text.y = element_text(color = "#F8737D"),
+        axis.text.x = element_text(color = "#13384D"),
+        axis.line.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        legend.title = element_blank(),
+        legend.position = "none",
+        panel.grid = element_blank()
+  )
 }
 
 
@@ -87,7 +87,16 @@ promedioGauge <- function(bd, calificacion){
     theme_minimal() +
     theme(panel.grid = element_blank(),
           axis.text = element_blank(),
-          axis.title = element_blank()
+          axis.title = element_blank(),
+          text = element_text(family = "Avenir Next", size = 20),
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
+                                    hjust = 0, face="bold"),
+          axis.line.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none"
+          
     )
 }
 # promedioGauge(bd, calif)
@@ -113,14 +122,14 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                                  stops = list(
                                    c(0, '#F8737D'),
                                    c(1, '#FFF')   ) ),
-                               crisp=F, lineWidth = 4, marker = list(radius =0))) %>% 
+                               crisp=F, lineWidth = 1, marker = list(radius =0))) %>% 
     hc_title(text = "<b>Calificación  </b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
     hc_tooltip(borderWidth =0,shadow = F,
                headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
                useHTML = TRUE,
                pointFormat = '<span style="font-size: 18px"> </span></b>Calificación: <b>{point.y}</b><br>Lugar: <b>{point.lugar}</b></b><br>Número de asistentes: <b>{point.asistentes}</b>',
                style = list(fontSize = "16px", color = "#41657A")) %>% 
-    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"))
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"),zoomType = "x")
   return(Graph)
 }
 # lineaCalificacion(bd, fecha  = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
@@ -162,25 +171,30 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
       labs(title = titulo) +
       theme(plot.background = element_rect(fill = "white", color = "white"))
   }else{
-  df <- data.frame(bd_1, bd_2)
-
-   Graph <- ggradar(df, base.size = 25) +
-     labs(title = titulo) +
-     # theme(plot.background = element_rect(fill = "white", color = "white")) +
-     theme_minimal()+
-     theme(plot.background = element_rect(fill = "white", color = "white"),
-           panel.grid = element_blank(),
-           axis.text.y = element_blank(),
-           axis.text.x =element_blank(),
-           text = element_text(family = "Avenir Next", size = 20),
-           plot.title = element_text(size = 22,
-                                     colour =  "#13384D",
-                                     hjust = 0, face="bold"),
-           axis.line = element_blank(),
-           legend.title = element_blank(),
-           legend.position = "none" )
-   
-    }
+    df <- data.frame(bd_1, bd_2)
+    titulos <- df %>%  colnames() %>%  str_to_sentence()
+    df <- df %>%  set_names(titulos)
+    Graph <- ggradar(df, base.size = 25,
+                     axis.label.size = 6, 
+                     background.circle.colour = "#DFE5EB", 
+                     gridline.max.linetype = "solid", 
+                     values.radar = c("0%","50%")) +
+      labs(title = titulo) +
+      # theme(plot.background = element_rect(fill = "white", color = "white")) +
+      theme_minimal()+
+      theme(plot.background = element_rect(fill = "white", color = "white"),
+            panel.grid = element_blank(),
+            axis.text.y = element_blank(),
+            axis.text.x =element_blank(),
+            text = element_text(family = "Avenir Next", size = 20, color = "#41657A"),
+            plot.title = element_text(size = 22,
+                                      colour =  "#13384D",
+                                      hjust = 0, face="bold"),
+            axis.line = element_blank(),
+            legend.title = element_blank(),
+            legend.position = "none" )
+    
+  }
   return(Graph)
 }
 
@@ -248,7 +262,7 @@ burbujas <- function(bd, pregunta1, pregunta2){
     gather(grupo, resp, c({{pregunta1}}, {{pregunta2}})) %>% 
     group_by(grupo) %>%  count(resp) %>% 
     mutate(n = round(n/sum(n), 2), 
-             etiqueta = case_when(resp%in% c("Debían haber sido menos personas",
+           etiqueta = case_when(resp%in% c("Debían haber sido menos personas",
                                            "Debía de haber durado menos tiempo")~ "Debió haber sido menor",
                                 resp%in% c("Debían de haber sido más personas", 
                                            "Debía de haber durado más tiempo")~"Debió haber sido mayor",
@@ -278,7 +292,7 @@ burbujas <- function(bd, pregunta1, pregunta2){
           legend.title = element_blank(),
           legend.position = "none",
           panel.grid = element_blank() )
-    
+  
   return(p)
 }
 # burbujas(bd, pregunta1 = asistentes, pregunta2 = duracion)
@@ -305,20 +319,20 @@ barras_animo <- function(DB, pregunta, Otro, x){
   frec_2 = count(DB_AUX, Otro_2)
   
   frec_1 <- frec_1 %>% 
-     mutate(porcentaje = (100*n/sum(n))) %>%
-     mutate(label = sprintf("%1.1f%%", porcentaje)) %>%
-     arrange(-n)
-   
+    mutate(porcentaje = (100*n/sum(n))) %>%
+    mutate(label = sprintf("%1.1f%%", porcentaje)) %>%
+    arrange(-n)
+  
   nTot <- frec_1 %>% 
-            select(n) %>% 
-              mutate(sum = sum(n)) %>% 
-                select(sum)
+    select(n) %>% 
+    mutate(sum = sum(n)) %>% 
+    select(sum)
   
   nTot <- nTot[1,1]$sum
-   
+  
   frec_1 <- frec_1 %>% 
-     filter(!pregunta_2 %in% c('Otro')) %>% 
-     head(4)
+    filter(!pregunta_2 %in% c('Otro')) %>% 
+    head(4)
   
   frec_2 <- frec_2 %>% 
     mutate(porcentaje = (100*n/sum(n))) %>%
@@ -329,23 +343,23 @@ barras_animo <- function(DB, pregunta, Otro, x){
     filter(porcentaje > x) 
   
   frec_2 <- frec_2 %>% 
-              select(c(pregunta_2, n)) %>% 
-              mutate(porcentaje = (100*n/nTot)) %>% 
-              mutate(label = sprintf("%1.1f%%", porcentaje)) %>% 
-              arrange(-n)
+    select(c(pregunta_2, n)) %>% 
+    mutate(porcentaje = (100*n/nTot)) %>% 
+    mutate(label = sprintf("%1.1f%%", porcentaje)) %>% 
+    arrange(-n)
   
   frec <- frec_1 %>% 
-            union(frec_2) 
+    union(frec_2) 
   
   frec <- frec %>% 
-            mutate(n = n/sum(n))
-
+    mutate(n = n/sum(n))
+  
   Graph <- ggplot(frec, aes(x = reorder(pregunta_2, -n), y = n)) +
-                    scale_y_continuous(labels = scales::percent) +
+    scale_y_continuous(labels = scales::percent) +
     geom_bar(fill='#55C1FF', color = "#55C1FF", width = 0.7, alpha = 0.5, stat = "identity") +
     labs(title = "En general, ¿cómo describiría el ánimo de los asistentes?", x = "", y = "") +
     tema_barras_animo()
-   
+  
   return(Graph)
 }
 
@@ -368,18 +382,18 @@ barras_n_assist <- function(DB){
   barras_2 = count(DB, considera_num_asist)
   
   barras_2 <- barras_2 %>% mutate(porcentaje = (100*n/sum(n))) %>%
-     mutate(label = sprintf("%1.1f%%", porcentaje))
+    mutate(label = sprintf("%1.1f%%", porcentaje))
   
   barras_2 <- barras_2 %>%
-                arrange(-n) %>% head(4)
-
+    arrange(-n) %>% head(4)
+  
   Graph <-ggplot(barras_2, mapping = aes(x = forcats::fct_reorder(considera_num_asist, -n),
-                                          y = label, label = forcats::fct_reorder(considera_num_asist, -n))) +
-     geom_bar(fill = "#FEFFFF", color = "#FEFFFF", stat = "identity") +
-     coord_flip() + tema_barras_n_asist() +
-     labs(title = "Número de Asistentes") +
-     geom_fit_text(position = "stack", reflow = TRUE, size = 15,
-                   color = "#A7A6A6")
+                                         y = label, label = forcats::fct_reorder(considera_num_asist, -n))) +
+    geom_bar(fill = "#FEFFFF", color = "#FEFFFF", stat = "identity") +
+    coord_flip() + tema_barras_n_asist() +
+    labs(title = "Número de Asistentes") +
+    geom_fit_text(position = "stack", reflow = TRUE, size = 15,
+                  color = "#A7A6A6")
   return(Graph)
 }
 
@@ -402,7 +416,7 @@ lolipop_cRecursos <- function(DB, pregunta){
   cr <- cr %>% mutate(porcentaje = (100*n/sum(n)))%>%
     mutate(labela = sprintf("%1.1f%%", porcentaje)) %>%
     arrange(-n)
-
+  
   Graph <- ggplot(cr, aes(x = porcentaje, y = reorder({{ pregunta }}, -n), label = labela, color = n, fill = n)) +
     geom_segment(aes(x = 0, y = {{ pregunta }}, xend = porcentaje, yend = {{ pregunta }})) +
     geom_point(size = 20) + tema_lolipop() +
@@ -411,9 +425,9 @@ lolipop_cRecursos <- function(DB, pregunta){
   
   cr <- mutate(labela = {{ pregunta }})
   Graph <- Graph +
-  geom_fit_text(position = "stack", reflow = TRUE, size = 15,
+    geom_fit_text(position = "stack", reflow = TRUE, size = 15,
                   color = "#A7A6A6")
-
+  
   return(Graph)
 }
 
@@ -444,12 +458,12 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
           axis.text.y = element_blank(),
           axis.text.x =element_text(size = 20, colour =  "#13384D"),
           text = element_text(family = "Avenir Next", size = 20),
-        plot.title = element_text(size = 22,
-                                  colour =  "#13384D",
-                                  hjust = 0, face="bold"),
-        axis.line = element_blank(),
-        legend.title = element_blank(),
-        legend.position = "none" )
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
+                                    hjust = 0, face="bold"),
+          axis.line = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none" )
   
   return(p)
 }
