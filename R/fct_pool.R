@@ -12,4 +12,6 @@ onStop(function() {
   pool::poolClose(pool)
 })
 
-crearGiraBd <- "tElectoralTest_crear_giras"
+eventosBd <- "tElectoralTest_eventos"
+girasBd <- "tElectoralTest_giras"
+evaluacionEventosBd <- "tElectoralTest_evaluacionEventos"
