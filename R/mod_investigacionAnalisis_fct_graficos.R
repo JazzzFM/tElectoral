@@ -82,7 +82,7 @@ tema_probGanar <- function(){
       aspect.ratio = 1,
       # Fondo
       # Texto
-      plot.title = element_text(family = fuente,hjust = .5),
+      plot.title = element_text(family = "Avenir Next",hjust = .5),
       # Retícula
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
@@ -114,7 +114,20 @@ probGanar <- function(bd, candidato, nCand){
     labs(title = "Probabilidad de triunfo")+
     xlim(c(-nCand,nCand+1))+
     ylim(c(0,100))+
-    tema_probGanar()
+    tema_probGanar()+
+    theme(
+      text = element_text(family = "Avenir Next", size = 20),
+      plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face="bold"),
+      axis.text.y = element_blank(),
+      axis.text.x = element_text(color = "#41657A"),
+      axis.line.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      legend.title = element_blank(),
+      # legend.position = "none",
+      panel.grid = element_blank()
+    )
   return(g)
   
 }
@@ -136,7 +149,7 @@ hPollofPolls <- function(DB){
                      min = min * 100,
                      max = max * 100)
   # Tooltip
-  tt <- tooltip_table(c("{point.series.name}"),
+  tt <- tooltip_table(c("{point.series.name}: "),
                       c("{point.votacion_r}%"))
   # Gráfica
   Graph <- DB%>% 
@@ -146,26 +159,33 @@ hPollofPolls <- function(DB){
            color = c("#E29578", "#F05606", "#600B10",  "#00539B",
                      "#7030A0", "#FED90E", "#00B83A", "#FD2017",
                      "#00A453"))%>% 
-    hc_title(text = "Poll of Polls") %>%
-    hc_subtitle(text = "Data from Different Survey Houses") %>% 
+    hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>%
+    # hc_subtitle(text = "Data from Different Survey Houses") %>% 
     hc_add_series(data = DB,
                   hcaes(x = fecha, y = votacion, fill = colores, color = colores,
                         group = candidato),
                   type = "line", color = c("#E29578", "#F05606", "#600B10",  "#00539B",
                                            "#7030A0", "#FED90E", "#00B83A", "#FD2017",
                                            "#00A453")) %>% 
-    hc_yAxis(title = list(text = "Porcentaje"), labels = list(format = "{value}%") ) %>%
-    hc_xAxis(crosshair = T) %>% 
-    hc_plotOptions(line = list(colorByPoint = F, showInLegend = F)) %>% 
+    hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
+    hc_xAxis(crosshair = T, 
+             labels = list(step = 2,style = list(fontSize = "18px",color = "#13384D")),
+             title = list(text = "Fecha", style = list( fontSize = "16px", color = "#41657A"))) %>% 
+    hc_plotOptions(line = list(colorByPoint = F, showInLegend = F),
+                   arearange = list(lineWidth = 0)) %>% 
     hc_tooltip(sort = F,
-               share = F,
+               shared = T,
                borderWidth= 0,
-               split = F,
+               split = T,
                pointFormat = tt, 
+               headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
+               style = list(fontSize = "16px", color = "#41657A"), 
                useHTML = TRUE) %>%
-    hc_add_theme(hc_theme_hcrt()) %>%
+    # hc_add_theme(hc_theme_hcrt()) %>%
     hc_legend(enabled = T) %>% 
-    hc_colors(DB$colores) 
+    hc_colors(DB$colores) %>% 
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"),zoomType = "x")
+  
   
   return(Graph)
 }
@@ -186,10 +206,22 @@ iVotoBarras <- function(DB){
   Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = candidato))+
     geom_bar(stat = "identity") + 
     coord_flip() + theme_minimal() +
-    labs(title = "Intención de Voto", subtitle = "(2020)",caption = "Data from Different Survey Houses",
+    labs(title = "Intención de Voto", subtitle = "(2020)",caption = "",
          y = "Porcentaje de voto", x = "candidatos") +
     geom_text(aes(label = label, hjust = 1.2), color = "white")+
-    theme(legend.position = "none",  axis.title.y = element_blank()) +
+    theme(
+          axis.title.y = element_blank(),
+          text = element_text(family = "Avenir Next", size = 20),
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
+                                    hjust = 0, face="bold"),
+          axis.text.y = element_text(color = "#41657A"),
+          axis.text.x = element_text(color = "#41657A"),
+          axis.line.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none",
+          panel.grid = element_blank()) +
     scale_fill_manual(values = colores)
   
   return(Graph)
