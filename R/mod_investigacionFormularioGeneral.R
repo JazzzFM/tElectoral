@@ -13,7 +13,10 @@ mod_investigacionFormularioGeneral_ui <- function(id){
     h3("Formulario General"),
     p("Llene los siguientes campos para ..."),
     fluidRow(
-      column(width = 12,
+      column(width = 6,
+             textInput(inputId = ns("nombre"), label = "Nombre de la encuesta", placeholder = "...")
+      ),
+      column(width = 6,
              textInput(inputId = ns("casaEncuestadora"), label = "Casa encuestadora", placeholder = "...")
        ),
       column(width = 12,
@@ -36,9 +39,10 @@ mod_investigacionFormularioGeneral_ui <- function(id){
 mod_investigacionFormularioGeneral_server <- function(input, output, session, parent_session){
   ns <- session$ns
   observeEvent(input$guardar, {
-    if(validarFormularioGeneral(input$casaEncuestadora, input$poblacionObjetivo, input$fechaInicio, input$fechaFin)){
+    if(validarFormularioGeneral(input$nombre, input$casaEncuestadora, input$poblacionObjetivo, input$fechaInicio, input$fechaFin)){
       print(
         tibble::tibble(
+          nombre = input$nombre,
           casaEncuestadora = input$casaEncuestadora,
           poblacionObjetivo = input$poblacionObjetivo,
           fechaInicio = input$fechaInicio,

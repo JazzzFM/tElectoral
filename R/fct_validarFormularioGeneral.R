@@ -1,6 +1,10 @@
-validarFormularioGeneral <- function(encuesta, objetivo, fechaInicio, fechaFin){
+validarFormularioGeneral <- function(nombre, encuesta, objetivo, fechaInicio, fechaFin){
   allValido <- TRUE
   mensaje <- ""
+  if(!validarVacio(nombre)){
+    allValido <- FALSE
+    mensaje <- paste(mensaje, "El nombre de la encuesta no puede estar vacío.", sep = "\n")
+  }
   if(!validarVacio(encuesta)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "La casa encuestadora no puede estar vacía.", sep = "\n")
