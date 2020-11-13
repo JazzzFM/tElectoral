@@ -29,14 +29,15 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_eventos (
   activo TINYINT
 );" )
 
-# DBI::dbRemoveTable(pool,"tElectoralTest_eventos")
+# DBI::dbRemoveTable(pool,"tElectoralTest_giras")
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_giras (
   idGira INT AUTO_INCREMENT PRIMARY KEY,
-  responsable VARCHAR(100),
-  descripcion TEXT,
-  lugarInicio VARCHAR(100),
-  inicio DATETIME,
-  fin DATETIME,
+  Responsable VARCHAR(100),
+  Descripcion TEXT,
+  LugarInicio VARCHAR(100),
+  FechaInicio DATETIME,
+  LugarFinal VARCHAR(100),
+  FechaFinal DATETIME,
   fechaAlta DATETIME,
   fechaEdicion DATETIME,
   usuarioCrea VARCHAR(100),
