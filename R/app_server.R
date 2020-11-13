@@ -13,11 +13,11 @@ app_server <- function( input, output, session ) {
                                                                     password = "1"))
   )
   
-  # bd <- reactiveValues(
-  #   eventos = leerBd(pool,eventosBd),
-  #   giras = leerBd(pool,girasBd),
-  #   evaluacionEventos = leerBd(pool,evaluacionEventosBd)
-  # )
+  bd <- reactiveValues(
+    eventos = leerBd(pool,eventosBd),
+    giras = leerBd(pool,girasBd),
+    evaluacionEventos = leerBd(pool,evaluacionEventosBd)
+  )
   # Portada
   callModule(mod_portada_server, "portada_ui_1")
   # Investigación
@@ -35,6 +35,6 @@ app_server <- function( input, output, session ) {
   callModule(mod_analisisEventos_server, "analisisEventos_ui_1")
 
   # Evaluación gira
-  callModule(mod_evaluacionGira_server, "evaluacionGira_ui_1", session)
+  callModule(mod_evaluacionGira_server, "evaluacionGira_ui_1", session, bd, res_auth)
 
 }
