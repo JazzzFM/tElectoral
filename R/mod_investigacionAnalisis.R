@@ -97,7 +97,7 @@ mod_investigacionAnalisis_server <- function(input, output, session){
     
     # browser()
     # Función
-    probGanar(cand, candidato = "MORENA", 9)
+    probGanar(cand, candidato = "MORENA", 5)
     })
   
   # output$votopopu <- renderPlot({
