@@ -106,20 +106,21 @@ tema_probGanar <- function(){
 probGanar <- function(bd, candidato, nCand){
 
   pCand <- bd %>% 
-    filter(cand == candidato) %>% 
+    filter(cand == {{candidato}}) %>% 
     pull("prob") 
+  
   # browser()
   g <- bd %>% 
     ggplot()+
     # Marcas
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25),alpha=.8, fill="tomato")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50),alpha=.5, fill="#ffadad")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75),alpha=.5, fill="#ADECFF")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100),alpha=.8, fill="#0081A7")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25),alpha=.8, fill="8DB1AB")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50),alpha=.5, fill="#ADECFF")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75),alpha=.5, fill="#0081A7")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100),alpha=.8, fill="#587792")+
     # Indicadores
-    geom_rect(aes(xmin=rw, xmax=rw+.8, ymin=0, ymax=prob, fill=candidato),size=.3,color="white") +
-    geom_text(aes(x=-nCand,y=0, label=scales::percent(pCand/100)), size=10)+
+    geom_rect(aes(xmin=rw, xmax=rw+.8, ymin=0, ymax=prob, fill=candidato), size=.3,color="white") +
     coord_polar(theta = "y")+
+    geom_text(aes(x=-nCand, y=0, label=scales::percent(pCand/100)), size=8) +
     scale_fill_manual(values = c("INDEPENDIENTE" = "#925AAD", 
                                  "MC" = "#ED6B40", 
                                  "MORENA" = "#751438",
@@ -128,7 +129,7 @@ probGanar <- function(bd, candidato, nCand){
                                  "PRD" = "#FAB855",
                                  "PRI" = "#EB0E0E",
                                  "PT" = "#D63131", 
-                                 "PVEM" ="#199121"))+
+                                 "PVEM" ="#2F9C37"))+
     labs(title = "Probabilidad de triunfo")+
     xlim(c(-nCand,nCand+1))+
     ylim(c(0,100))+
@@ -139,11 +140,9 @@ probGanar <- function(bd, candidato, nCand){
                                 colour =  "#13384D",
                                 hjust = 0, face="bold"),
       axis.text.y = element_blank(),
-      axis.text.x = element_text(color = "#41657A"),
       axis.line.x = element_blank(),
       panel.grid.major.y = element_blank(),
       legend.title = element_blank(),
-      # legend.position = "none",
       panel.grid = element_blank()
     )
   return(g)
