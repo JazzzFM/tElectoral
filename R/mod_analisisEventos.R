@@ -20,7 +20,7 @@ mod_analisisEventos_ui <- function(id){
   ns <- NS(id)
   # Gráfico de Calificación Promedio
   tagList(
-    h3("Evaluación general de la gira"),
+    h3(style="text-align:center", "Evaluación general de la gira"),
     fluidRow(
       column(width = 12,
              fluidRow(
@@ -74,11 +74,14 @@ mod_analisisEventos_ui <- function(id){
     ),
     fluidRow(
       column(width = 12,
-             leafletOutput(ns("llmapa")))
-    )
-  )
-}
-
+             fluidRow(
+               column(width = 12, 
+                      div(class="topBoxInfo bordered-white ft-sm",
+                          h3(style="text-align:left", "Representantes de Casilla por Municipio"),
+                          leafletOutput(ns("llmapa")))
+                    ))
+            )) 
+  )}
 #' analisisEventos Server Function
 #'
 #' @noRd 
@@ -149,7 +152,7 @@ mod_analisisEventos_server <- function(input, output, session){
                             prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
       )
     
-    distRadar(bd, pregunta = animo, otro = animo_otro, x = 30, titulo = "Animo de los asistentes") 
+    distRadar(bd, pregunta = animo, otro = animo_otro, x = 30, titulo = "Ánimo de los Asistentes") 
   })
   
   output$cRecursos <- renderPlot({
@@ -201,6 +204,7 @@ mod_analisisEventos_server <- function(input, output, session){
              calif = sample(c(0:10), size = 113, replace = T,
                             prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
       )
+
     paletaRecursos(bd, pregunta = calidad, titulo = str_wrap("Nivel de calidad de los recursos tecnológicos", 30))
   })
   

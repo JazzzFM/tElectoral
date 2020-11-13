@@ -14,15 +14,13 @@ mod_investigacionAnalisis_ui <- function(id){
   tagList(
     # Letreros
     fluidRow(
-      column(width = 3,
-             plotOutput(ns("caja1"))),
-      column(width = 3,
-            plotOutput(ns("caja2"))),
-      column(width = 3,
-            plotOutput(ns("caja3"))),
-      column(width = 3,
-             plotOutput(ns("caja4")))
-    ),
+      column(width = 4,
+             valueBoxOutput(ns("caja1"), width = "100%")),
+       column(width = 4,
+              valueBoxOutput(ns("caja2"), width = "100%")),
+       column(width = 4,
+              valueBoxOutput(ns("caja3"), width = "100%")),
+             ),
     # Gráficos
     fluidRow(
       column(width = 12,
@@ -42,6 +40,27 @@ mod_investigacionAnalisis_ui <- function(id){
 #' @noRd 
 mod_investigacionAnalisis_server <- function(input, output, session){
   ns <- session$ns
+  #Letreros
+  output$caja1 <- renderValueBox({
+    DB_MichEncuesta %>% nrow() %>% 
+      valueBox(subtitle = "Encuestas Realizadas", icon = icon("address-book-o"), color = "blue")
+  })
+  output$caja2 <- renderValueBox({
+    start <- datetime <- ymd_hms(now("GMT"))
+    end <- ymd_hms("2021-06-06 5:21:00", tz = "GMT")
+    d <- as.numeric(round(end - start)) 
+    d %>% valueBox(subtitle = "Días para la Elección", icon = icon("calendar"), color = "blue")
+  })
+  output$caja3 <- renderValueBox({
+    DB_MichEncuesta %>% select(fecha_final) %>% tail(1) %>%
+      valueBox(subtitle = "Fecha de Última Encuesta", icon = icon("calendar-o"), color = "blue")
+  })
+  # Probabilidad de triunfo
+  # Pendiente a donde quedar
+  output$caja4 <- renderPlot({
+    BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+    cajaResume(BB, 4)
+  })
   # Prueba
   output$intervalos <- renderHighchart({
     # real data
@@ -94,26 +113,7 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   #   
   #   hVotoPopu(bd)
   # })
-  
-   output$caja1 <- renderPlot({
-    cajaResume(DB_MichEncuesta, 1)
-   })
-  
-   output$caja2 <- renderPlot({
-     cajaResume(DB_MichEncuesta, 2)
-   })
-   
-   output$caja3 <- renderPlot({
-     cajaResume(DB_MichEncuesta, 3)
-   })
-   
-   output$caja4 <- renderPlot({
-     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-     cajaResume(BB, 4)
-   })
 }
-
-
 ## To be copied in the UI
 # 
 

@@ -1,4 +1,3 @@
-
 # bd <- select(DB_Mich, c(MUNICIPIO, lugar =CABECERA_MUNICIPAL)) %>%
 #   mutate(fecha= seq(from = dmy_hm("06-01-21 11:00"), to = dmy_hm("06-02-21 11:00"), length.out =113),
 #     asistentes = sample(c("Debían de haber sido más personas",
@@ -50,7 +49,6 @@
 # 
 # # lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
 #Tema ggplots
-
 tema <- function(){
   theme(text = element_text(family = "Avenir Next", size = 2*18/.pt),
         plot.title = element_text(size = 2*22/.pt,
@@ -166,11 +164,13 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
     spread(value = n, key = {{ otro }})
   
   if(nrow(bd_1) != nrow(bd_2)){
-    
-    Graph <- ggradar(bd_1, base.size = 25) +
+
+      Graph <- ggradar(bd_1,  base.size = 15, font.radar = "sans", 
+                       values.radar = c("0%", "50%", "100%")) + 
       labs(title = titulo) +
       theme(plot.background = element_rect(fill = "white", color = "white"))
   }else{
+
     df <- data.frame(bd_1, bd_2)
     titulos <- df %>%  colnames() %>%  str_to_sentence()
     df <- df %>%  set_names(titulos)
@@ -195,6 +195,7 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
             legend.position = "none" )
     
   }
+
   return(Graph)
 }
 
@@ -291,8 +292,8 @@ burbujas <- function(bd, pregunta1, pregunta2){
           panel.grid.major.y = element_blank(),
           legend.title = element_blank(),
           legend.position = "none",
-          panel.grid = element_blank() )
-  
+          panel.grid = element_blank())
+
   return(p)
 }
 # burbujas(bd, pregunta1 = asistentes, pregunta2 = duracion)
@@ -458,27 +459,53 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
           axis.text.y = element_blank(),
           axis.text.x =element_text(size = 20, colour =  "#13384D"),
           text = element_text(family = "Avenir Next", size = 20),
-          plot.title = element_text(size = 22,
-                                    colour =  "#13384D",
-                                    hjust = 0, face="bold"),
-          axis.line = element_blank(),
-          legend.title = element_blank(),
-          legend.position = "none" )
-  
+        plot.title = element_text(size = 22,
+                                  colour =  "#13384D",
+                                  hjust = 0, face="bold"),
+        axis.line = element_blank(),
+        legend.title = element_blank(),
+        legend.position = "none" )
   return(p)
 }
 
 llMapaEstado <- function(Estado){
   
-  pal <- colorNumeric("Reds",domain = unique(Estado$n))
-  Graph <- leaflet(Estado) %>%
-    addTiles() %>% 
-    addPolygons(popup = ~glue("Municipio: {NOMBRE} <br> Id: {MUNICIPIO}"),
-                fillColor = ~pal(n), weight = 1, color = "black",opacity = 1,
-                fillOpacity = 1,label = ~MUNICIPIO) %>%
-    addLegend(pal = pal,values = ~n)
+  labels <- sprintf(
+    "<strong>%s</strong><br/>%g representantes de casilla",
+    Estado$NOMBRE, Estado$n
+  ) %>% lapply(htmltools::HTML)
+  
+  pal <- colorNumeric("Reds", domain = unique(Estado$n))
+  
+  Graph <-  leaflet(Estado, options = leafletOptions(minZoom = 8)) %>%
+    addProviderTiles("MapBox", options = providerTileOptions(
+      id = "mapbox.light",
+      accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN'))) %>% 
+      addPolygons(
+        fillColor = ~pal(n),
+        weight = 2,
+        opacity = 1,
+        color = "white",
+        dashArray = "3",
+        fillOpacity = 0.7,
+        highlight = highlightOptions(
+          weight = 5,
+          color = "#666",
+          dashArray = "",
+          fillOpacity = 0.7,
+          bringToFront = TRUE),
+        label = labels,
+        labelOptions = labelOptions(
+          style = list("font-weight" = "normal", padding = "3px 8px"),
+          textsize = "15px",
+          direction = "auto"))%>%
+        addLegend(pal = pal, values = ~n, opacity = 0.7, title = "No. Representantes",
+                  position = "bottomright") 
+    
   return(Graph)
 }
+
+#llMapaEstado(DB_MichGeograf)
 
 #paletaRecursos(bd, pregunta = calidad, titulo = "Nivel de calidad de los recursos tecnológicos empleados")
 
