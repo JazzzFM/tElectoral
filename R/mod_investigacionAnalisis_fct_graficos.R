@@ -253,8 +253,7 @@ hVotoPopu <- function(DB){
 
 cajaResume <- function(DB, x){
   if(x == 1){
-    X_1 <- DB %>%
-      nrow()
+    X_1 <- DB %>% nrow()
     
     annotation <- data.frame(x = c(2), y = c(3),
                              label = paste(X_1, "de Encuestas", sep=' '))
@@ -262,7 +261,7 @@ cajaResume <- function(DB, x){
     Graph <- ggplot(DB, aes(x = (1:5), y = (1:5))) +
             theme_minimal() +
           theme(panel.background = element_rect(fill = "gray"),
-                panel.grid.major = element_blank(), 
+                panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
                 axis.text.x = element_blank(),
                 axis.ticks.x = element_blank(),
@@ -270,7 +269,7 @@ cajaResume <- function(DB, x){
                 axis.ticks.y = element_blank(),
                 axis.title.y = element_blank(),
                 axis.title.x = element_blank(),
-                axis.text = element_blank()) + 
+                axis.text = element_blank()) +
           geom_text(data = annotation, aes( x = x, y = y, label = label),
               color = "White", size = 7, angle = 0, fontface = "bold")
        
