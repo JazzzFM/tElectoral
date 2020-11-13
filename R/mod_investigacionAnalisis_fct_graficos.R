@@ -104,10 +104,11 @@ tema_probGanar <- function(){
 
 # Probabilidad de ganar
 probGanar <- function(bd, candidato, nCand){
+
   pCand <- bd %>% 
     filter(cand == candidato) %>% 
-    pull("prob")
-  
+    pull("prob") 
+  # browser()
   g <- bd %>% 
     ggplot()+
     # Marcas
@@ -116,9 +117,18 @@ probGanar <- function(bd, candidato, nCand){
     geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75),alpha=.5, fill="#ADECFF")+
     geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100),alpha=.8, fill="#0081A7")+
     # Indicadores
-    geom_rect(aes(xmin=rw, xmax=rw+.8, ymin=0, ymax=prob, fill=cand),size=.3,color="white") +
+    geom_rect(aes(xmin=rw, xmax=rw+.8, ymin=0, ymax=prob, fill=candidato),size=.3,color="white") +
     geom_text(aes(x=-nCand,y=0, label=scales::percent(pCand/100)), size=10)+
     coord_polar(theta = "y")+
+    scale_fill_manual(values = c("INDEPENDIENTE" = "#925AAD", 
+                                 "MC" = "#ED6B40", 
+                                 "MORENA" = "#751438",
+                                 "PAN"  = "#17418A",
+                                 "PES" = "#54218A",
+                                 "PRD" = "#FAB855",
+                                 "PRI" = "#EB0E0E",
+                                 "PT" = "#D63131", 
+                                 "PVEM" ="#199121"))+
     labs(title = "Probabilidad de triunfo")+
     xlim(c(-nCand,nCand+1))+
     ylim(c(0,100))+
@@ -161,7 +171,7 @@ hPollofPolls <- function(DB){
                      votacion = votacion *100,
                      min = min * 100,
                      max = max * 100) %>% 
-    na.omit() %>% 
+    # na.omit() %>% 
     left_join(paleta) 
   # Tooltip
   tt <- tooltip_table(c("{point.series.name}: "),
@@ -176,8 +186,9 @@ hPollofPolls <- function(DB){
     # hc_subtitle(text = "Data from Different Survey Houses") %>% 
     hc_add_series(data = DB,
                   hcaes(x = fecha, y = votacion,
-                        group = candidato)) %>% 
-    hc_colors(colors =unique(DB$colores)) %>% 
+                        group = candidato),
+                  type = "line") %>% 
+    hc_colors(colors = paleta$colores) %>% 
     hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
     hc_xAxis(crosshair = T, 
              labels = list(step = 2,style = list(fontSize = "18px",color = "#13384D")),
@@ -203,19 +214,20 @@ hPollofPolls <- function(DB){
 
 iVotoBarras <- function(DB){
 
-  colores = c("INDEPENDIENTE" = "#E29578", "MC" = "#F05606",
-            "MORENA" = "#600B10", "PAN" = "#00539B",
-            "PES" = "#7030A0", "PRD" = "#FED90E",
-            "PVEM"= "#00B83A", "PT" = "#FD2017",
-            "PRI" = "#00A453")
-  
+  paleta <- tibble(candidato = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
+                                 "PRD", "PRI", "PT", "PVEM"),
+                   colores = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
+                               "#FAB855", "#EB0E0E", "#D63131", "#199121")) %>%  
+    arrange(candidato)
+  # browser()
   barras <- DB %>% group_by(candidato)%>%
     summarise(voto = mean(votacion)*100) %>% 
     mutate(label = sprintf("%1.1f%%", voto)) %>% 
-    na.omit()
+    na.omit() %>%  left_join(paleta)
   
-  Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = candidato))+
-    geom_bar(stat = "identity") + 
+  Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = colores))+
+    geom_bar(stat = "identity", width = .7) + 
+    scale_fill_identity()+
     coord_flip() + theme_minimal() +
     labs(title = "Intención de Voto", subtitle = "(2020)",caption = "",
          y = "Porcentaje de voto", x = "candidatos") +
@@ -232,8 +244,7 @@ iVotoBarras <- function(DB){
           panel.grid.major.y = element_blank(),
           legend.title = element_blank(),
           legend.position = "none",
-          panel.grid = element_blank()) +
-    scale_fill_manual(values = colores)
+          panel.grid = element_blank()) 
   
   return(Graph)
 }

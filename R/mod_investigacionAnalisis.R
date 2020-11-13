@@ -58,20 +58,27 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   
   output$gPdt <- renderPlot({
     # Temporal: Fake data!!!!!
-    
+    # bd <- procesamiento_graph(DB_MichEncuesta)
+
     nCand <- 3 + rpois(1,2)
     cand <- tibble(prob = abs(rnorm(n = nCand, 18, 25))) %>% 
       mutate(prob=round(100*prob/sum(prob)), 
              rw=row_number(),
              cand=paste("Candidato", rw))
+  
     
     #Real data, I cannot understant how does it works! ask him first!
-    # cand <- procesamiento_graph(DB_MichEncuesta) %>% 
-    #      group_by(candidato, colores) %>% summarise()
-    # cand <- cand %>% mutate(prob = runif(1, min = 0, max = 26))
+    cand <- procesamiento_graph(DB_MichEncuesta) %>%
+         group_by(candidato, colores) %>% summarise()
+    cand <- cand %>% mutate(prob = runif(1, min = 0, max = 26))  
+      
+    cand<-cand %>% arrange(desc(prob)) %>% 
+      ungroup() %>%  mutate(cand = candidato, rw = seq(1:9), prob = round(prob)) %>% 
+      head(5)  
     
+    # browser()
     # Función
-    probGanar(cand, candidato = "Candidato 2", nCand)
+    probGanar(cand, candidato = "MORENA", 9)
     })
   
   # output$votopopu <- renderPlot({
