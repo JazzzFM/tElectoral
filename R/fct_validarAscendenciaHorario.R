@@ -1,20 +1,20 @@
-validarAscendenciaHorario <- function(evt, eventos, uiCount, editableIndex = 0){
+validarAscendenciaHorario <- function(evt, eventos, editableIndex = 0){
   valido <- TRUE
-  for(i in 1:sum(uiCount$val,-1)){
-    if(editableIndex != i && !is.na(eventos[[as.character(i)]]$inicioEvento)){
-      if(evt()$fechaEvento < eventos[[as.character(i)]]$fechaEvento){
+  for(i in seq_along(eventos)){
+    if(editableIndex != i && !is.null(eventos[[i]]$inicioEvento)){
+      if(evt()$fechaEvento < eventos[[i]]$fechaEvento){
         valido <- FALSE
       }
-      if(evt()$inicioEvento < eventos[[as.character(i)]]$inicioEvento){
+      if(evt()$inicioEvento < eventos[[i]]$inicioEvento){
         valido <- FALSE
       }
-      if(evt()$finEvento < eventos[[as.character(i)]]$finEvento){
+      if(evt()$finEvento < eventos[[i]]$finEvento){
         valido <- FALSE
       }
       
       if(!valido){
           shinyalert::shinyalert(title = "¡Fecha menor!",
-                                 text = glue::glue("No es posible crear un evento con una fecha menor a la de los eventos anteriores (siendo en este caso el evento {eventos[[as.character(i)]]$nombre} en {eventos[[as.character(i)]]$lugar}). Verifique por favor."))
+                                 text = glue::glue("No es posible crear un evento con una fecha menor a la de los eventos anteriores (siendo en este caso el evento {eventos[[i]]$nombre} en {eventos[[i]]$lugar}). Verifique por favor."))
         break
       }
     }

@@ -27,27 +27,28 @@ mod_lugaresPaso3_ui <- function(id, titulo){
                  ),
                  div(class = "tramo",
                      textOutput(ns("tramoTexto"))
-                     )
-           )
+                 )
+             )
       )
     )
   )
 }
-    
+
 #' lugaresPaso3 Server Function
 #'
 #' @noRd 
 
-mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, parent_session, eventos, uiCount, paso1, tiempoActual, tiempoAntes, index){
+mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, parent_session, todosEventos, paso1, tiempoActual, tiempoAntes, index){
   ns <- session$ns
   # Add evento
+  eventos <- reactiveValues()
+  uiCount <- reactiveValues(val = 1)
   observeEvent(input$addEvento, {
     showModal(modalDialog(title = "Evento",
                           mod_evento_ui(ns(glue::glue("evento_ui_{uiCount$val}"))),
                           footer = actionButton(ns("agregar"),"Agregar"),
                           easyClose = T
-    )
-    )
+    ))
     callModule(mod_evento_server, glue::glue("evento_ui_{uiCount$val}"), parent_session = parent_session, valores = NULL, paso1 = paso1, editar = as.logical(F), index = as.numeric(uiCount$val), lugar=lugar)
   })
   output$tramoTexto <- renderText({
@@ -55,35 +56,34 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
       glue::glue("{floor(tiempoActual/60)} hrs. con {round(tiempoActual %% 60)} minuto(s)") 
     }
   })
+  
   observeEvent(input$agregar, {
     evt <- callModule(mod_evento_server, glue::glue("evento_ui_{uiCount$val}"), parent_session = parent_session, valores = NULL, paso1 = paso1, editar = as.logical(F), index = as.numeric(uiCount$val), lugar = lugar)
     if(validarInfoEvento(evt())){
       allValido <- TRUE
-      if(uiCount$val > 1){
-        allValido <- validarHorarioOcupado(evt, eventos, uiCount) # Retorna false si está ocupado
-        if(allValido)
-          allValido <- validarAscendenciaHorario(evt, eventos, uiCount) # Retorna false si después de tantas fechas, hay una fecha menor a ellas
-        if(index != 1 && allValido){
-          res <- validarAlcanceTiempo(evt,eventos,tiempoAntes, lugarAntes, lugar, uiCount) # Retorna false si no alcanza el tiempo y el tiempo
-          allValido <- as.logical(res[1])
-          if(!allValido){
-            shinyalert::shinyalert(title = "Advertencia", 
-                                   text = glue::glue("La duración del tramo para llegar a {lugar} es de {floor(tiempoAntes/60)} hrs. con {round(tiempoAntes %% 60)} minuto(s), y de acuerdo al inicio de este evento solo tendrás {floor(res[2] / 60)} hrs. y {round(res[2] %% 60)} mins. para llegar a tu destino. ¿Deseas continuar?"),
-                                   showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
-                                   confirmButtonText = "Sí",
-                                   callbackR = function(x) if(x) {
-                                     eventos[[as.character(uiCount$val)]] <- evt()
-                                     insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
-                                              ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
-                                                input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "danger"),
-                                                input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
-                                              ))
-                                     )
-                                     uiCount$val <- uiCount$val+1
-                                     removeModal()
-                                   }
-            )
-          }
+      allValido <- validarHorarioOcupado(evt, todosEventos %>% map(~.x())) # Retorna false si está ocupado
+      if(allValido)
+        allValido <- validarAscendenciaHorario(evt, todosEventos %>% map(~.x())) # Retorna false si después de tantas fechas, hay una fecha menor a ellas
+      if(index != 1 && allValido){
+        res <- validarAlcanceTiempo(evt, todosEventos %>% map(~.x()),tiempoAntes, lugarAntes, lugar) # Retorna false si no alcanza el tiempo y el tiempo
+        allValido <- as.logical(res[1])
+        if(!allValido){
+          shinyalert::shinyalert(title = "Advertencia", 
+                                 text = glue::glue("La duración del tramo para llegar a {lugar} es de {floor(tiempoAntes/60)} hrs. con {round(tiempoAntes %% 60)} minuto(s), y de acuerdo al inicio de este evento solo tendrás {floor(res[2] / 60)} hrs. y {round(res[2] %% 60)} mins. para llegar a tu destino. ¿Deseas continuar?"),
+                                 showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
+                                 confirmButtonText = "Sí",
+                                 callbackR = function(x) if(x) {
+                                   eventos[[as.character(uiCount$val)]] <- evt()
+                                   insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
+                                            ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
+                                              input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "danger"),
+                                              input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
+                                            ))
+                                   )
+                                   uiCount$val <- uiCount$val+1
+                                   removeModal()
+                                 }
+          )
         }
       }
       
@@ -120,11 +120,11 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
     if(validarInfoEvento(evt())){
       allValido <- TRUE
       if(uiCount$val > 1){
-        allValido <- validarHorarioOcupado(evt, eventos, uiCount, actualEditable$value) # Retorna false si está ocupado
+        allValido <- validarHorarioOcupado(evt, todosEventos %>% map(~.x()), actualEditable$value) # Retorna false si está ocupado
         if(allValido)
-          allValido <- validarAscendenciaHorario(evt, eventos, uiCount, actualEditable$value) # Retorna false si después de tantas fechas, hay una fecha menor a ellas
+          allValido <- validarAscendenciaHorario(evt, todosEventos %>% map(~.x()), actualEditable$value) # Retorna false si después de tantas fechas, hay una fecha menor a ellas
         if(index != 1 && allValido){
-          res <- validarAlcanceTiempo(evt,eventos,tiempoAntes, lugarAntes, lugar, uiCount) # Retorna false si no alcanza el tiempo y el tiempo
+          res <- validarAlcanceTiempo(evt, todosEventos %>% map(~.x()),tiempoAntes, lugarAntes, lugar, uiCount) # Retorna false si no alcanza el tiempo y el tiempo
           allValido <- as.logical(res[1])
           if(!allValido){
             shinyalert::shinyalert(title = "Advertencia", 
@@ -184,7 +184,7 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
                            })
   })
   ev <- reactive({
-    seq_len(uiCount$val-1) %>% map(~eventos[[as.character(.x)]]() %>% mutate(lugar = lugar)) %>% do.call(rbind,.) %>% na.omit()
+    seq_len(uiCount$val-1) %>% map(~eventos[[as.character(.x)]]) %>% do.call(rbind,.) %>% na.omit()
   })
   
   return(ev)
@@ -192,7 +192,7 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
 
 ## To be copied in the UI
 # 
-    
+
 ## To be copied in the server
 # 
- 
+
