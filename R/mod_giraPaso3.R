@@ -23,13 +23,11 @@ mod_giraPaso3_ui <- function(id){
 #'
 #' @noRd 
 
-mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_session = NULL, reseted){
+mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_session = NULL, reseted, usuario){
   ns <- session$ns
   
   listaEventos <- reactiveValues(eventos = c())
   horariosOcupados <- reactiveValues()
-  eventos <- reactiveValues()
-  uiCount <- reactiveValues(val = 1)
   output$outEventos <- renderUI({
     if(!is.null(gira$paso2)){
       lapply(seq_along(gira$paso2$lugares), function(i) {
@@ -45,8 +43,7 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
                                                                                 lugar = gira$paso2$lugares[.x],
                                                                                 lugarAntes = ifelse(.x != 1, gira$paso2$lugares[sum(.x, -1)], ""),
                                                                                 parent_session = parent_session,
-                                                                                eventos = eventos,
-                                                                                uiCount = uiCount,
+                                                                                todosEventos = listaEventos$eventos,
                                                                                 paso1 = gira$paso1,
                                                                                 tiempoActual = ifelse(.x != length(gira$paso2$lugares), gira$paso2Tiempos[.x], 0),
                                                                                 tiempoAntes = ifelse(.x != 1, gira$paso2Tiempos[sum(.x, -1)], 0),
@@ -63,7 +60,24 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
   observeEvent(input$guardar, {
     if(is.null(seq_along(listaEventos$eventos) %>% detect(~is.null(listaEventos$eventos[[.x]]())))){
       if(is.null(seq_along(listaEventos$eventos) %>% detect(~nrow(listaEventos$eventos[[.x]]()) == 0))){
-        seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.)
+        fA <- lubridate::now()
+        gira$paso1 %>% 
+          mutate(FechaInicio = lubridate::ymd_hm(glue::glue("{FechaInicio} {HorarioInicio}"),tz = "America/Mexico_City"),
+                 FechaFinal = lubridate::ymd_hm(glue::glue("{FechaFinal} {HorarioFinal}"),tz = "America/Mexico_City"),
+                 fechaAlta = fA,
+                 usuarioCrea = usuario$user,
+                 activo = 1) %>%
+          select(-HorarioInicio,-HorarioFinal) %>% 
+          insertBd(pool, girasBd, bd = .)
+        idgiraRec <- tbl(pool, girasBd) %>% filter(fechaAlta == !!fA) %>% pull(idGira)
+        seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.) %>% 
+          mutate(fechaAlta = fA,
+                 usuarioCrea = usuario$user,
+                 idGira = idgiraRec,
+                 activo = 1) %>% 
+          insertBd(pool, eventosBd, bd = .)
+        
+        
       }else{
         shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")
       }
