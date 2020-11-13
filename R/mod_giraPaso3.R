@@ -60,7 +60,7 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
   observeEvent(input$guardar, {
     if(is.null(seq_along(listaEventos$eventos) %>% detect(~is.null(listaEventos$eventos[[.x]]())))){
       if(is.null(seq_along(listaEventos$eventos) %>% detect(~nrow(listaEventos$eventos[[.x]]()) == 0))){
-        fA <- lubridate::now()
+        fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
         gira$paso1 %>% 
           mutate(FechaInicio = lubridate::ymd_hm(glue::glue("{FechaInicio} {HorarioInicio}"),tz = "America/Mexico_City"),
                  FechaFinal = lubridate::ymd_hm(glue::glue("{FechaFinal} {HorarioFinal}"),tz = "America/Mexico_City"),
@@ -69,7 +69,9 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
                  activo = 1) %>%
           select(-HorarioInicio,-HorarioFinal) %>% 
           insertBd(pool, girasBd, bd = .)
+        
         idgiraRec <- tbl(pool, girasBd) %>% filter(fechaAlta == !!fA) %>% pull(idGira)
+        
         seq_along(listaEventos$eventos) %>% map(~listaEventos$eventos[[.x]]()) %>% do.call(rbind,.) %>% 
           mutate(fechaAlta = fA,
                  usuarioCrea = usuario$user,
