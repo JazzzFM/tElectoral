@@ -13,58 +13,79 @@ mod_evaluacionGira_ui <- function(id){
     h3("Evaluación de gira"),
     p("Seleccione una gira y llene los siguientes campos para completar la evaluación"),
     hr(),
-    selectizeInput(inputId = ns("gira"), choices = c("Seleccione ..." = "", "Gira 1", "Gira 2"), label = "Gira a evaluar"),
+    selectizeInput(inputId = ns("gira"), choices = c("Seleccione ..." = ""), label = "Gira a evaluar"),
     h4("Eventos"),
     DT::DTOutput(ns("eventos"))
   )
 }
-    
+
 #' evaluacionGira Server Function
 #'
 #' @noRd 
-mod_evaluacionGira_server <- function(input, output, session, parent_session = NULL){
+mod_evaluacionGira_server <- function(input, output, session, parent_session = NULL, bd, res_auth){
   ns <- session$ns
-  a <- tibble(abc = c(a = "Evento 1", b = "Evento 2", c= "Evento 3"), Acciones = c(a = 1, b = 2, c= 3))
-  output$eventos <- DT::renderDT({
-    a$Acciones$a <- HTML(input_btns(ns("evaluar"), 1, "Evaluar", icon = "edit", status = "primary"), input_btns(ns("ver"), 1, "Ver", icon = "eye", status = "info"))
-    a$Acciones$b <- HTML(input_btns(ns("evaluar"), 2, "Evaluar", icon = "edit", status = "primary"), input_btns(ns("ver"), 2, "Ver", icon = "eye", status = "info"))
-    a$Acciones$c <- HTML(input_btns(ns("evaluar"), 3, "Evaluar", icon = "edit", status = "primary"), input_btns(ns("ver"), 3, "Ver", icon = "eye", status = "info"))
-    DT::datatable(
-      data = a
-    )
-  }, escape = F)
+  # a <- tibble(abc = c(a = "Evento 1", b = "Evento 2", c= "Evento 3"), Acciones = c(a = 1, b = 2, c= 3))
+  observeEvent(bd$giras,{
+    aux <- bd$giras %>% filter(activo == 1) %>%
+      mutate(nombre = glue::glue("{LugarInicio} {FechaInicio} - {LugarFinal} {FechaFinal}"))
+    updateSelectizeInput(session,inputId = "gira", choices = aux$idGira %>% set_names(aux$nombre))
+  })
   
-  evaluaciones <- reactiveValues()
-  actualEvaluable <- reactiveValues(value = 0)
+  seleccion <- reactive(
+    bd$eventos %>% filter(activo == 1, idGira == !! input$gira)
+  )
+  
+  output$eventos <- DT::renderDT({
+    # seleccion() 
+    # a$Acciones$a <- 
+    # a$Acciones$b <- 
+    # a$Acciones$c <- HTML(input_btns(ns("evaluar"), 3, "Evaluar", icon = "edit", status = "primary"), input_btns(ns("ver"), 3, "Ver", icon = "eye", status = "info"))
+    seleccion() %>% select(idEvento,nombre, lugar) %>%
+      mutate(Evaluar = input_btns(ns("evaluar"), idEvento, "Evaluar", icon = "edit", status = "primary"),
+             Ver  = input_btns(ns("ver"), idEvento, "Ver", icon = "eye", status = "info")
+      ) %>% select(-idEvento)
+  }, selection = 'none',rownames = FALSE,
+  options = list(language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json',searchPlaceholder = "Buscar..."),
+                 lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5
+  ),
+  escape = F)
+  
+  
   observeEvent(input$evaluar, {
     showModal(modalDialog(title = "Evaluación de evento", #Se planea concatenar el título del evento
                           mod_evaluacionGiraPreguntas_ui(glue::glue(ns("evaluacionGiraPreguntas_ui_{input$evaluar}"))),
                           footer = actionButton("Concluir evaluación", class = "btn-primary", inputId = ns("concluirEvaluacion")),
                           easyClose = T
-                          ))
-    callModule(mod_evaluacionGiraPreguntas_server, glue::glue("evaluacionGiraPreguntas_ui_{input$evaluar}"), valores = NULL, parent_session = parent_session)
-    actualEvaluable$value <- input$evaluar
+    ))
   })
   
   observeEvent(input$concluirEvaluacion, {
     removeModal()
-    evaluaciones[[as.character(actualEvaluable$value)]] <- callModule(mod_evaluacionGiraPreguntas_server, glue::glue("evaluacionGiraPreguntas_ui_{actualEvaluable$value}"), valores = NULL, parent_session = parent_session)
+    fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character
+    callModule(mod_evaluacionGiraPreguntas_server, glue::glue("evaluacionGiraPreguntas_ui_{input$evaluar}"), valores = NULL, parent_session = parent_session)() %>% 
+      mutate(fechaAlta = fA,
+             usuarioCrea = res_auth$user,
+             activo = 1,
+             idEvento = input$evaluar) %>% 
+      insertBd(pool, evaluacionEventosBd, bd = .)
     
   })
   
   observeEvent(input$ver, {
     showModal(modalDialog(title = "Evaluación de evento", #Se planea concatenar el título del evento
-                          mod_evaluacionGiraPreguntas_ui(glue::glue(ns("evaluacionGiraPreguntas_ui_{input$ver}"))),
-                          footer =  modalButton("Cerrar"),
+                          mod_evaluacionGiraPreguntas_ui(glue::glue(ns("evaluacionGiraPreguntas_ui_{input$ver}")),
+                                                         valores = tbl(pool,evaluacionEventosBd) %>% 
+                                                           filter(idEvento == !! input$ver) %>% collect()),
+                          # footer =  modalButton("Cerrar"),
                           easyClose = T
     ))
-    callModule(mod_evaluacionGiraPreguntas_server, glue::glue("evaluacionGiraPreguntas_ui_{input$ver}"), valores = evaluaciones[[as.character(input$ver)]](), parent_session = parent_session, readonly = 1)
+    # callModule(mod_evaluacionGiraPreguntas_server, glue::glue("evaluacionGiraPreguntas_ui_{input$ver}"), valores = evaluaciones[[as.character(input$ver)]](), parent_session = parent_session, readonly = 1)
   })
 }
-    
+
 ## To be copied in the UI
 # mod_evaluacionGira_ui("evaluacionGira_ui_1")
-    
+
 ## To be copied in the server
 # callModule(mod_evaluacionGira_server, "evaluacionGira_ui_1")
- 
+
