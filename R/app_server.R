@@ -12,6 +12,12 @@ app_server <- function( input, output, session ) {
     check_credentials = shinymanager::check_credentials(db = tibble(user ="admin",
                                                                     password = "1"))
   )
+  
+  # bd <- reactiveValues(
+  #   eventos = leerBd(pool,eventosBd),
+  #   giras = leerBd(pool,girasBd),
+  #   evaluacionEventos = leerBd(pool,evaluacionEventosBd)
+  # )
   # Portada
   callModule(mod_portada_server, "portada_ui_1")
   # Investigación
@@ -21,7 +27,9 @@ app_server <- function( input, output, session ) {
   # End cuestionario
   
   # Gira
-  callModule(mod_gira_server, "gira_ui_1", session)
+  callModule(mod_gira_server, "gira_ui_1", session, 
+             # bd = bd, 
+             usuario = res_auth)
 
   # Pantalla de eventos
   callModule(mod_analisisEventos_server, "analisisEventos_ui_1")
