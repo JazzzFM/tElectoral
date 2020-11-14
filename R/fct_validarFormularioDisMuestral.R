@@ -1,9 +1,14 @@
-validarFormularioDisMuestral <- function(modoLevantamiento, marcoMuestral, numeroEntrevistas,
+validarFormularioDisMuestral <- function(fechaRegistro, modoLevantamiento, marcoMuestral, numeroEntrevistas,
                                          aleatoria, poliEtapa, estrat, conglo,
-                                         nivelPolietap, nivelEstrat, nivelConglo,
+                                         nivelpoliEtapa, nivelEstrat, nivelConglo,
                                          unidadMuestral, nivelConfianza, margenError){
   allValido <- TRUE
   mensaje <- ""
+  
+  # if(!validarVacio(fechaRegistro)){
+  #   allValido <- FALSE
+  #   mensaje <- paste(mensaje, "Seleccione una fecha de registro.", sep = "\n")
+  # }
   if(!validarVacio(marcoMuestral)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "El campo del marco muestral no debe ser vacío.", sep = "\n")
@@ -25,9 +30,13 @@ validarFormularioDisMuestral <- function(modoLevantamiento, marcoMuestral, numer
     allValido <- FALSE
     mensaje <- paste(mensaje, "Seleccione una opción para Aleatoria.", sep = "\n")
   }
+  # Atención
   if(!validarVacio(poliEtapa)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "Seleccione una opción para Poloetápica.", sep = "\n")
+    # if(poliEtapa == "No" && nivelPolietap > 0){
+    #   allValido <- FALSE
+    # }
   }
   if(!validarVacio(estrat)){
     allValido <- FALSE
@@ -37,7 +46,7 @@ validarFormularioDisMuestral <- function(modoLevantamiento, marcoMuestral, numer
     allValido <- FALSE
     mensaje <- paste(mensaje, "Seleccione una opción para Conglomerados.", sep = "\n")
   }
-  if(!validarVacio(nivelPolietap)){
+  if(!validarVacio(nivelpoliEtapa)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "El nivel de Poloetápica no debe ser vacío.", sep = "\n")
   }

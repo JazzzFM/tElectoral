@@ -24,6 +24,7 @@ app_ui <- function(request) {
                    icon = icon("dashboard"),
                    menuItem("Registro", tabName="invRegistro"),
                    menuItem("Encuestas", tabName="invEncuestas"),
+                   menuItem("For Dis Muestral", tabName="formDisMuestral"), #pruebas
                    menuItem("Form intención de voto", tabName="formIntVoto"),
                    menuItem("Resultados", tabName="invResultados")
                    ),
@@ -67,8 +68,8 @@ app_ui <- function(request) {
                   mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1")),
           tabItem(tabName = "invRegistro",
                   mod_investigacionFormularioGeneral_ui("investigacionFormularioGeneral_ui_1")),
-          # tabItem(tabName = "formDisMuestral",
-          #         mod_investigacionFormularioDisMuestral_ui("investigacionFormularioDisMuestral_ui_1")),
+           tabItem(tabName = "formDisMuestral",
+                   mod_investigacionFormularioDisMuestral_ui("investigacionFormularioDisMuestral_ui_1")),
           tabItem(tabName = "invEncuestas",
                   mod_investigacionEncuestas_ui("investigacionEncuestas_ui_1")),
           tabItem(tabName = "formIntVoto",
