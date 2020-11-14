@@ -1453,7 +1453,7 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
 }
 .topBoxInfo p:first-child {
   font-size: 4em;
-  background-color: var(--m-red-color);
+  background: var(--gradient-button-primary);
   color: #fff;
   width: 165px;
   height: 165px;

@@ -95,11 +95,10 @@ tema_probGanar <- function(){
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
       # Ejes
-      axis.text.y = element_blank(),
+      #axis.text.y = element_blank(),
       axis.text.x = element_text(size = 40/.pt),
       axis.title = element_blank()
     )
-  
 }
 
 # Probabilidad de ganar
@@ -146,7 +145,6 @@ probGanar <- function(bd, candidato, nCand){
       panel.grid = element_blank()
     )
   return(g)
-  
 }
 
 hPollofPolls <- function(DB){
