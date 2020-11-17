@@ -58,7 +58,7 @@ procesamiento_graph <- function(DB){
   
   BB <- filter(BB, votacion > 0.08)
   
-  BAUX = tibble(candidato = c("PRI", "PAN", "MORENA", "PRD", "PES", "PVME",
+  BAUX = tibble(candidato = c("PRI", "PAN", "MORENA", "PRD", "PES", "PVEM",
                               "PT", "MC", "INDEPENDIENTE"), 
                 colores = c("#00A453", "#00539B", "#600B10", "#FED90E",
                             "#7030A0", "#FD2017", "#00B83A", "#F05606",
