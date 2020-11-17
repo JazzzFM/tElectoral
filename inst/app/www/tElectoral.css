@@ -170,6 +170,9 @@ body{
   position: relative;
   z-index: 1;
 }
+.none{
+  display: none !important;
+}
 .FlexRow{
   display: flex;
   align-items: center;
@@ -565,15 +568,14 @@ div#logo img{
 .sidebar-menu .treeview-menu>li.active::before,
 .sidebar-menu .treeview-menu>li.active::after{
     content: '';
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    top: 0;
-    bottom: 0;
-    display: block;
-    margin: auto;
-    right: 15px;
-    border-radius: 50%;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 10px;
+  display: block;
+  margin: auto;
+  left: 0px;
+  border-radius: 50%;
 }
 .sidebar-menu .treeview-menu>li.active::before{
   background-color: #fff;
@@ -1566,3 +1568,36 @@ display: block;
   }
 }
 
+/* Formulario de intención de voto */
+.flexTable > * {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.flexTable h4{
+  text-align: center;
+}
+.four-columns,
+.three-columns{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+.four-columns > * {
+width: calc(100% / 4) !important;
+}
+.three-columns > * {
+width: calc(100% / 3) !important;
+}
+.flexTable .form-group.shiny-input-container > div{
+  width: 100% !important;
+}
+.four-columns button {
+    align-self: center;
+}
+.four-columns .form-group {
+  height: 54px;
+}
