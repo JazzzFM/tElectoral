@@ -56,6 +56,12 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, pa
   ns <- session$ns
   uiCount <- reactiveValues(val = 1)
   observeEvent(input$addFila, {
+    clase <- ""
+    if(input$tipoIntVoto == "Candidato + Partido")
+      clase <- "four-columns"
+    else {
+      clase <- "three-columns"
+    }
     insertUI(selector = "#tablaCandidatos .candContainer", where = "beforeEnd",
              ui = div(class=clase, id=glue::glue("row-candidato-{uiCount$val}"),
                       selectizeInput(inputId = ns(glue::glue("nombreCandidato-{uiCount$val}")), choices = c("Juan", "Alejandro", "María"), label = ""),
