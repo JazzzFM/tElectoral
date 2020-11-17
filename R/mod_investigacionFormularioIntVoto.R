@@ -15,7 +15,7 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
     useShinyjs(),
     fluidRow(
       column(12, 
-             pickerInput(inputId = ns("tipoIntVoto"), label = "Tipo de intención de voto", choices = c("Seleccione" = "", "Candidato + Partido", "Candidato", "Partido"))
+             pickerInput(inputId = ns("tipoIntVoto"), label = "Tipo de intención de voto", choices = c("Candidato + Partido", "Candidato", "Partido"))
        ),
       column(12,
              textInput(inputId=ns("pregunta"), label = "Pregunta", placeholder = "...")
@@ -30,7 +30,7 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
     
     h3("Registro"),
     div(class = "flexTable", id = "tablaCandidatos",
-        div( class="four-columns",
+        div( class="four-columns", id="tableHeader",
           h4("Candidato"),
           h4("Partido"),
           h4("Resultado"),
@@ -52,12 +52,12 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
 #' investigacionFormularioIntVoto Server Function
 #'
 #' @noRd 
-mod_investigacionFormularioIntVoto_server <- function(input, output, session, parent_session){
+mod_investigacionFormularioIntVoto_server <- function(input, output, session, parent_session = NULL, showForm = NULL){
   ns <- session$ns
   uiCount <- reactiveValues(val = 1)
   observeEvent(input$addFila, {
     insertUI(selector = "#tablaCandidatos .candContainer", where = "beforeEnd",
-             ui = div(class="four-columns", id=glue::glue("candidato-{uiCount$val}"),
+             ui = div(class=clase, id=glue::glue("row-candidato-{uiCount$val}"),
                       selectizeInput(inputId = ns(glue::glue("nombreCandidato-{uiCount$val}")), choices = c("Juan", "Alejandro", "María"), label = ""),
                       selectizeInput(inputId = ns(glue::glue("partido-{uiCount$val}")), choices = c("PRD", "PRI", "PAN"), label = ""),
                       numericInput(inputId = ns(glue::glue("resultado-{uiCount$val}")), value = 0, min = 0, max= 10, label = ""),
@@ -104,7 +104,7 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, pa
   })
   
   observeEvent(input$eliminar, {
-    removeUI(selector = glue::glue("#candidato-{input$eliminar}"))
+    removeUI(selector = glue::glue("#row-candidato-{input$eliminar}"))
     updateSelectizeInput(session = parent_session, inputId = ns(glue::glue("nombreCandidato-{input$eliminar}")), selected = "")
     updateSelectizeInput(session = parent_session, inputId = ns(glue::glue("partido-{input$eliminar}")), selected = "")
     updateSelectizeInput(session = parent_session, inputId = ns(glue::glue("resultado-{input$eliminar}")), selected = -1)

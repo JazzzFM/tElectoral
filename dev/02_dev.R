@@ -59,6 +59,7 @@ golem::add_module( name = "investigacionFormularioGeneral" )
 golem::add_module( name = "investigacionFormularioDisMuestral" )
 golem::add_module( name = "investigacionFormularioIntVoto" )
 golem::add_module( name = "investigacionEncuestas" )
+golem::add_module( name = "investigacionCompartido" )
 # Comunicación
 golem::add_module( name = "comunicacion" )
 

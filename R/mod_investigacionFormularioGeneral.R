@@ -36,7 +36,7 @@ mod_investigacionFormularioGeneral_ui <- function(id){
 #' investigacionFormularioGeneral Server Function
 #'
 #' @noRd 
-mod_investigacionFormularioGeneral_server <- function(input, output, session, parent_session){
+mod_investigacionFormularioGeneral_server <- function(input, output, session, parent_session, showForm = 0){
   ns <- session$ns
   observeEvent(input$guardar, {
     if(validarFormularioGeneral(input$nombre, input$casaEncuestadora, input$poblacionObjetivo, input$fechaInicio, input$fechaFin)){

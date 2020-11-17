@@ -190,26 +190,26 @@ var ayudasContainer;
 $(document).on("click", 'button', SetAyudas);
 function SetAyudas(){
     if($("button.showInfo").length == 0){
-     setTimeout(function() {
-        ayudasContainer = $(".AyudasContainer");
-        ayudasContainer.append("<button>Cerrar ayuda</button>")
-        var referencias = [];
-        // Asignamos ids a referencias
-        $.each(ayudasContainer.find("p"), function(){
-           referencias.push($(this).attr("ref-id"));
-        });
-        // Asignamos ids al dom
-        referencias.forEach(item => {
-            var element = $(`[id="${item}"]`);
-            console.log(item)
-            //if(!element.hasClass("form-group"))
-            //    element = element.parents(".form-group");
-            element.find(".control-label").prepend(`
-                <button type="button" ref-id="${item}" class="showInfo"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
-            `);
-        })
-    console.log(referencias);
-    }, 500);   
+         setTimeout(function() {
+            ayudasContainer = $(".AyudasContainer");
+            ayudasContainer.append("<button>Cerrar ayuda</button>")
+            var referencias = [];
+            // Asignamos ids a referencias
+            $.each(ayudasContainer.find("p"), function(){
+               referencias.push($(this).attr("ref-id"));
+            });
+            // Asignamos ids al dom
+            referencias.forEach(item => {
+                var element = $(`[id="${item}"]`);
+                console.log(item)
+                //if(!element.hasClass("form-group"))
+                //    element = element.parents(".form-group");
+                element.find(".control-label").prepend(`
+                    <button type="button" ref-id="${item}" class="showInfo"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                `);
+            })
+        console.log(referencias);
+        }, 500);   
     }
 }
 
@@ -226,3 +226,64 @@ $(document).on("click",".AyudasContainer button",function(){
     }, 1000);
 })
 /* End control de ayudas */
+
+/* Formulario de intención de voto */
+$(document).on("click", 'button', function(){
+    let a = document.querySelector("select[id='investigacionFormularioIntVoto_ui_1-tipoIntVoto']");    
+    if(a != null){
+        $(a).on("change", function(e){
+    	    setColumnsIntVoto(e.currentTarget.value);
+    	});
+    }
+});
+$(document).on("click", 'button#investigacionFormularioIntVoto_ui_1-addFila', function(){
+    let a = document.querySelector("select[id='investigacionFormularioIntVoto_ui_1-tipoIntVoto']");    
+    if(a!= null)
+        setColumnsIntVoto(a.value);
+});
+function setColumnsIntVoto(val){
+    let value = val;
+    	let container = document.querySelector("#tablaCandidatos");
+    	let headers = container.querySelector("#tableHeader");
+        let candidatos = container.querySelectorAll("div[id*='row-candidato']");
+        
+        // Se remueven clases
+        headers.classList.remove("four-columns")
+        headers.classList.remove("three-columns")
+        candidatos.forEach(item => {
+            item.classList.remove("four-columns")
+            item.classList.remove("three-columns")
+        })
+    	if(value == "Candidato + Partido"){
+    	    headers.classList.add("four-columns")
+    	    headers.children[0].classList.remove("none");
+    	    headers.children[1].classList.remove("none");
+    	    candidatos.forEach(item => {
+                item.classList.add("four-columns");
+                item.children[0].classList.remove("none")
+                item.children[1].classList.remove("none")
+            })
+    	}
+    	else if(value == "Candidato"){
+    	    headers.classList.add("three-columns")
+    	    headers.children[0].classList.remove("none");
+    	    headers.children[1].classList.add("none");
+    	    candidatos.forEach(item => {
+                item.classList.add("three-columns");
+                item.children[0].classList.remove("none")
+                item.children[1].classList.add("none")
+            })
+    	}
+    	else if(value == "Partido"){
+    	    headers.classList.add("three-columns")
+    	    headers.children[0].classList.add("none");
+    	    headers.children[1].classList.remove("none");
+    	    candidatos.forEach(item => {
+                item.classList.add("three-columns");
+                item.children[0].classList.add("none")
+                item.children[1].classList.remove("none")
+            })
+    	}
+
+}
+/* End formulario de intención voto */

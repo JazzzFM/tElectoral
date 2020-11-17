@@ -83,7 +83,7 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
 #' investigacionFormularioDisMuestral Server Function
 #'
 #' @noRd 
-mod_investigacionFormularioDisMuestral_server <- function(input, output, session){
+mod_investigacionFormularioDisMuestral_server <- function(input, output, session, showForm = 0){
   ns <- session$ns
   
   observeEvent(input$guardar, {

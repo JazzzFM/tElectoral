@@ -170,6 +170,9 @@ body{
   position: relative;
   z-index: 1;
 }
+.none{
+  display: none !important;
+}
 .FlexRow{
   display: flex;
   align-items: center;
@@ -1452,7 +1455,7 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
 }
 .topBoxInfo p:first-child {
   font-size: 4em;
-  background-color: var(--m-red-color);
+  background: var(--gradient-button-primary);
   color: #fff;
   width: 165px;
   height: 165px;
@@ -1576,7 +1579,8 @@ display: block;
 .flexTable h4{
   text-align: center;
 }
-.four-columns {
+.four-columns,
+.three-columns{
     width: 100%;
     display: flex;
     justify-content: center;
@@ -1584,6 +1588,9 @@ display: block;
 }
 .four-columns > * {
 width: calc(100% / 4) !important;
+}
+.three-columns > * {
+width: calc(100% / 3) !important;
 }
 .flexTable .form-group.shiny-input-container > div{
   width: 100% !important;
