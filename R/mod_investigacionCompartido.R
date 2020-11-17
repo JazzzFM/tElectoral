@@ -12,9 +12,9 @@ mod_investigacionCompartido_ui <- function(id){
   ns <- NS(id)
   tagList(
     useShinyjs(),
-    hidden(
-      div(id = ns("formEncuestas"), mod_investigacionEncuestas_ui("investigacionEncuestas_ui_1"))
-      ),
+    # hidden(
+    #   div(id = ns("formEncuestas"), mod_investigacionEncuestas_ui("investigacionEncuestas_ui_1"))
+    #   ),
     # hidden(
     #   div(id = ns("formIntVoto"), mod_investigacionFormularioIntVoto_ui("investigacionFormularioIntVoto_ui_1"))
     #   )
@@ -29,7 +29,7 @@ mod_investigacionCompartido_server <- function(input, output, session, parent_se
   showForm <- reactiveValues(val = 1)
   
   #Encuestas
-  callModule(mod_investigacionEncuestas_server, "investigacionEncuestas_ui_1", parent_session, showForm)
+  #callModule(mod_investigacionEncuestas_server, "investigacionEncuestas_ui_1", parent_session, showForm)
   #Intención de voto
   #callModule(mod_investigacionFormularioIntVoto_server, "investigacionFormularioIntVoto_ui_1", parent_session, showForm)
   
