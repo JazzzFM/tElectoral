@@ -1,5 +1,5 @@
 ## code to prepare `AWS` dataset goes here
-config <- config::get(file = "inst/app/data/config.yml")
+# config <- config::get(file = "inst/app/data/config.yml")
 pool <- pool::dbPool(
   drv = RMariaDB::MariaDB(),
   dbname = config$database,
