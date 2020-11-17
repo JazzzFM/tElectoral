@@ -1,14 +1,10 @@
 validarFormularioDisMuestral <- function(fechaRegistro, modoLevantamiento, marcoMuestral, numeroEntrevistas,
                                          aleatoria, poliEtapa, estrat, conglo,
                                          nivelpoliEtapa, nivelEstrat, nivelConglo,
-                                         unidadMuestral, nivelConfianza, margenError){
+                                         unidadMuestral, nivelConfianza, margenError, observ){
   allValido <- TRUE
   mensaje <- ""
   
-  # if(!validarVacio(fechaRegistro)){
-  #   allValido <- FALSE
-  #   mensaje <- paste(mensaje, "Seleccione una fecha de registro.", sep = "\n")
-  # }
   if(!validarVacio(marcoMuestral)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "El campo del marco muestral no debe ser vacío.", sep = "\n")
@@ -30,60 +26,44 @@ validarFormularioDisMuestral <- function(fechaRegistro, modoLevantamiento, marco
     allValido <- FALSE
     mensaje <- paste(mensaje, "Seleccione una opción para Aleatoria.", sep = "\n")
   }
-  # Atención
   if(!validarVacio(poliEtapa)){
     allValido <- FALSE
-    mensaje <- paste(mensaje, "Seleccione una opción para Poloetápica.", sep = "\n")
-    # if(poliEtapa == "No" && nivelPolietap > 0){
-    #   allValido <- FALSE
-    # }
+    mensaje <- paste(mensaje, "Seleccione una opción para Polietápica.", sep = "\n")
+  }else{
+    if(poliEtapa == "Sí" && nivelpoliEtapa == 1){
+      allValido <- FALSE
+      mensaje <- paste(mensaje, "Si es Polietápica el nivel debe ser mayor a uno", sep = "\n")
+    }
   }
   if(!validarVacio(estrat)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "Seleccione una opción para Estratificada.", sep = "\n")
+  }else{
+    if(estrat == "Sí" && nivelEstrat == 1){
+      allValido <- FALSE
+      mensaje <- paste(mensaje, "Si es Estratificada el nivel debe ser mayor a uno", sep = "\n")
+    }
   }
   if(!validarVacio(conglo)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "Seleccione una opción para Conglomerados.", sep = "\n")
-  }
-  if(!validarVacio(nivelpoliEtapa)){
-    allValido <- FALSE
-    mensaje <- paste(mensaje, "El nivel de Poloetápica no debe ser vacío.", sep = "\n")
-  }
-  if(!validarVacio(nivelEstrat)){
-    allValido <- FALSE
-    mensaje <- paste(mensaje, "El nivel de Estratificada. no debe ser vacío.", sep = "\n")
-  }
-  if(!validarVacio(nivelConglo)){
-    allValido <- FALSE
-    mensaje <- paste(mensaje, "El nivel de Conglomerados no debe ser vacío.", sep = "\n")
+  }else{
+    if(conglo == "Sí" && nivelConglo == 1){
+      allValido <- FALSE
+      mensaje <- paste(mensaje, "Si es Conglomerada el nivel debe ser mayor a uno", sep = "\n")
+    }
   }
   if(!validarVacio(unidadMuestral)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "La Unidad muestral no debe ser vacía.", sep = "\n")
-  }else{
-    if(!validarSoloLetras(unidadMuestral)){
-      allValido <- FALSE
-      mensaje <- paste(mensaje, "La Unidad muestral muestral no puede contener números o caracteres especiales.", sep = "\n")
-    } 
   }
   if(!validarVacio(nivelConfianza)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "El Nivel de confianza no debe ser vacío.", sep = "\n")
-  }else{
-    if(!validarSoloLetras(nivelConfianza)){
-      allValido <- FALSE
-      mensaje <- paste(mensaje, "El Nivel de confianza no puede contener números o caracteres especiales.", sep = "\n")
-    } 
   }
   if(!validarVacio(margenError)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "El Margen de error no debe ser vacío.", sep = "\n")
-  }else{
-    if(!validarSoloLetras(margenError)){
-      allValido <- FALSE
-      mensaje <- paste(mensaje, "El Margen de error no puede contener números o caracteres especiales.", sep = "\n")
-    } 
   }
   if(mensaje != ""){
     shinyalert::shinyalert(title = "¡Formulario de diseño muestral no válido!", 
