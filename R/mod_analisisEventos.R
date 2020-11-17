@@ -93,13 +93,11 @@ mod_analisisEventos_server <- function(input, output, session){
     promedioGauge(bd, calificacion = x)
   })
   
-
-  a <- tibble(Municipio = c(a = "Municipio 1", b = "Municipio 2", c= "Municipio 3", d= "Prueba", e="Prueba 2", f="Prueba 3", g="Prueba 4", h="Prueba 5", i="Prueba 6", j="Prueba 7"), Calificación = c(a = 10, b = 5, c= 8, d=4, e=9, f=7, g=1, h=7, i=3,j=4),)
-
   output$tableMun <- DT::renderDT({
-    tibble(Municipio = c(a = "Municipio 1", b = "Municipio 2", c= "Municipio 3"), Calificación = c(a = 10, b = 5, c= 8))
-    
-  }, escape = F, options = list(dom = 't'))
+    mun <- tibble(CABECERA_MUNICIPAL = sample(size=3, DB_Mich2$CABECERA_MUNICIPAL)) 
+    a <- tibble(Municipio = mun$CABECERA_MUNICIPAL, Calificación = c(a = 10, b = 5, c= 8))
+     DT::datatable(data = a)
+   }, escape = F, options = list(dom = 't'))
   
   output$eAnimo <- renderPlot({
     # fake data as the real structure
@@ -320,10 +318,6 @@ mod_analisisEventos_server <- function(input, output, session){
   })
   
 }
-  # output$ggmapa <- renderPlot({
-  #   ggMapaEstado(DB_MichGeograf)
-  # })
-
 
 ## To be copied in the UI
 # 
