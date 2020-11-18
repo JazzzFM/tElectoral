@@ -51,10 +51,10 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
         ),
       column(width = 6,
              prettyRadioButtons(label = "Estratificada", choices = c("Sí", "No"),
-                                inputId = ns("estrat"), selected = 0)
+                                inputId = ns("estratificada"), selected = 0)
       ),
       column(width = 6,
-             shinyjs::hidden(numericInput(inputId = ns("nivelEstrat"),
+             shinyjs::hidden(numericInput(inputId = ns("nivielEstratificada"),
                                           label = "¿Cuántos niveles?",
                                           value = 1,
                                           min = 1,
@@ -62,10 +62,10 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
       ),
       column(width = 6,
              prettyRadioButtons(label = "Conglomerados", choices = c("Sí", "No"),
-                                inputId = ns("conglo"), selected = 0)
+                                inputId = ns("conglomerados"), selected = 0)
       ),
       column(width = 6,
-             shinyjs::hidden(numericInput(inputId = ns("nivelConglo"),
+             shinyjs::hidden(numericInput(inputId = ns("nivielConglomerados"),
                                           label = "¿Cuántos niveles?",
                                           value = 1,
                                           min = 1,
@@ -84,7 +84,7 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
                        placeholder = "Respuesta libre ...")
       ),
       column(width = 12,
-             textAreaInput('observ', label = 'Observaciones', placeholder = "Respuesta libre ..."),
+             textAreaInput(inputId = ns("observaciones"), label = 'Observaciones', placeholder = "Respuesta libre ..."),
       ),
       actionButton(inputId = ns("guardar"), "Guardar", class = "btn btn-definitive")
     )
@@ -95,7 +95,7 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
 #'
 #' @noRd 
 
-mod_investigacionFormularioDisMuestral_server <- function(input, output, session, parent_session = NULL, showForm = NULL){
+mod_investigacionFormularioDisMuestral_server <- function(input, output, session, bd, usuario, parent_session = NULL, showForm = NULL){
   ns <- session$ns
   observeEvent(input$poliEtapa, {
     if(input$poliEtapa == "Sí"){
@@ -109,55 +109,60 @@ mod_investigacionFormularioDisMuestral_server <- function(input, output, session
       updateNumericInput(session = parent_session, inputId = ns("nivelpoliEtapa"), value = 1)
     }
   })
-  observeEvent(input$estrat, {
-    if(input$estrat == "Sí"){
+  observeEvent(input$estratificada, {
+    if(input$estratificada == "Sí"){
       shinyjs::show(
-        selector = paste0("#", ns("nivelEstrat"))
+        selector = paste0("#", ns("nivielEstratificada"))
       )
     }else{
       shinyjs::hide(
-        selector = paste0("#", ns("nivelEstrat"))
+        selector = paste0("#", ns("nivielEstratificada"))
       )
-      updateNumericInput(session = parent_session, inputId = ns("nivelEstrat"), value = 1)
+      updateNumericInput(session = parent_session, inputId = ns("nivielEstratificada"), value = 1)
     }
   })
-  observeEvent(input$conglo, {
-    if(input$conglo == "Sí"){
+  observeEvent(input$conglomerados, {
+    if(input$conglomerados == "Sí"){
       shinyjs::show(
-        selector = paste0("#", ns("nivelConglo"))
+        selector = paste0("#", ns("nivielConglomerados"))
       )
     }else{
       shinyjs::hide(
-        selector = paste0("#", ns("nivelConglo"))
+        selector = paste0("#", ns("nivielConglomerados"))
       )
-      updateNumericInput(session = parent_session, inputId = ns("nivelConglo"), value = 1)
+      updateNumericInput(session = parent_session, inputId = ns("nivielConglomerados"), value = 1)
     }
   })
   observeEvent(input$guardar, {
-  if(validarFormularioDisMuestral(input$fechaRegistro, input$modoLevantamiento, input$marcoMuestral, input$numeroEntrevistas,
-                               input$aleatoria, input$poliEtapa, input$estrat, input$conglo,
-                               input$nivelpoliEtapa, input$nivelEstrat, input$nivelConglo,
-                               input$unidadMuestral, input$nivelConfianza, input$margenError,
-                               input$observ)){
-    print(
-      tibble::tibble(
-        fechaRegistri = input$fechaRegistro,
-        modoLevanamiento = input$modoLevantamiento,
-        marcoMuestral = input$marcoMuestral,
-        numeroEntrevistas = input$numeroEntrevistas,
-        aleatoria = input$aleatoria, 
-        poliEtapa = input$poliEtapa,
-        nivelpoliEtapa = input$nivelpoliEtapa, 
-        estrat = input$estrat,
-        nivelEstrat = input$nivelEstrat, 
-        conglo = input$conglo,
-        nivelConglo = input$nivelConglo,
-        unidadMuestral = input$unidadMuestral,
-        nivelConfianza = input$nivelConfianza,
-        margenError = input$margenError,
-        observaciones = input$observ
-        )
-      )
+  if(validarFormularioDisMuestral(input$modoLevantamiento, input$marcoMuestral, input$numeroEntrevistas,
+                               input$aleatoria, input$poliEtapa, input$estratificada, input$conglomerados,
+                               input$nivelpoliEtapa, input$nivielEstratificada, input$nivielConglomerados,
+                               input$unidadMuestral, input$nivelConfianza, input$margenError)){
+    
+    fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
+    disMuestral <- tibble::tibble(
+          idFormGeneral = 1,
+          modoLevantamiento = input$modoLevantamiento,
+          marcoMuestral = input$marcoMuestral,
+          numeroEntrevistas = input$numeroEntrevistas,
+          aleatoria = input$aleatoria,
+          poliEtapa = input$poliEtapa,
+          nivelpoliEtapa = input$nivelpoliEtapa,
+          estratificada = input$estratificada,
+          nivielEstratificada = input$nivielEstratificada,
+          conglomerados = input$conglomerados,
+          nivielConglomerados = input$nivielConglomerados,
+          unidadMuestral = input$unidadMuestral,
+          nivelConfianza = input$nivelConfianza,
+          margenError = input$margenError,
+          observaciones = input$observaciones,
+          fechaAlta = fA,
+          fechaEdicion = NULL,
+          usuarioCrea = usuario$user,
+          usuarioEdicion = NULL,
+          activo = 1)
+    #print(disMuestral)
+    insertBd(pool, formDisMuestralBd, bd = disMuestral)
     }
   })
      

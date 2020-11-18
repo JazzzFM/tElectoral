@@ -1,5 +1,6 @@
 ## code to prepare `AWS` dataset goes here
-# config <- config::get(file = "inst/app/data/config.yml")
+config <- config::get(file = "inst/app/data/config.yml")
+
 pool <- pool::dbPool(
   drv = RMariaDB::MariaDB(),
   dbname = config$database,
@@ -102,4 +103,47 @@ DBI::dbExecute(pool,"CREATE TABLE tElectoral_prueba_eventos (
   activa TINYINT,
   usElimina TEXT
 );")
+
+#pruebas
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_formularioGeneral (
+  idFormGeneral INT NOT NULL,
+  idFormGeneral INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100),
+  casaEncuestadora VARCHAR(150),
+  poblacionObjetivo VARCHAR(175),
+  fechaInicio DATETIME,
+  fechaFin DATETIME,
+  fechaAlta DATETIME,
+  fechaEdicion DATETIME,
+  usuarioCrea VARCHAR(100),
+  usuarioEdicion VARCHAR(100),
+  activo TINYINT
+);" )
+
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_disenoMuestral (
+  idDMuestral INT AUTO_INCREMENT PRIMARY KEY,
+  idFormGeneral INT NOT NULL,
+  modoLevantamiento VARCHAR(50),
+  marcoMuestral VARCHAR(150),
+  numeroEntrevistas INT,
+  aleatoria VARCHAR(10),
+  poliEtapa VARCHAR(10),
+  nivelpoliEtapa INT NULL,
+  estratificada VARCHAR(10),
+  nivielEstratificada INT NULL,
+  conglomerados VARCHAR(10),
+  nivielConglomerados INT NULL,
+  unidadMuestral VARCHAR(200),
+  nivelConfianza VARCHAR(200),
+  margenError VARCHAR(200),
+  observaciones VARCHAR(500) NULL,
+  fechaAlta DATETIME,
+  fechaEdicion DATETIME,
+  usuarioCrea VARCHAR(100),
+  usuarioEdicion VARCHAR(100),
+  activo TINYINT,
+  CONSTRAINT FK_DisMuestral_FormGeneral FOREIGN KEY (idFormGeneral) REFERENCES tElectoralTest_investigacion_formularioGeneral(idFormGeneral)
+);" )
+#DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_disenoMuestral")
+
 # usethis::use_data(AWS, overwrite = TRUE)

@@ -16,16 +16,19 @@ app_server <- function( input, output, session ) {
   bd <- reactiveValues(
     eventos = leerBd(pool,eventosBd),
     giras = leerBd(pool,girasBd),
-    evaluacionEventos = leerBd(pool,evaluacionEventosBd)
+    evaluacionEventos = leerBd(pool,evaluacionEventosBd),
+    formGeneral = leerBd(pool, formGeneralBd),
+    #esto debe llevar una condicional
+    formDisMuestral = leerBd(pool, formDisMuestralBd)
   )
   # Portada
   callModule(mod_portada_server, "portada_ui_1")
   # Investigación
   callModule(mod_investigacionAnalisis_server, "investigacionAnalisis_ui_1")
-  callModule(mod_investigacionFormularioGeneral_server, "investigacionFormularioGeneral_ui_1", parent_session = session)
+  callModule(mod_investigacionFormularioGeneral_server, "investigacionFormularioGeneral_ui_1", bd, res_auth, parent_session = session)
   #callModule(mod_investigacionCompartido_server, "investigacionCompartido_ui_1", session)
   callModule(mod_investigacionFormularioIntVoto_server, "investigacionFormularioIntVoto_ui_1", session, NULL)
-  callModule(mod_investigacionFormularioDisMuestral_server, "investigacionFormularioDisMuestral_ui_1", parent_session = session)
+  callModule(mod_investigacionFormularioDisMuestral_server, "investigacionFormularioDisMuestral_ui_1", bd, res_auth, parent_session = session)
   callModule(mod_investigacionEncuestas_server, "investigacionEncuestas_ui_1")
   # End Investigación
   # Protocolo de cuestionarios

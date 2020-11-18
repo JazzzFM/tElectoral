@@ -1,22 +1,17 @@
-validarFormularioDisMuestral <- function(fechaRegistro, modoLevantamiento, marcoMuestral, numeroEntrevistas,
-                                         aleatoria, poliEtapa, estrat, conglo,
-                                         nivelpoliEtapa, nivelEstrat, nivelConglo,
-                                         unidadMuestral, nivelConfianza, margenError, observ){
+validarFormularioDisMuestral <- function(modoLevantamiento, marcoMuestral, numeroEntrevistas,
+                                         aleatoria, poliEtapa, estratificada, conglomerados,
+                                         nivelpoliEtapa, nivielEstratificada, nivielConglomerados,
+                                         unidadMuestral, nivelConfianza, margenError){
   allValido <- TRUE
   mensaje <- ""
-  
-  if(!validarVacio(marcoMuestral)){
-    allValido <- FALSE
-    mensaje <- paste(mensaje, "El campo del marco muestral no debe ser vacío.", sep = "\n")
-  }else{
-    if(!validarSoloLetras(marcoMuestral)){
-      allValido <- FALSE
-      mensaje <- paste(mensaje, "El campo del marco muestral no puede contener números o caracteres especiales.", sep = "\n")
-    } 
-  }
+ 
   if(!validarVacio(modoLevantamiento)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "Seleccione una opción para el Levantamiento.", sep = "\n")
+  }
+  if(!validarVacio(marcoMuestral)){
+    allValido <- FALSE
+    mensaje <- paste(mensaje, "El campo del marco muestral no debe ser vacío.", sep = "\n")
   }
   if(!validarVacio(numeroEntrevistas)){
     allValido <- FALSE
@@ -35,20 +30,20 @@ validarFormularioDisMuestral <- function(fechaRegistro, modoLevantamiento, marco
       mensaje <- paste(mensaje, "Si es Polietápica el nivel debe ser mayor a uno", sep = "\n")
     }
   }
-  if(!validarVacio(estrat)){
+  if(!validarVacio(estratificada)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "Seleccione una opción para Estratificada.", sep = "\n")
   }else{
-    if(estrat == "Sí" && nivelEstrat == 1){
+    if(estratificada == "Sí" && nivielEstratificada == 1){
       allValido <- FALSE
       mensaje <- paste(mensaje, "Si es Estratificada el nivel debe ser mayor a uno", sep = "\n")
     }
   }
-  if(!validarVacio(conglo)){
+  if(!validarVacio(conglomerados)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "Seleccione una opción para Conglomerados.", sep = "\n")
   }else{
-    if(conglo == "Sí" && nivelConglo == 1){
+    if(conglomerados == "Sí" && nivielConglomerados == 1){
       allValido <- FALSE
       mensaje <- paste(mensaje, "Si es Conglomerada el nivel debe ser mayor a uno", sep = "\n")
     }

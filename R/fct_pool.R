@@ -20,7 +20,10 @@ pool <- pool::dbPool(
 onStop(function() {
   pool::poolClose(pool)
 })
-
+#gira
 eventosBd <- "tElectoralTest_eventos"
 girasBd <- "tElectoralTest_giras"
 evaluacionEventosBd <- "tElectoralTest_evaluacionEventos"
+#investigacion
+formGeneralBd <- "tElectoralTest_investigacion_formularioGeneral"
+formDisMuestralBd <- "tElectoralTest_investigacion_disenoMuestral"

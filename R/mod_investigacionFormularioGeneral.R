@@ -36,19 +36,25 @@ mod_investigacionFormularioGeneral_ui <- function(id){
 #' investigacionFormularioGeneral Server Function
 #'
 #' @noRd 
-mod_investigacionFormularioGeneral_server <- function(input, output, session, parent_session, showForm = NULL){
+mod_investigacionFormularioGeneral_server <- function(input, output, session, bd, usuario, parent_session, showForm = NULL){
   ns <- session$ns
   observeEvent(input$guardar, {
     if(validarFormularioGeneral(input$nombre, input$casaEncuestadora, input$poblacionObjetivo, input$fechaInicio, input$fechaFin)){
-      print(
-        tibble::tibble(
-          nombre = input$nombre,
-          casaEncuestadora = input$casaEncuestadora,
-          poblacionObjetivo = input$poblacionObjetivo,
-          fechaInicio = input$fechaInicio,
-          fechaFin = input$fechaFin
-        )
+      fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
+      formGeneral <- tibble::tibble(
+        nombre = input$nombre,
+        casaEncuestadora = input$casaEncuestadora,
+        poblacionObjetivo = input$poblacionObjetivo,
+        fechaInicio = input$fechaInicio,
+        fechaFin = input$fechaFin,
+        fechaAlta = fA,
+        fechaEdicion = NULL,
+        usuarioCrea = usuario$user,
+        usuarioEdicion = NULL,
+        activo = 1
       )
+      
+      insertBd(pool, formGeneralBd, bd = formGeneral)
     }
   })
 }
