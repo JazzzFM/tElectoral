@@ -106,7 +106,6 @@ DBI::dbExecute(pool,"CREATE TABLE tElectoral_prueba_eventos (
 
 #pruebas
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_formularioGeneral (
-  idFormGeneral INT NOT NULL,
   idFormGeneral INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100),
   casaEncuestadora VARCHAR(150),
