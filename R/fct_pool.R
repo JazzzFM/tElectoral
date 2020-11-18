@@ -27,3 +27,5 @@ evaluacionEventosBd <- "tElectoralTest_evaluacionEventos"
 #investigacion
 formGeneralBd <- "tElectoralTest_investigacion_formularioGeneral"
 formDisMuestralBd <- "tElectoralTest_investigacion_disenoMuestral"
+formIntVotoBd <- "tElectoralTest_investigacion_intencionVoto"
+formIntVotoRegistroBd <- "tElectoralTest_investigacion_intencionVotoRegistro"

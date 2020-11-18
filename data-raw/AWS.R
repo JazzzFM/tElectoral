@@ -106,7 +106,6 @@ DBI::dbExecute(pool,"CREATE TABLE tElectoral_prueba_eventos (
 
 #pruebas
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_formularioGeneral (
-  idFormGeneral INT NOT NULL,
   idFormGeneral INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100),
   casaEncuestadora VARCHAR(150),
@@ -119,6 +118,37 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_formularioGenera
   usuarioEdicion VARCHAR(100),
   activo TINYINT
 );" )
+
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_intencionVoto (
+  idIntencionVoto INT AUTO_INCREMENT PRIMARY KEY,
+  idFormGeneral INT NOT NULL,
+  tipoIntencionVoto VARCHAR(25),
+  pregunta VARCHAR(250),
+  siNoExplicacion VARCHAR(250),
+  careos INT,
+  fechaAlta DATETIME,
+  fechaEdicion DATETIME,
+  usuarioCrea VARCHAR(100),
+  usuarioEdicion VARCHAR(100),
+  activo TINYINT,
+  CONSTRAINT FK_intencionVoto_FormGeneral FOREIGN KEY (idFormGeneral) REFERENCES tElectoralTest_investigacion_formularioGeneral(idFormGeneral)
+);" )
+#DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_intencionVoto")
+
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_intencionVotoRegistro (
+  idIntencionVotoRegistro INT AUTO_INCREMENT PRIMARY KEY,
+  idIntencionVoto INT NOT NULL,
+  candidato VARCHAR(25),
+  partido VARCHAR(250),
+  resultado VARCHAR(250),
+  fechaAlta DATETIME,
+  fechaEdicion DATETIME,
+  usuarioCrea VARCHAR(100),
+  usuarioEdicion VARCHAR(100),
+  activo TINYINT,
+  CONSTRAINT FK_intencionVotoRegistro_intencionVoto FOREIGN KEY (idIntencionVoto) REFERENCES tElectoralTest_investigacion_intencionVoto(idIntencionVoto)
+);" )
+#DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_intencionVotoRegistro")
 
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_disenoMuestral (
   idDMuestral INT AUTO_INCREMENT PRIMARY KEY,

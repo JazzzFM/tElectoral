@@ -1595,7 +1595,8 @@ width: calc(100% / 3) !important;
 .flexTable .form-group.shiny-input-container > div{
   width: 100% !important;
 }
-.four-columns button {
+.four-columns button,
+.three-columns button{
     align-self: center;
 }
 .four-columns .form-group {

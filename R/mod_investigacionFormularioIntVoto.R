@@ -24,7 +24,7 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
              textInput(inputId=ns("noSabeNoContesto"), label = "¿Cómo se registró la pregunta 'No sabe/No contestó'?", placeholder = "Explique...")
       ),
       column(6,
-             numericInput(inputId=ns("resultado"), label = "Resultado", value = 0, min = 0)
+             numericInput(inputId=ns("careos"), label = "Cantidad de careos", value = 0, min = 0)
       )
     ),
     
@@ -52,20 +52,26 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
 #' investigacionFormularioIntVoto Server Function
 #'
 #' @noRd 
-mod_investigacionFormularioIntVoto_server <- function(input, output, session, parent_session = NULL, showForm = NULL){
+mod_investigacionFormularioIntVoto_server <- function(input, output, session, usuario ,parent_session = NULL, showForm = NULL){
   ns <- session$ns
   uiCount <- reactiveValues(val = 1)
   observeEvent(input$addFila, {
     clase <- ""
+    claseCandidato <- ""
+    clasePartido <- ""
     if(input$tipoIntVoto == "Candidato + Partido")
       clase <- "four-columns"
-    else {
+    else if(input$tipoIntVoto == "Candidato"){
       clase <- "three-columns"
+      clasePartido="none"
+    }else if(input$tipoIntVoto == "Partido"){
+      clase <- "three-columns"
+      claseCandidato="none"
     }
     insertUI(selector = "#tablaCandidatos .candContainer", where = "beforeEnd",
              ui = div(class=clase, id=glue::glue("row-candidato-{uiCount$val}"),
-                      selectizeInput(inputId = ns(glue::glue("nombreCandidato-{uiCount$val}")), choices = c("Juan", "Alejandro", "María"), label = ""),
-                      selectizeInput(inputId = ns(glue::glue("partido-{uiCount$val}")), choices = c("PRD", "PRI", "PAN"), label = ""),
+                      div(class=glue::glue("ctr-1 {claseCandidato}"), selectizeInput(inputId = ns(glue::glue("nombreCandidato-{uiCount$val}")), choices = c("Juan", "Alejandro", "María"), label = "")),
+                      div(class=glue::glue("ctr-2 {clasePartido}"), selectizeInput(inputId = ns(glue::glue("partido-{uiCount$val}")), choices = c("PRD", "PRI", "PAN"), label = "")),
                       numericInput(inputId = ns(glue::glue("resultado-{uiCount$val}")), value = 0, min = 0, max= 10, label = ""),
                       HTML(input_btns(ns("eliminar"), users = uiCount$val, tooltip = "Eliminar", icon ="trash-o", status = "danger"))
                   )
@@ -75,33 +81,54 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, pa
   
   observeEvent(input$guardar, {
     if(uiCount$val > 1){
-      # Se obtienen candidatos de tabla
-      cand <- c()
-      part <- c()
-      res <- c()
-      for(i in 1:uiCount$val -1){
-        if(!is.null(input[[(glue::glue("nombreCandidato-{sum(i,1)}"))]]) & !is.null(input[[(glue::glue("partido-{sum(i,1)}"))]]) & !is.null(input[[(glue::glue("resultado-{sum(i,1)}"))]])){
-          if(input[[(glue::glue("nombreCandidato-{sum(i,1)}"))]] != "" & input[[(glue::glue("partido-{sum(i,1)}"))]] != "" & input[[(glue::glue("resultado-{sum(i,1)}"))]] >= 0){
-            cand <- append(cand, input[[(glue::glue("nombreCandidato-{sum(i,1)}"))]])
-            part <- append(part, input[[(glue::glue("partido-{sum(i,1)}"))]])
-            res <- append(res, input[[(glue::glue("resultado-{sum(i,1)}"))]])  
-          }
-        }
-      }
+      fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
       
-      if(validarFormularioIntVoto(input$tipoIntVoto, input$pregunta, input$noSabeNoContesto, input$resultado)){
-        candidatos <- tibble::tibble(
-          candidato = cand,
-          partido = part,
-          resultado = res
-        )
-        print(tibble::tibble(
+      if(validarFormularioIntVoto(input$tipoIntVoto, input$pregunta, input$noSabeNoContesto, input$careos)){
+        
+        intencionVoto <- tibble::tibble(
+          idFormGeneral = 1,
           tipoIntencionVoto = input$tipoIntVoto,
           pregunta = input$pregunta,
-          noSabeNoContesto = input$noSabeNoContesto,
-          resultado = input$resultado
-        )) 
-        print(candidatos)
+          siNoExplicacion = input$noSabeNoContesto,
+          careos = input$careos,
+          fechaAlta = fA,
+          usuarioCrea = usuario$user,
+          activo = 1
+        )
+        insertBd(pool, formIntVotoBd, bd = intencionVoto)
+        idIntVoto <- tbl(pool, formIntVotoBd) %>% filter(fechaAlta == !!fA) %>% pull(idIntencionVoto)
+        
+        # Se obtienen candidatos de tabla
+        id <- c()
+        cand <- c()
+        part <- c()
+        res <- c()
+        fechaAlta <- c()
+        usuarioCrea <- c()
+        activo <- c()
+        for(i in 1:uiCount$val -1){
+          if(!is.null(input[[(glue::glue("nombreCandidato-{sum(i,1)}"))]]) & !is.null(input[[(glue::glue("partido-{sum(i,1)}"))]]) & !is.null(input[[(glue::glue("resultado-{sum(i,1)}"))]])){
+            if(input[[(glue::glue("nombreCandidato-{sum(i,1)}"))]] != "" & input[[(glue::glue("partido-{sum(i,1)}"))]] != "" & input[[(glue::glue("resultado-{sum(i,1)}"))]] >= 0){
+              id <- append(id, idIntVoto)
+              cand <- append(cand, input[[(glue::glue("nombreCandidato-{sum(i,1)}"))]])
+              part <- append(part, input[[(glue::glue("partido-{sum(i,1)}"))]])
+              res <- append(res, input[[(glue::glue("resultado-{sum(i,1)}"))]])
+              fechaAlta <- append(fechaAlta, fA)
+              usuarioCrea <- append(usuarioCrea, usuario$user)
+              activo <- append(activo, 1)
+            }
+          }
+        }
+        candidatos <- tibble::tibble(
+          idIntencionVoto = id,
+          candidato = cand,
+          partido = part,
+          resultado = res,
+          fechaAlta = fechaAlta,
+          usuarioCrea = usuarioCrea,
+          activo = activo
+        )
+        insertBd(pool, formIntVotoRegistroBd, bd = candidatos)
       }
     }else{
       shinyalert::shinyalert(title = "¡No hay candidatos!", 

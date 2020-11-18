@@ -1,4 +1,4 @@
-validarFormularioIntVoto <- function(tipoIntVoto, pregunta, noSabeNoContesto, resultado){
+validarFormularioIntVoto <- function(tipoIntVoto, pregunta, noSabeNoContesto, careos){
   allValido <- TRUE
   mensaje <- ""
   if(!validarVacio(tipoIntVoto)){
@@ -13,9 +13,9 @@ validarFormularioIntVoto <- function(tipoIntVoto, pregunta, noSabeNoContesto, re
     allValido <- FALSE
     mensaje <- paste(mensaje, "Debe explicar cómo se contestó la pregunta 'No sabe/No contestó", sep = "\n")
   }
-  if(resultado <= 0){
+  if(careos <= 0){
     allValido <- FALSE
-    mensaje <- paste(mensaje, "El resultado debe ser mayor a cero", sep = "\n")
+    mensaje <- paste(mensaje, "La cantidad de careos debe ser mayor a cero", sep = "\n")
   }
   if(mensaje != ""){
     shinyalert::shinyalert(title = "¡Formulario de intención de voto no válido!", 
