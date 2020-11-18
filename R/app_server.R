@@ -32,7 +32,7 @@ app_server <- function( input, output, session ) {
              usuario = res_auth)
 
   # Pantalla de eventos
-  callModule(mod_analisisEventos_server, "analisisEventos_ui_1")
+  callModule(mod_analisisEventos_server, "analisisEventos_ui_1", bd)
 
   # Evaluación gira
   callModule(mod_evaluacionGira_server, "evaluacionGira_ui_1", session, bd, res_auth)
