@@ -161,10 +161,10 @@ mod_investigacionFormularioDisMuestral_server <- function(input, output, session
           usuarioCrea = usuario$user,
           usuarioEdicion = NULL,
           activo = 1)
-    
+    insertBd(pool, formDisMuestralBd, bd = disMuestral)
     tryCatch(                      
       expr = {
-        insertBd(pool, formDisMuestralBd, bd = disMuestral)
+        leerBd(pool, formDisMuestralBd)
         shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
         },
       error = function(e){    
