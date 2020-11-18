@@ -161,8 +161,20 @@ mod_investigacionFormularioDisMuestral_server <- function(input, output, session
           usuarioCrea = usuario$user,
           usuarioEdicion = NULL,
           activo = 1)
-    #print(disMuestral)
     insertBd(pool, formDisMuestralBd, bd = disMuestral)
+    tryCatch(                      
+      expr = {
+        leerBd(pool, formDisMuestralBd)
+        shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
+        },
+      error = function(e){    
+        shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
+      },
+      warning = function(w){    
+        shinyalert::shinyalert(title = "Revise su conexión.")
+      }
+    )
+    
     }
   })
      

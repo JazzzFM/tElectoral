@@ -53,7 +53,6 @@ mod_investigacionFormularioGeneral_server <- function(input, output, session, bd
         usuarioEdicion = NULL,
         activo = 1
       )
-      
       insertBd(pool, formGeneralBd, bd = formGeneral)
     }
   })
