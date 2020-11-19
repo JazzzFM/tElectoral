@@ -100,7 +100,7 @@ mod_analisisEventos_server <- function(input, output, session, bd){
    }, escape = F, options = list(dom = 't'))
   
   output$eAnimo <- renderPlot({
-    distRadar(bd$evaluacionEvento, pregunta = actitud, otro = actitud_otro, x = 30, titulo = "Ánimo de los Asistentes") 
+    distRadar(bd$evaluacionEvento, pregunta = actitud, otro = actitud_otro, x = 0, titulo = "Ánimo de los Asistentes") 
   })
   
   output$cRecursos <- renderPlot({
