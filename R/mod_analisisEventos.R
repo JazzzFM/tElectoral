@@ -32,7 +32,7 @@ mod_analisisEventos_ui <- function(id){
                ),
                column(width = 4, 
                       div(class="topBoxInfo bordered-green",
-                          p("26"),
+                          p("6"),
                           p("Eventos")
                       )
                ),
