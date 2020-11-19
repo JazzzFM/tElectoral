@@ -15,7 +15,7 @@ mod_giraPaso1_ui <- function(id){
     p("A continuación, llene los campos para completar el paso 1"),
     fluidRow(
       column(width = 12,
-             textInput(inputId = ns("Responsable"), label = "Responsable" , placeholder = "..."))
+             textInput(inputId = ns("Responsable"), label = "Responsable" , placeholder = "...") )
     ),
     fluidRow(
       column(width = 12,
