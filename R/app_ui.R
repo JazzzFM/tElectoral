@@ -8,6 +8,7 @@
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
+    shinyjs::useShinyjs(),
     golem_add_external_resources(),
     # Dashboard
     dashboardPage(
@@ -21,7 +22,13 @@ app_ui <- function(request) {
           ),
           menuItem("Investigación",
                    tabName = "investigacion",
-                   icon = icon("dashboard")),
+                   icon = icon("dashboard"),
+                   menuItem("Registro", tabName="invRegistro"),
+                   menuItem("Encuestas", tabName="invEncuestas"),
+                   menuItem("For Dis Muestral", tabName="formDisMuestral"),
+                   menuItem("Form intención de voto", tabName="formIntVoto"),
+                   menuItem("Resultados", tabName="invResultados")
+                   ),
           menuItem("Protocolo de cuestionarios",
                    tabName = "comunicacion",
                    icon = icon("dashboard")),
@@ -58,8 +65,19 @@ app_ui <- function(request) {
         tabItems(
           tabItem(tabName = "inicio", 
                   mod_portada_ui("portada_ui_1")),
-          tabItem(tabName = "investigacion",
+          tabItem(tabName = "invResultados",
                   mod_investigacionAnalisis_ui("investigacionAnalisis_ui_1")),
+          tabItem(tabName = "invRegistro",
+                  mod_investigacionFormularioGeneral_ui("investigacionFormularioGeneral_ui_1")),
+           tabItem(tabName = "formDisMuestral",
+                   mod_investigacionFormularioDisMuestral_ui("investigacionFormularioDisMuestral_ui_1")),
+          tabItem(tabName = "invEncuestas",
+                  #mod_investigacionCompartido_ui("investigacionCompartido_ui_1")
+                  mod_investigacionEncuestas_ui("investigacionEncuestas_ui_1")
+                  ),
+          tabItem(tabName = "formIntVoto",
+                  mod_investigacionFormularioIntVoto_ui("investigacionFormularioIntVoto_ui_1")
+          ),
           tabItem(tabName = "comunicacion",
                   mod_comunicacion_ui("comunicacion_ui_1")),
           tabItem(tabName = "analisisEventos",
@@ -80,6 +98,15 @@ app_ui <- function(request) {
       )
     )
   )
+}
+
+convertMenuItem <- function(mi,tabName) {
+  # mi$children[[1]]$attribs['data-toggle']="tab"
+  # mi$children[[1]]$attribs['data-value'] = tabName
+  if(length(mi$attribs$class)>0 && mi$attribs$class=="treeview"){
+    mi$attribs$class=NULL
+  }
+  mi
 }
 
 #' Add external Resources to the Application

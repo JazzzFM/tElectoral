@@ -32,20 +32,24 @@ mod_analisisEventos_ui <- function(id){
                ),
                column(width = 4, 
                       div(class="topBoxInfo bordered-green",
+<<<<<<< HEAD
                           p("6"),
+=======
+                          p(HTML(glue::glue("{textOutput(ns('numEventos'))}"))),
+>>>>>>> dev
                           p("Eventos")
                       )
                ),
                column(width = 4, 
                       div(class="topBoxInfo default",
-                          p("52%"),
+                          p("52%"), # a reemplazar en bd
                           p("Visitas prioritarias realizadas"),
                           p("16 eventos")
                       )
                ),
                column(width = 4, 
                       div(class="topBoxInfo red",
-                          p("4"),
+                          p("4"), # a reemplazar en bd
                           p("Incidentes")
                       )
                ),
@@ -77,7 +81,7 @@ mod_analisisEventos_ui <- function(id){
              fluidRow(
                column(width = 12, 
                       div(class="topBoxInfo bordered-white ft-sm",
-                          h3(style="text-align:left", "Representantes de Casilla por Municipio"),
+                          h3(style="text-align:center", "Número de Eventos Realizados y en Proceso"),
                           leafletOutput(ns("llmapa")))
                     ))
             )) 
@@ -93,6 +97,10 @@ mod_analisisEventos_server <- function(input, output, session, bd){
     promedioGauge(bd$evaluacionEventos, calificacion = expectativas)
   })
   
+  output$numEventos <- renderText({
+    as.character( bd$eventos %>%  nrow())
+  })
+  
   output$tableMun <- DT::renderDT({
     mun <- tibble(CABECERA_MUNICIPAL = sample(size=3, DB_Mich2$CABECERA_MUNICIPAL)) 
     a <- tibble(Municipio = mun$CABECERA_MUNICIPAL, Calificación = c(a = 10, b = 5, c= 8))
@@ -100,7 +108,7 @@ mod_analisisEventos_server <- function(input, output, session, bd){
    }, escape = F, options = list(dom = 't'))
   
   output$eAnimo <- renderPlot({
-    distRadar(bd$evaluacionEvento, pregunta = actitud, otro = actitud_otro, x = 30, titulo = "Ánimo de los Asistentes") 
+    distRadar(bd$evaluacionEventos, pregunta = actitud, otro = actitudOtro, x = 0, titulo = "Ánimo de los Asistentes") 
   })
   
   output$cRecursos <- renderPlot({
