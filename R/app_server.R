@@ -16,7 +16,7 @@ app_server <- function( input, output, session ) {
   bd <- reactiveValues(
     eventos = leerBd(pool,eventosBd),
     giras = leerBd(pool,girasBd),
-    evaluacionEventos = leerBd(pool,evaluacionEventosBd)
+    evaluacionEventos = leerBd(pool, evaluacionEventosBd)
   )
   # Portada
   callModule(mod_portada_server, "portada_ui_1")

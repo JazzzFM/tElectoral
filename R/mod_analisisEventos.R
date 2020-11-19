@@ -77,7 +77,7 @@ mod_analisisEventos_ui <- function(id){
              fluidRow(
                column(width = 12, 
                       div(class="topBoxInfo bordered-white ft-sm",
-                          h3(style="text-align:left", "Representantes de Casilla por Municipio"),
+                          h3(style="text-align:center", "Número de Eventos Realizados y en Proceso"),
                           leafletOutput(ns("llmapa")))
                     ))
             )) 
@@ -100,7 +100,7 @@ mod_analisisEventos_server <- function(input, output, session, bd){
    }, escape = F, options = list(dom = 't'))
   
   output$eAnimo <- renderPlot({
-    distRadar(bd$evaluacionEvento, pregunta = actitud, otro = actitud_otro, x = 30, titulo = "Ánimo de los Asistentes") 
+    distRadar(bd$evaluacionEventos, pregunta = actitud, otro = actitud_otro, x = 0, titulo = "Ánimo de los Asistentes") 
   })
   
   output$cRecursos <- renderPlot({

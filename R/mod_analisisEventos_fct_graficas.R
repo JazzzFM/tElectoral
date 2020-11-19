@@ -471,7 +471,7 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
 llMapaEstado <- function(Estado){
   
   labels <- sprintf(
-    "<strong>%s</strong><br/>%g representantes de casilla",
+    "<strong>%s</strong><br/>%g Eventos",
     Estado$NOMBRE, Estado$n
   ) %>% lapply(htmltools::HTML)
   
@@ -499,7 +499,7 @@ llMapaEstado <- function(Estado){
           style = list("font-weight" = "normal", padding = "3px 8px"),
           textsize = "15px",
           direction = "auto"))%>%
-        addLegend(pal = pal, values = ~n, opacity = 0.7, title = "No. Representantes",
+        addLegend(pal = pal, values = ~n, opacity = 1, title = "No. Eventos",
                   position = "bottomright") 
     
   return(Graph)
