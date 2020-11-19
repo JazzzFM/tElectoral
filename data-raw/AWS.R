@@ -1,6 +1,5 @@
 ## code to prepare `AWS` dataset goes here
 config <- config::get(file = "inst/app/data/config.yml")
-
 pool <- pool::dbPool(
   drv = RMariaDB::MariaDB(),
   dbname = config$database,
@@ -46,12 +45,15 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_giras (
   activo TINYINT
 );" )
 
-
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_evaluacionEventos (
   idEvento INT,
+  numEventos INT,
+  visitasPrioritarias INT,
+  incidentes INT,
   asistentes VARCHAR(50),
-  actitud VARCHAR(50),
   duracion VARCHAR(50),
+  actitud VARCHAR(50),
+  actitudOtro VARCHAR(50),
   calidadTecno VARCHAR(50),
   expectativas INT,
   fechaAlta DATETIME,
@@ -60,6 +62,7 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_evaluacionEventos (
   usuarioEdicion VARCHAR(100),
   activo TINYINT
 );" )
+#DBI::dbRemoveTable(pool,"tElectoralTest_evaluacionEventos")
 
 # tbl(pool,"tElectoralTest_eventos") %>% select(idGira) %>% filter(idGira == 1)
 # sandbox -----------------------------------------------------------------
