@@ -1580,11 +1580,15 @@ display: block;
   text-align: center;
 }
 .four-columns,
-.three-columns{
+.three-columns,
+.two-columns{
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+}
+.two-columns{
+  margin: 20px 0;
 }
 .four-columns > * {
 width: calc(100% / 4) !important;
@@ -1592,11 +1596,15 @@ width: calc(100% / 4) !important;
 .three-columns > * {
 width: calc(100% / 3) !important;
 }
+.two-columns > * {
+width: calc(100% / 2) !important;
+}
 .flexTable .form-group.shiny-input-container > div{
   width: 100% !important;
 }
 .four-columns button,
-.three-columns button{
+.three-columns button,
+.two-columns button{
     align-self: center;
 }
 .four-columns .form-group {

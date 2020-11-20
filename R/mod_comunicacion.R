@@ -40,7 +40,7 @@ mod_comunicacion_ui <- function(id){
 #' @noRd 
 mod_comunicacion_server <- function(input, output, session, parent_session = NULL){
   ns <- session$ns
-  cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso2 = NULL, paso3 = NULL, paso4 = NULL)
+  cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso3 = c(), paso4 = NULL)
   # Paso 1
   callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario)
   # Paso 2
