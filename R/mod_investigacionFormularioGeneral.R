@@ -54,6 +54,7 @@ mod_investigacionFormularioGeneral_server <- function(input, output, session, bd
         activo = 1
       )
       insertBd(pool, formGeneralBd, bd = formGeneral)
+      tryCatch(
       expr = {
         leerBd(pool, formGeneralBd)
         shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
