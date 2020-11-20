@@ -11,11 +11,25 @@
 mod_cuestionario_paso_2_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinyjs::useShinyjs(),
-    h3("Creación de preguntas"),
-    p("De click en Agregar pregunta para añadir una pregunta a un bloque."),
-    uiOutput(ns("outPreguntas")),
-    actionButton(ns("guardar"), "Guardar", class = "btn-definitive")
+    h3("Bloques del cuestionario"),
+    p("Introduzca una cantidad de bloques, de click en el botón que sigue para generar los títulos y llenarlos."),
+    tags$hr(),
+    fluidRow(
+      class = "NombreBloquesContainer",
+      column(
+        width = 6,
+        class = "FlexColumn",
+        numericInputIcon(inputId = ns("CantidadBloques"),
+                         label = "Cantidad de bloques",
+                         value = 0,
+                         min = 0,
+                         icon = list(NULL, 
+                                     actionButton(inputId = ns("genBloques"), icon = icon("cog") ,"", class="btn btn-primary")
+                         )
+        )
+      )
+    ),
+    actionButton(inputId = ns("guardarPaso2"), "Guardar paso 2")
   )
 }
 
@@ -24,34 +38,40 @@ mod_cuestionario_paso_2_ui <- function(id){
 #' @noRd 
 mod_cuestionario_paso_2_server <- function(input, output, session, cuestionario = NULL, parent_session){
   ns <- session$ns
- 
-  
-  listaPreguntas <- reactiveValues(preguntas = NULL)
-  output$outPreguntas <- renderUI({
-    if(!is.null(cuestionario$paso1)){
-      lapply(seq_along(cuestionario$titulos), function(i) {
-        mod_cuestionario_bloques_ui(ns(glue::glue("cuestionario_bloques_ui_{i}")), bloque = cuestionario$titulos[i])
-      }) 
+   observeEvent(input$guardarPaso2,{
+     # Guardar títulos
+     temp <- c()
+     value <- input$CantidadBloques
+     for (i in 1:value) {
+       temp[i] <- input[[(paste0("NombreBloque-", i))]]
+     }
+     cuestionario$titulos <- temp
+     cuestionario$paso1$cantidadBloques <- input$CantidadBloques
+     print(cuestionario$titulos)
+     print(cuestionario$paso1)
+     # End guardar títulos
+   })
+  #Generar bloques
+  observeEvent(input$genBloques, {
+    value <- input$CantidadBloques
+    removeUI(
+      selector = ".NombreBloque",
+      multiple = T
+    )
+    if(value > 0){
+      for (item in 1:value) {
+        insertUI(
+          selector = '.NombreBloquesContainer',
+          where = "beforeEnd",
+          ui = column(class="NombreBloque",
+                      width = 6,
+                      textInput(inputId = ns(paste0("NombreBloque-", item)), placeholder = "...", label = paste0("Título de bloque no. ", item))
+          )
+        )
+      }
     }
   })
-  observe({
-    listaPreguntas$preguntas <- seq_along(cuestionario$titulos) %>% map(~callModule(mod_cuestionario_bloques_server,
-                                                                              glue::glue("cuestionario_bloques_ui_{.x}"),
-                                                                              bloque = cuestionario$titulos[.x],
-                                                                              parent_session = parent_session))
-  })
   
-  observeEvent(input$guardar, {
-    if(is.null(seq_along(listaPreguntas$preguntas) %>% detect(~is.null(listaPreguntas$preguntas[[.x]]())))){
-      if(is.null(seq_along(listaPreguntas$preguntas) %>% detect(~nrow(listaPreguntas$preguntas[[.x]]()) == 0))){
-        seq_along(listaPreguntas$preguntas) %>% map(~listaPreguntas$preguntas[[.x]]()) %>% do.call(rbind,.)  
-      }else{
-        shinyalert::shinyalert(title = "Debe añadir al menos una pregunta por bloque")  
-      } 
-    }else{
-      shinyalert::shinyalert(title = "Debe añadir al menos una pregunta por bloque")  
-    }
-  })
 }
 
 ## To be copied in the UI

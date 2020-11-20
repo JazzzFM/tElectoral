@@ -16,11 +16,21 @@ mod_comunicacion_ui <- function(id){
              mod_cuestionario_paso_1_ui(ns("cuestionario_paso_1_ui_1"))
     ),
     tabPanel(title = "Paso 2", value = "paso2",
-             shinyjs::hidden(div(id = ns("Paso2Cuestionario"),
-                 mod_cuestionario_paso_2_ui(ns("cuestionario_paso_2_ui_1")),
-                 )),
+             # shinyjs::hidden(div(id = ns("Paso2Cuestionario"),
+             #     mod_cuestionario_paso_2_ui(ns("cuestionario_paso_2_ui_1")),
+             #     )),
+             mod_cuestionario_paso_2_ui(ns("cuestionario_paso_2_ui_1")),
              tags$hr()
-       )
+       ),
+    tabPanel(title = "Paso 3", value ="paso3",
+             mod_cuestionario_paso_3_ui("cuestionario_paso_3_ui_1")
+           ),
+    tabPanel(title = "Paso 4", value = "paso4",
+             mod_cuestionario_paso_4_ui("cuestionario_paso_4_ui_1")
+          ),
+    tabPanel(title = "Paso 5", value = "paso5",
+             mod_cuestionario_paso_5_ui("cuestionario_paso_5_ui_1")
+    )
     )
   )
 }
@@ -30,17 +40,21 @@ mod_comunicacion_ui <- function(id){
 #' @noRd 
 mod_comunicacion_server <- function(input, output, session, parent_session = NULL){
   ns <- session$ns
-  cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso2 = NULL)
+  cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso2 = NULL, paso3 = NULL, paso4 = NULL)
   # Paso 1
   callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario)
   # Paso 2
   callModule(mod_cuestionario_paso_2_server, "cuestionario_paso_2_ui_1", cuestionario, parent_session)
-  observe({
-    if(!is.null(cuestionario$paso1)){
-      shinyjs::show(selector = paste0("#", ns("Paso2Cuestionario")))
-      updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso2", parent_session)
-    }
-  })
+  callModule(mod_cuestionario_paso_3_server, "cuestionario_paso_3_ui_1", cuestionario, parent_session)
+  callModule(mod_cuestionario_paso_4_server, "cuestionario_paso_4_ui_1", cuestionario, parent_session)
+  callModule(mod_cuestionario_paso_5_server, "cuestionario_paso_5_ui_1", parent_session)
+  
+  # observe({
+  #   if(!is.null(cuestionario$paso1)){
+  #     shinyjs::show(selector = paste0("#", ns("Paso2Cuestionario")))
+  #     updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso2", parent_session)
+  #   }
+  # })
 }
 
 ## To be copied in the UI
