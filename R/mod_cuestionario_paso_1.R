@@ -97,8 +97,10 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
         opBloquesCuestionario = input$opBloquesCuestionario,
         observacionOpBloquesCuestionario = input$observacionOpBloquesCuestionario,
         filtrosPoblacionObjetivo = input$filtrosPoblacionObjetivo,
-        observacionFiltrosPoblacionObjetivo = input$observacionFiltrosPoblacionObjetivo
+        observacionFiltrosPoblacionObjetivo = input$observacionFiltrosPoblacionObjetivo,
+        cantidadBloques = 0
       )
+      print(cuestionario$paso1)
     }
     #shinyjs::enable(input$GuardarPaso1)
   })

@@ -22,14 +22,15 @@ mod_cuestionario_paso_3_ui <- function(id){
 #' cuestionario_paso_3 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario = c(), parent_session = NULL){
+mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario = NULL, parent_session){
   ns <- session$ns
-  listaPreguntas <- reactiveValues(preguntas = NULL)
+  #listaPreguntas <- reactiveValues(preguntas = NULL)
   output$outPreguntas <- renderUI({
+    browser()
     if(!is.null(cuestionario$paso1)){
       lapply(seq_along(cuestionario$titulos), function(i) {
         mod_cuestionario_bloques_ui(ns(glue::glue("cuestionario_bloques_ui_{i}")), bloque = cuestionario$titulos[i])
-      }) 
+      })
     }
   })
   # observe({
@@ -40,15 +41,7 @@ mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario 
   # })
   
   observeEvent(input$guardar, {
-    # if(is.null(seq_along(listaPreguntas$preguntas) %>% detect(~is.null(listaPreguntas$preguntas[[.x]]())))){
-    #   if(is.null(seq_along(listaPreguntas$preguntas) %>% detect(~nrow(listaPreguntas$preguntas[[.x]]()) == 0))){
-    #     seq_along(listaPreguntas$preguntas) %>% map(~listaPreguntas$preguntas[[.x]]()) %>% do.call(rbind,.)  
-    #   }else{
-    #     shinyalert::shinyalert(title = "Debe añadir al menos una pregunta por bloque")  
-    #   } 
-    # }else{
-    #   shinyalert::shinyalert(title = "Debe añadir al menos una pregunta por bloque")  
-    # }
+    print("paso3")
   })
 }
     
