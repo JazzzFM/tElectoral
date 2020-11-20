@@ -26,7 +26,6 @@ mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario 
   ns <- session$ns
   #listaPreguntas <- reactiveValues(preguntas = NULL)
   output$outPreguntas <- renderUI({
-    browser()
     if(!is.null(cuestionario$paso1)){
       lapply(seq_along(cuestionario$titulos), function(i) {
         mod_cuestionario_bloques_ui(ns(glue::glue("cuestionario_bloques_ui_{i}")), bloque = cuestionario$titulos[i])

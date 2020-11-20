@@ -23,13 +23,13 @@ mod_comunicacion_ui <- function(id){
              tags$hr()
        ),
     tabPanel(title = "Paso 3", value ="paso3",
-             mod_cuestionario_paso_3_ui("cuestionario_paso_3_ui_1")
+             mod_cuestionario_paso_3_ui(ns("cuestionario_paso_3_ui_1"))
            ),
     tabPanel(title = "Paso 4", value = "paso4",
-             mod_cuestionario_paso_4_ui("cuestionario_paso_4_ui_1")
+             mod_cuestionario_paso_4_ui(ns("cuestionario_paso_4_ui_1"))
           ),
     tabPanel(title = "Paso 5", value = "paso5",
-             mod_cuestionario_paso_5_ui("cuestionario_paso_5_ui_1")
+             mod_cuestionario_paso_5_ui(ns("cuestionario_paso_5_ui_1"))
     )
     )
   )
