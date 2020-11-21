@@ -32,12 +32,14 @@ mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario 
       })
     }
   })
-  # observe({
-  #   listaPreguntas$preguntas <- seq_along(cuestionario$titulos) %>% map(~callModule(mod_cuestionario_bloques_server,
-  #                                                                                   glue::glue("cuestionario_bloques_ui_{.x}"),
-  #                                                                                   bloque = cuestionario$titulos[.x],
-  #                                                                                   parent_session = parent_session))
-  # })
+  observe({
+    seq_along(cuestionario$titulos) %>% map(~callModule(mod_cuestionario_bloques_server,
+                                                                                    glue::glue("cuestionario_bloques_ui_{.x}"),
+                                                                                    bloque = cuestionario$titulos[.x],
+                                                                                    parent_session = parent_session,
+                                                                                    cuestionario,
+                                                                                    .x))
+  })
   
   observeEvent(input$guardar, {
     print("paso3")
