@@ -237,7 +237,8 @@ iVotoBarras <- function(DB){
     theme(
           axis.title.y = element_blank(),
           text = element_text(family = "Avenir Next", size = 20),
-          plot.title = element_text(size = 22, colour =  "#13384D",
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
                                     hjust = 0, face="bold"),
           axis.text.y = element_text(color = "#41657A"),
           axis.text.x = element_text(color = "#41657A"),

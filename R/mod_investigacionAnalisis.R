@@ -31,7 +31,9 @@ mod_investigacionAnalisis_ui <- function(id){
              plotOutput(ns("intencion"))),
       column(width = 6,
              plotOutput(ns("gPdt")))
-    )
+    ),
+    h3("Resultados Diseño Muestral"),
+    tags$hr()
   )
 }
 
