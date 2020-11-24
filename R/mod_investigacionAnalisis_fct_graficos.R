@@ -84,7 +84,7 @@ tema_intCred <- function(){
 tema_probGanar <- function(){
   fuente <- "Georgia"   
   # Tema base
-  theme_minimal() %+replace%  
+  theme_minimal() + 
     theme(
       # Ratio
       aspect.ratio = 1,
@@ -108,11 +108,17 @@ probGanar <- function(bd, candidato, nCand){
     filter(cand == {{candidato}}) %>% 
     pull("prob") 
   
+  c <- bd %>% 
+    filter(cand == {{candidato}})
+  
+  bd <- bd %>% filter(cand != {{candidato}}) %>% head(4)
+  bd <- union(c, bd)
+
   # browser()
   g <- bd %>% 
     ggplot()+
     # Marcas
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25),alpha=.8, fill="8DB1AB")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25),alpha=.8, fill="#8DB1AB")+
     geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50),alpha=.5, fill="#ADECFF")+
     geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75),alpha=.5, fill="#0081A7")+
     geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100),alpha=.8, fill="#587792")+
@@ -132,7 +138,7 @@ probGanar <- function(bd, candidato, nCand){
     labs(title = "Probabilidad de triunfo")+
     xlim(c(-nCand,nCand+1))+
     ylim(c(0,100))+
-    tema_probGanar()+
+    tema_probGanar() +
     theme(
       text = element_text(family = "Avenir Next", size = 20),
       plot.title = element_text(size = 22,
@@ -214,8 +220,7 @@ iVotoBarras <- function(DB){
   paleta <- tibble(candidato = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
                                  "PRD", "PRI", "PT", "PVEM"),
                    colores = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
-                               "#FAB855", "#EB0E0E", "#D63131", "#199121")) %>%  
-    arrange(candidato)
+                               "#FAB855", "#EB0E0E", "#D63131", "#199121")) %>%  arrange(candidato)
   # browser()
   barras <- DB %>% group_by(candidato)%>%
     summarise(voto = mean(votacion)*100) %>% 
@@ -226,14 +231,13 @@ iVotoBarras <- function(DB){
     geom_bar(stat = "identity", width = .7) + 
     scale_fill_identity()+
     coord_flip() + theme_minimal() +
-    labs(title = "Intención de Voto", subtitle = "(2020)",caption = "",
+    labs(title = "Intención de Voto", subtitle = "(2020)", caption = "",
          y = "Porcentaje de voto", x = "candidatos") +
     geom_text(aes(label = label, hjust = 1.2), color = "white")+
     theme(
           axis.title.y = element_blank(),
           text = element_text(family = "Avenir Next", size = 20),
-          plot.title = element_text(size = 22,
-                                    colour =  "#13384D",
+          plot.title = element_text(size = 22, colour =  "#13384D",
                                     hjust = 0, face="bold"),
           axis.text.y = element_text(color = "#41657A"),
           axis.text.x = element_text(color = "#41657A"),
