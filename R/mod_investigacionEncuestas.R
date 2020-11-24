@@ -21,48 +21,41 @@ mod_investigacionEncuestas_ui <- function(id){
 #' investigacionEncuestas Server Function
 #'
 #' @noRd 
-mod_investigacionEncuestas_server <- function(input, output, session, parent_session = NULL, showForm = NULL){
+mod_investigacionEncuestas_server <- function(input, output, session, bd, parent_session = NULL, showForm = NULL, idFormGeneral){
   ns <- session$ns
-
-  t <- tibble(Nombre = c(a = "Encuesta 1", b = "Encuesta 2", c= "Encuesta 3"),
-              Fecha_inicio = c(a = today(), b = today(), c = today()),
-              Fecha_fin = c(a = today(), b = today(), c = today()), 
-              FM = c(a = 1, b = 2, c= 3), 
-              FC = c(a = 1, b = 2, c= 3), 
-              FV = c(a = 1, b = 2, c= 3),
-              Editar =  c(a = 1, b = 2, c= 3),
-              Eliminar = c(a = 1, b = 2, c= 3))
+  
+  seleccion <- reactive(
+    bd$encuestas %>% filter(activo == 1)
+  )
   
   output$encuestas <- DT::renderDT({
-    
-    t$FM$a <- HTML(input_btns(ns("disMuestral"), 1, "Editar", icon = "pie-chart", status = "primary"))
-    t$FM$b <- HTML(input_btns(ns("disMuestral"), 2, "Editar", icon = "pie-chart", status = "primary"))
-    t$FM$c <- HTML(input_btns(ns("disMuestral"), 3, "Editar", icon = "pie-chart", status = "primary"))
-    
-    t$FC$a <- HTML(input_btns(ns("cuestionario"), 1, "Editar", icon = "question-circle", status = "primary"))
-    t$FC$b <- HTML(input_btns(ns("cuestionario"), 2, "Editar", icon = "question-circle", status = "primary"))
-    t$FC$c <- HTML(input_btns(ns("cuestionario"), 3, "Editar", icon = "question-circle", status = "primary"))
-    
-    t$FV$a <- HTML(input_btns(ns("intVoto"), 1, "Editar", icon = "hand-pointer-o", status = "primary"))
-    t$FV$b <- HTML(input_btns(ns("intVoto"), 2, "Editar", icon = "hand-pointer-o", status = "primary"))
-    t$FV$c <- HTML(input_btns(ns("intVoto"), 3, "Editar", icon = "hand-pointer-o", status = "primary"))
-    
-    
-    t$Editar$a <- HTML(input_btns(ns("editar"), 1, "Editar", icon = "edit", status = "primary"))
-    t$Editar$b <- HTML(input_btns(ns("editar"), 2, "Editar", icon = "edit", status = "primary"))
-    t$Editar$c <- HTML(input_btns(ns("editar"), 3, "Editar", icon = "edit", status = "primary"))
-    
-    t$Eliminar$a <- HTML(input_btns(ns("eliminar"), 1, "Eliminar", icon = "trash-o", status = "primary"))
-    t$Eliminar$b <- HTML(input_btns(ns("eliminar"), 2, "Eliminar", icon = "trash-o", status = "primary"))
-    t$Eliminar$c <- HTML(input_btns(ns("eliminar"), 3, "Eliminarr", icon = "trash-o", status = "primary"))
-    
-    DT::datatable(data = t)
-    }, escape = F)
+    seleccion() %>% select(idFormGeneral,nombre,casaEncuestadora) %>%
+      mutate(FD = input_btns(ns("disMuestral"), idFormGeneral, "Diseño muestral", icon = "pie-chart", status = "primary"),
+             FV = input_btns(ns("intVoto"), idFormGeneral, "Intención de voto", icon = "hand-pointer-o", status = "primary"),
+             FC = input_btns(ns("cuestionario"), idFormGeneral, "Cuestionario", icon = "question-circle", status = "primary"),
+             Editar = input_btns(ns("editar"), idFormGeneral, "Ver", icon = "edit", status = "info"),
+             Eliminar = input_btns(ns("eliminar"), idFormGeneral, "Eliminar", icon = "trash-o", status = "danger"),
+      ) %>% select(-idFormGeneral)
+  }, selection = 'none',rownames = FALSE,
+  options = list(language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json',searchPlaceholder = "Buscar..."),
+                 lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5
+  ),
+  escape = F)
   
-  observeEvent(input$intVoto, {
-    print("hola")
-    showForm$val <- 3
+  observeEvent(input$disMuestral, {
+    showForm$val <- 2
+    idFormGeneral$val <- input$disMuestral
   })
+  observeEvent(input$intVoto, {
+    showForm$val <- 3
+    idFormGeneral$val <- input$intVoto
+  })
+  observeEvent(input$cuestionario, {
+    showForm$val <- 4
+    idFormGeneral$val <- input$cuestionario
+  })
+  
+  
   
 }
 

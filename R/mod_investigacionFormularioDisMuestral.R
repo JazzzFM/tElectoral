@@ -95,7 +95,7 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
 #'
 #' @noRd 
 
-mod_investigacionFormularioDisMuestral_server <- function(input, output, session, bd, usuario, parent_session = NULL, showForm = NULL){
+mod_investigacionFormularioDisMuestral_server <- function(input, output, session, usuario, parent_session = NULL, showForm = NULL){
   ns <- session$ns
   observeEvent(input$poliEtapa, {
     if(input$poliEtapa == "Sí"){
@@ -162,18 +162,18 @@ mod_investigacionFormularioDisMuestral_server <- function(input, output, session
           usuarioEdicion = NULL,
           activo = 1)
     insertBd(pool, formDisMuestralBd, bd = disMuestral)
-    tryCatch(                      
-      expr = {
-        leerBd(pool, formDisMuestralBd)
-        shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
-        },
-      error = function(e){    
-        shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
-      },
-      warning = function(w){    
-        shinyalert::shinyalert(title = "Revise su conexión.")
-      }
-    )
+    # tryCatch(                      
+    #   expr = {
+    #     leerBd(pool, formDisMuestralBd)
+    #     shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
+    #     },
+    #   error = function(e){    
+    #     shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
+    #   },
+    #   warning = function(w){    
+    #     shinyalert::shinyalert(title = "Revise su conexión.")
+    #   }
+    # )
     
     }
   })
