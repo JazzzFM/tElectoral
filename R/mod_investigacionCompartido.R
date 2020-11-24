@@ -12,56 +12,39 @@ mod_investigacionCompartido_ui <- function(id){
   ns <- NS(id)
   tagList(
     useShinyjs(),
-    # hidden(
-    #   div(id = ns("formEncuestas"), mod_investigacionEncuestas_ui("investigacionEncuestas_ui_1"))
-    #   ),
-    # hidden(
-    #   div(id = ns("formIntVoto"), mod_investigacionFormularioIntVoto_ui("investigacionFormularioIntVoto_ui_1"))
-    #   )
+    uiOutput(ns("investigacionContainer"))
   )
 }
     
 #' investigacionCompartido Server Function
 #'
 #' @noRd 
-mod_investigacionCompartido_server <- function(input, output, session, parent_session = NULL){
+mod_investigacionCompartido_server <- function(input, output, session, bd, usuario, parent_session = NULL){
   ns <- session$ns
   showForm <- reactiveValues(val = 1)
+  idFormGeneral <- reactiveValues(val = 0)
   
-  #Encuestas
-  #callModule(mod_investigacionEncuestas_server, "investigacionEncuestas_ui_1", parent_session, showForm)
-  #Intención de voto
-  #callModule(mod_investigacionFormularioIntVoto_server, "investigacionFormularioIntVoto_ui_1", parent_session, showForm)
+  callModule(mod_investigacionEncuestas_server, "investigacionEncuestas_ui_1", bd, parent_session, showForm, idFormGeneral)
+  callModule(mod_investigacionListadoDisMuestral_server, "investigacionListadoDisMuestral_ui_1", bd, usuario, parent_session, showForm, idFormGeneral)
+  callModule(mod_investigacionListadoIntVoto_server, "investigacionListadoIntVoto_ui_1", bd, usuario, parent_session, showForm, idFormGeneral)
+  callModule(mod_investigacionListadoCuestionario_server, "investigacionListadoCuestionario_ui_1", bd, usuario, parent_session, showForm, idFormGeneral)
   
-  observe({
-    print(showForm$val)
+  output$investigacionContainer <- renderUI({ # Encuestas
     if(showForm$val == 1){
-      hideElementsInvestigacion()
-      show(selector = paste0("#",ns("formEncuestas")))
+      mod_investigacionEncuestas_ui(ns("investigacionEncuestas_ui_1"))
     }
-    else if(showForm$val == 2){
-      hideElementsInvestigacion()
-      show(selector = "#formDisMuestral") 
+    else if(showForm$val == 2){ # Listado Diseño muestral
+      mod_investigacionListadoDisMuestral_ui(ns("investigacionListadoDisMuestral_ui_1"))
     }
     else if(showForm$val == 3){
-      hideElementsInvestigacion()
-      show(selector = paste0("#", ns("formIntVoto")))
-      
+      mod_investigacionListadoIntVoto_ui(ns("investigacionListadoIntVoto_ui_1"))
     }
     else if(showForm$val == 4){
-      hideElementsInvestigacion()
-      show(selector = "#formCuestionario")
+      mod_investigacionListadoCuestionario_ui(ns("investigacionListadoCuestionario_ui_1"))
     }
   })
-  
 }
- 
-hideElementsInvestigacion <- function(){
-  hide(selector = "#formEncuestas")
-  hide(selector = "#formDisMuestral")
-  hide(selector = "#formIntVoto")
-  hide(selector = "#formCuestionario")
-}   
+
 ## To be copied in the UI
 # mod_investigacionCompartido_ui("investigacionCompartido_ui_1")
     

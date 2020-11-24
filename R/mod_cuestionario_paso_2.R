@@ -46,7 +46,9 @@ mod_cuestionario_paso_2_server <- function(input, output, session, cuestionario 
        temp[i] <- input[[(paste0("NombreBloque-", i))]]
      }
      cuestionario$titulos <- temp
+     cuestionario$paso1$cantidadBloques <- input$CantidadBloques
      print(cuestionario$titulos)
+     print(cuestionario$paso1)
      # End guardar títulos
    })
   #Generar bloques

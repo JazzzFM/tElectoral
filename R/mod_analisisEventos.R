@@ -32,20 +32,19 @@ mod_analisisEventos_ui <- function(id){
                ),
                column(width = 4, 
                       div(class="topBoxInfo bordered-green",
-                          p("26"), # a reemplazar en bd
+                          p(HTML(glue::glue("{textOutput(ns('numEventos'))}"))),
                           p("Eventos")
                       )
                ),
                column(width = 4, 
                       div(class="topBoxInfo default",
-                          p("52%"), # a reemplazar en bd
-                          p("Visitas prioritarias realizadas"),
-                          p("16 eventos")
+                          p(HTML(glue::glue("{textOutput(ns('eventosPct'))}"))),
+                          p("Municipios visitados")
                       )
                ),
                column(width = 4, 
                       div(class="topBoxInfo red",
-                          p("4"), # a reemplazar en bd
+                          p(HTML(glue::glue("{textOutput(ns('numIncidentes'))}"))),
                           p("Incidentes")
                       )
                ),
@@ -91,6 +90,18 @@ mod_analisisEventos_server <- function(input, output, session, bd){
   output$pGauge <- renderPlot({
     # bd <- tibble(x = sample(0:10, size = 20, replace = T))
     promedioGauge(bd$evaluacionEventos, calificacion = expectativas)
+  })
+  
+  output$numEventos <- renderText({
+    as.character( bd$eventos %>%  nrow())
+  })
+  
+  output$eventosPct <- renderText({
+    as.character( bd$eventos %>%count(lugar) %>%  nrow()  )
+  })
+  
+  output$numIncidentes <- renderText({
+    as.character( bd$evaluacionEventos %>% summarise(n =sum(incidentes)) %>% pull(n)  )
   })
   
   output$tableMun <- DT::renderDT({
