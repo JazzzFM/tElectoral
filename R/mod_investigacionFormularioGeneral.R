@@ -18,7 +18,7 @@ mod_investigacionFormularioGeneral_ui <- function(id){
       ),
       column(width = 6,
              textInput(inputId = ns("casaEncuestadora"), label = "Casa encuestadora", placeholder = "...")
-       ),
+      ),
       column(width = 12,
              textInput(inputId = ns("poblacionObjetivo"), label = "Población objetivo", placeholder = "...")
       ),
@@ -32,7 +32,7 @@ mod_investigacionFormularioGeneral_ui <- function(id){
     )
   )
 }
-    
+
 #' investigacionFormularioGeneral Server Function
 #'
 #' @noRd 
@@ -55,23 +55,25 @@ mod_investigacionFormularioGeneral_server <- function(input, output, session, bd
       )
       insertBd(pool, formGeneralBd, bd = formGeneral)
       tryCatch(
-      expr = {
-        leerBd(pool, formGeneralBd)
-        shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
+        expr = {
+          leerBd(pool, formGeneralBd)
+          shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
+        },
+        error = function(e){    
+          shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
+        },
+        warning = function(w){    
+          shinyalert::shinyalert(title = "Revise su conexión.")
         }
-      error = function(e){    
-        shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
-      }
-      warning = function(w){    
-        shinyalert::shinyalert(title = "Revise su conexión.")
-      }
+      )
     }
   })
 }
-    
-## To be copied in the UI
-# mod_investigacionFormularioGeneral_ui("investigacionFormularioGeneral_ui_1")
-    
-## To be copied in the server
-# callModule(mod_investigacionFormularioGeneral_server, "investigacionFormularioGeneral_ui_1")
- 
+  
+  ## To be copied in the UI
+  # mod_investigacionFormularioGeneral_ui("investigacionFormularioGeneral_ui_1")
+  
+  ## To be copied in the server
+  # callModule(mod_investigacionFormularioGeneral_server, "investigacionFormularioGeneral_ui_1")
+  
+  
