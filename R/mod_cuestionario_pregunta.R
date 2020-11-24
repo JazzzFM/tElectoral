@@ -14,119 +14,69 @@ mod_cuestionario_pregunta_ui <- function(id){
     fluidRow(
       column(
         width = 12,
-        textInput(inputId = ns("Pregunta"), label = "Pregunta", placeholder = "...")
+        numericInput(inputId = ns("numPreguntas"), label = "Indique el total de preguntas que constituyen al bloque", value = 1, min = 1, max = 100)
       )
     ),
-    h3("Solicitud de respuesta"),
+    h3("Análisis de solicitudes de respuesta"),
     tags$hr(),
     fluidRow(
-      column(
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Deseabilidad social", choices = c("No hay", "Ligera", "Mucha"), inputId = ns("DeseabilidadSocial"))
+      column(width = 6,
+             numericInput(inputId = ns("deseabilidadSocial"), label = "Número de preguntas con deseabilidad social", value= 0, min = 0, max = 100)
       ),
-      column(
-        width = 6,
-        pickerInput(label = "Centralidad", choices = c("Seleccione una" = '', "No es central","Poco central","Algo centrales","Central", "Muy central"), inputId = ns("Centralidad")),
+      column(width = 6,
+             textAreaInput(inputId = ns("observacionDeseabilidadSocial"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
-      column(
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Énfasis en opiniones subjetivas en la solicitud de respuesta", choices = c("Presente", "No presente"), inputId = ns("EnfasisSRespuesta"))
+      column(width = 6,
+             numericInput(inputId = ns("supuestosImplicitos"), label = "Número de preguntas con supuestos implícitos",value= 0, min = 0, max = 100)
       ),
-      column(
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Balance en la solicitud de respuesta", choices = c("Balanceada", "No balanceada", "No aplica"), inputId = ns("BalanceSRespuesta"))
+      column(width = 6,
+             textAreaInput(inputId = ns("observacionSupuestosImplicitos"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
-      column(
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Solicitudes con supuestos implícitos", choices = c("Presente", "No presente"), inputId = ns("SolicitudesImplicitos"))
+      column(width = 6,
+             numericInput(inputId = ns("dobleBarril"), label = "Número de preguntas con doble barril", min = 0,value= 0,max = 100)
       ),
-      column(
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Presencia de doble barril", choices = c("Presente", "No presente"), inputId = ns("DobleBarril"))
+      column(width = 6,
+             textAreaInput(inputId = ns("observacionDobleBarril"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
-      column(
-        width = 6,
-        numericInput(label = "Número de enunciados en la solicitud de respuesta", min = 1, value = 1, inputId = ns("NEnunciadosRespuesta"))
+      column(width = 6,
+             numericInput(inputId = ns("balanceRedaccion"), label = "Número de preguntas sin balance en su redacción", value= 0,min = 0, max = 100)
+      ),
+      column(width = 6,
+             textAreaInput(inputId = ns("observacionBalanceRedaccion"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       )
     ),
     # End solicitud de respuesta
     
-    #Categoría de respuesta
-    h3("Categoría de respuesta"),
-    tags$hr(),
-    fluidRow(
-      class="RowCategoriaRespuesta",
-      column(
-        width = 12,
-        pickerInput(label = "Categorías de respuesta", choices = c("Seleccione una" = '', "Libre", "Nominal","Ordinal","Dicotómicas","Numéricas", "Cuantificadores vagos","Dibujo de línea", "Orden de importancia"), inputId = ns("CategoriaRespuesta")),
-      )
-    ),
-    fluidRow(
-      class = "RowCategoriaImplemented",
-      shinyjs::hidden(column(
-        id = ns("C_NCategorias"),
-        width = 6,
-        numericInput(label = "Número de categorías", min = 1, value = 1, inputId = ns("NCategorias"))
-      )),
-      shinyjs::hidden(column(
-        id = ns("C_CatExcluyentes"),
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Categorías mutuamente excluyente", choices = c("Presente", "No presente"), inputId = ns("CatExcluyentes"))
-      )),
-      shinyjs::hidden(column(
-        id = ns("C_CatNeutral"),
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Categoría neutral", choices = c("Presente", "No presente"), inputId = ns("CatNeutral"))
-      )),
-      shinyjs::hidden(column(
-        id = ns("C_EquilibrioCat"),
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Equilibrio entre las categorías", choices = c("Presente", "No presente"), inputId = ns("EquilibrioCat"))
-      )),
-      shinyjs::hidden(column(
-        id = ns("C_NoSabeNoContest"),
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "No sabe/No contesta", choices = c("Presente", "No presente"), inputId = ns("NoSabeNoContest"))
-      )),
-      shinyjs::hidden(column(
-        id = ns("C_CatOtro"),
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Otro", choices = c("Presente", "No presente"), inputId = ns("CatOtro"))
-      ))
-    ),
-    #End categoría de respuesta
     
-    #Extras
-    h3("Extras"),
+    h3("Análisis de opciones de repsuesta"),
     tags$hr(),
     fluidRow(
-      column(
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Información extra", choices = c("Presente", "No presente"), inputId = ns("InfExtra"))
-      )
-    ),
-    fluidRow(
-      class="RowExtras",
-      column(
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Material de apoyo visual", choices = c("Presente", "No presente"), inputId = ns("material"))
-      )
-    ),
-    shinyjs::hidden(fluidRow(
-      id= "RowExtrasImplemented",
-      column(
-        width = 6,
-        pickerInput(label = "Superposición de categorías y etiquetas de escala", choices = c("Superposición presente", "Texto conectado correctamente con su categoría"), inputId = ns("SuperposicionCategoriaEtiquetaEscala"))
+      column(width = 6,
+             numericInput(inputId = ns("opcionesNoMutuamenteExcluyentes"), label = "Número de preguntas con opciones de respuesta que no son mutuamente excluyentes", value= 0,min = 0, max = 100)
       ),
-      column(
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Inicio de la frase de respuesta en la ayuda visual", choices = c("Presente", "No presente"), inputId = ns("InicioFraseRespuesta"))
+      column(width = 6,
+             textAreaInput(inputId = ns("observacionOpcionesNoMutuamenteExcluyentes"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
-      column(
-        width = 6,
-        prettyRadioButtons(selected = 0, label = "Imagen dentro del apoyo visual", choices = c("Presente", "No presente"), inputId = ns("ImagenApoyo"))
-      )
-    )),
+      column(width = 6,
+             numericInput(inputId = ns("opcionesSinEquilibrio"), label = "Número de preguntas con opciones de respuesta sin equilibrio entre ellas",value= 0, min = 0, max = 100)
+      ),
+      column(width = 6,
+             textAreaInput(inputId = ns("observacionOpcionesSinEquilibrio"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+      ),
+      column(width = 6,
+             numericInput(inputId = ns("masDiezRespuesta"), label = "Número de preguntas que tienen más de 10 opciones de respuesta",value= 0, min = 0, max = 100)
+      ),
+      column(width = 6,
+             textAreaInput(inputId = ns("observacionMasDiezRespuesta"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+      ),
+      column(width = 6,
+             numericInput(inputId = ns("respuestaNeutral"), label = "Número de preguntas que necesitan una categoría de respuesta “neutral” o la opción de “otro” y no cuentan con ella", min = 0, value= 0,max = 100)
+      ),
+      column(width = 6,
+             textAreaInput(inputId = ns("observacionRespuestaNeutral"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+      ),
+    ),
+    
     #End extras 
     # Ayudas
     div(
@@ -189,40 +139,7 @@ mod_cuestionario_pregunta_server <- function(input, output, session, valores = N
       ImagenApoyo = input$ImagenApoyo
       )
   })
-  observeEvent(input$material,{
-    if(input$material == "Presente"){
-      shinyjs::show(selector = "#RowExtrasImplemented")
-    }else{
-      shinyjs::hide(selector = "#RowExtrasImplemented")
-    }
-  })
-  observeEvent(input$CategoriaRespuesta,{
-    shinyjs::hide(selector = paste0("#",ns("C_NCategorias")))
-    shinyjs::hide(selector = paste0("#",ns("C_CatExcluyentes")))
-    shinyjs::hide(selector = paste0("#",ns("C_CatNeutral")))
-    shinyjs::hide(selector = paste0("#",ns("C_EquilibrioCat")))
-    shinyjs::hide(selector = paste0("#",ns("C_NoSabeNoContest")))
-    shinyjs::hide(selector = paste0("#",ns("C_CatOtro")))
-    
-    if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
-      shinyjs::show(selector = paste0("#",ns("C_NCategorias")))
-    }
-    if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Orden de importancia"){
-      shinyjs::show(selector = paste0("#",ns("C_CatExcluyentes")))
-    }
-    if(input$CategoriaRespuesta == "Numéricas" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
-      shinyjs::show(selector = paste0("#",ns("C_CatNeutral")))
-    }
-    if(input$CategoriaRespuesta == "Numéricas" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Cuantificadores vagos"){
-      shinyjs::show(selector = paste0("#",ns("C_EquilibrioCat")))
-    }
-    if(input$CategoriaRespuesta == "Nominal" || input$CategoriaRespuesta == "Ordinal" || input$CategoriaRespuesta == "Dicotómicas" || input$CategoriaRespuesta == "Cuantificadores vagos" || input$CategoriaRespuesta == "Dibujo de línea" ||input$CategoriaRespuesta == "Numéricas"){
-      shinyjs::show(selector = paste0("#",ns("C_NoSabeNoContest")))
-    }
-    if(input$CategoriaRespuesta == "Nominal"){
-      shinyjs::show(selector = paste0("#",ns("C_CatOtro")))
-    }
-  })
+  
   
   observeEvent(valores,{
     if(!is.null(valores)){

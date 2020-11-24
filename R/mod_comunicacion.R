@@ -23,13 +23,13 @@ mod_comunicacion_ui <- function(id){
              tags$hr()
        ),
     tabPanel(title = "Paso 3", value ="paso3",
-             mod_cuestionario_paso_3_ui("cuestionario_paso_3_ui_1")
+             mod_cuestionario_paso_3_ui(ns("cuestionario_paso_3_ui_1"))
            ),
     tabPanel(title = "Paso 4", value = "paso4",
-             mod_cuestionario_paso_4_ui("cuestionario_paso_4_ui_1")
+             mod_cuestionario_paso_4_ui(ns("cuestionario_paso_4_ui_1"))
           ),
     tabPanel(title = "Paso 5", value = "paso5",
-             mod_cuestionario_paso_5_ui("cuestionario_paso_5_ui_1")
+             mod_cuestionario_paso_5_ui(ns("cuestionario_paso_5_ui_1"))
     )
     )
   )
@@ -40,7 +40,7 @@ mod_comunicacion_ui <- function(id){
 #' @noRd 
 mod_comunicacion_server <- function(input, output, session, parent_session = NULL){
   ns <- session$ns
-  cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso2 = NULL)
+  cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso3 = c(), paso4 = NULL)
   # Paso 1
   callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario)
   # Paso 2

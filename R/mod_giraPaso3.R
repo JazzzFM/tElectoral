@@ -32,7 +32,7 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
     if(!is.null(gira$paso2)){
       lapply(seq_along(gira$paso2$lugares), function(i) {
         mod_lugaresPaso3_ui(ns(glue::glue("lugaresPaso3_ui_{i}")), titulo = gira$paso2$lugares[i])
-      }) 
+      })
     }
   })
   
