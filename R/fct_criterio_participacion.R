@@ -24,6 +24,7 @@ criterio_participacion <- function(DB_ESTADO, DB_VISITAS,n){
            TOTAL_VOTOS=scales::percent(round(TOTAL_VOTOS,2)))
    
   # # # Arrange CP visitas
+
   DB_AUX <- DB_AUX %>% arrange(desc(CRITERIOP))
   #DB_ORDENADA <- select(DB_AUX, c(MUNICIPIO, VISITAS, TOTAL_VOTOS, CRITERIOP))
 

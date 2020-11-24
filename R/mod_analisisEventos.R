@@ -32,20 +32,19 @@ mod_analisisEventos_ui <- function(id){
                ),
                column(width = 4, 
                       div(class="topBoxInfo bordered-green",
-                          p("26"),
+                          p(HTML(glue::glue("{textOutput(ns('numEventos'))}"))),
                           p("Eventos")
                       )
                ),
                column(width = 4, 
                       div(class="topBoxInfo default",
-                          p("52%"),
-                          p("Visitas prioritarias realizadas"),
-                          p("16 eventos")
+                          p(HTML(glue::glue("{textOutput(ns('eventosPct'))}"))),
+                          p("Municipios visitados")
                       )
                ),
                column(width = 4, 
                       div(class="topBoxInfo red",
-                          p("4"),
+                          p(HTML(glue::glue("{textOutput(ns('numIncidentes'))}"))),
                           p("Incidentes")
                       )
                ),
@@ -77,7 +76,7 @@ mod_analisisEventos_ui <- function(id){
              fluidRow(
                column(width = 12, 
                       div(class="topBoxInfo bordered-white ft-sm",
-                          h3(style="text-align:left", "Representantes de Casilla por Municipio"),
+                          h3(style="text-align:center", "Número de Eventos Realizados y en Proceso"),
                           leafletOutput(ns("llmapa")))
                     ))
             )) 
@@ -85,234 +84,52 @@ mod_analisisEventos_ui <- function(id){
 #' analisisEventos Server Function
 #'
 #' @noRd 
-mod_analisisEventos_server <- function(input, output, session){
+mod_analisisEventos_server <- function(input, output, session, bd){
   ns <- session$ns
   
   output$pGauge <- renderPlot({
-    bd <- tibble(x = sample(0:10, size = 20, replace = T))
-    promedioGauge(bd, calificacion = x)
+    # bd <- tibble(x = sample(0:10, size = 20, replace = T))
+    promedioGauge(bd$evaluacionEventos, calificacion = expectativas)
   })
   
-
-  a <- tibble(Municipio = c(a = "Municipio 1", b = "Municipio 2", c= "Municipio 3", d= "Prueba", e="Prueba 2", f="Prueba 3", g="Prueba 4", h="Prueba 5", i="Prueba 6", j="Prueba 7"), Calificación = c(a = 10, b = 5, c= 8, d=4, e=9, f=7, g=1, h=7, i=3,j=4),)
-
+  output$numEventos <- renderText({
+    as.character( bd$eventos %>%  nrow())
+  })
+  
+  output$eventosPct <- renderText({
+    as.character( bd$eventos %>%count(lugar) %>%  nrow()  )
+  })
+  
+  output$numIncidentes <- renderText({
+    as.character( bd$evaluacionEventos %>% summarise(n =sum(incidentes)) %>% pull(n)  )
+  })
+  
   output$tableMun <- DT::renderDT({
-    tibble(Municipio = c(a = "Municipio 1", b = "Municipio 2", c= "Municipio 3"), Calificación = c(a = 10, b = 5, c= 8))
-    
-  }, escape = F, options = list(dom = 't'))
+    mun <- tibble(CABECERA_MUNICIPAL = sample(size=3, DB_Mich2$CABECERA_MUNICIPAL)) 
+    a <- tibble(Municipio = mun$CABECERA_MUNICIPAL, Calificación = c(a = 10, b = 5, c= 8))
+     DT::datatable(data = a)
+   }, escape = F, options = list(dom = 't'))
   
   output$eAnimo <- renderPlot({
-    # fake data as the real structure
-    bd <- select(DB_Mich, c(MUNICIPIO, lugar =CABECERA_MUNICIPAL)) %>%
-      mutate(fecha= seq(from = dmy_hm("06-01-21 11:00"), to = dmy_hm("06-02-21 11:00"), length.out =113),
-             asistentes = sample(c("Debían de haber sido más personas",
-                                   "Adecuado",
-                                   "Debían haber sido menos personas"),
-                                 prob = c(.3, .7, .2), size = 113, replace= T ),
-             animo = sample(c('Interesados',
-                              'Participativos',
-                              'Emocionados',
-                              'Desesperados',
-                              'Molestos',
-                              'Aburridos',
-                              'Otro'),
-                            size=113, replace=T,
-                            prob=c(.1,.1,.2,.1,.1,.1,.2)),
-             
-             animo_otro = sample(c('deprimido',
-                                   'triste',
-                                   'ansioso',
-                                   'borracho'),
-                                 size=113, replace=T),
-             
-             incidente = sample(c('Perdida del sonido o audio', 'Perdida de corriente eléctrica',
-                                  'Los asistentes no llegaron a tiempo','El recinto no era adecuado',
-                                  'Insultos por parte de los participantes', 'Enfrentamiento entre participantes',
-                                  'Salida repentina de participantes antes de que finalice el evento',
-                                  'Constantes interrupciones al discurso del candidato',
-                                  'Hackeo del evento (en caso de ser virtual)', 'Otro'),
-                                size=113, replace=T),
-             incidente_otro = sample(c('Se congelaba la pantalla',
-                                       'Hubo balazos',
-                                       'Se rompió el templete',
-                                       'Las autoridad local no lo permitió'),
-                                     size=113, replace=T,
-                                     prob=c(.3,.1,.2,.2)),
-             
-             duracion = sample(c("Debía de haber durado menos tiempo",
-                                 "Adecuado", "Debía de haber durado más tiempo"),
-                               prob = c(.3, .7, .2), size = 113, replace= T ),
-             
-             calidad =  sample(c("Muy buena calidad",
-                                 "Buena calidad",
-                                 "Mala calidad" ,
-                                 "Muy mala calidad"),
-                               prob = c(.5, .7, .3, .2), size = 113, replace= T ),
-             calif = sample(c(0:10), size = 113, replace = T,
-                            prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
-      )
-    
-    distRadar(bd, pregunta = animo, otro = animo_otro, x = 30, titulo = "Ánimo de los Asistentes") 
+    distRadar(bd$evaluacionEventos, pregunta = actitud, otro = actitudOtro, x = 0, titulo = "Ánimo de los Asistentes") 
   })
   
   output$cRecursos <- renderPlot({
-    bd <- select(DB_Mich, c(MUNICIPIO, lugar =CABECERA_MUNICIPAL)) %>%
-      mutate(fecha= seq(from = dmy_hm("06-01-21 11:00"), to = dmy_hm("06-02-21 11:00"), length.out =113),
-             asistentes = sample(c("Debían de haber sido más personas",
-                                   "Adecuado",
-                                   "Debían haber sido menos personas"),
-                                 prob = c(.3, .7, .2), size = 113, replace= T ),
-             animo = sample(c('Interesados',
-                              'Participativos',
-                              'Emocionados',
-                              'Desesperados',
-                              'Molestos',
-                              'Aburridos',
-                              'Otro'),
-                            size=113, replace=T,
-                            prob=c(.1,.1,.2,.1,.1,.1,.2)),
-             
-             animo_otro = sample(c('deprimido',
-                                   'triste',
-                                   'ansioso',
-                                   'borracho'),
-                                 size=113, replace=T),
-             
-             incidente = sample(c('Perdida del sonido o audio', 'Perdida de corriente eléctrica',
-                                  'Los asistentes no llegaron a tiempo','El recinto no era adecuado',
-                                  'Insultos por parte de los participantes', 'Enfrentamiento entre participantes',
-                                  'Salida repentina de participantes antes de que finalice el evento',
-                                  'Constantes interrupciones al discurso del candidato',
-                                  'Hackeo del evento (en caso de ser virtual)', 'Otro'),
-                                size=113, replace=T),
-             incidente_otro = sample(c('Se congelaba la pantalla',
-                                       'Hubo balazos',
-                                       'Se rompió el templete',
-                                       'Las autoridad local no lo permitió'),
-                                     size=113, replace=T,
-                                     prob=c(.3,.1,.2,.2)),
-             
-             duracion = sample(c("Debía de haber durado menos tiempo",
-                                 "Adecuado", "Debía de haber durado más tiempo"),
-                               prob = c(.3, .7, .2), size = 113, replace= T ),
-             
-             calidad =  sample(c("Muy buena calidad",
-                                 "Buena calidad",
-                                 "Mala calidad" ,
-                                 "Muy mala calidad"),
-                               prob = c(.5, .7, .3, .2), size = 113, replace= T ),
-             calif = sample(c(0:10), size = 113, replace = T,
-                            prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
-      )
-
-    paletaRecursos(bd, pregunta = calidad, titulo = str_wrap("Nivel de calidad de los recursos tecnológicos", 30))
+    
+    paletaRecursos(bd$evaluacionEventos, pregunta = calidadTecno, 
+                   titulo = str_wrap("Nivel de calidad de los recursos tecnológicos", 30))
   })
   
   output$lCalif <- renderHighchart({
-    # Fake data with the real data structure
-    bd <- select(DB_Mich, c(MUNICIPIO, lugar =CABECERA_MUNICIPAL)) %>%
-      mutate(fecha= seq(from = dmy_hm("06-01-21 11:00"), to = dmy_hm("06-02-21 11:00"), length.out =113),
-             asistentes = sample(c("Debían de haber sido más personas",
-                                   "Adecuado",
-                                   "Debían haber sido menos personas"),
-                                 prob = c(.3, .7, .2), size = 113, replace= T ),
-             animo = sample(c('Interesados',
-                              'Participativos',
-                              'Emocionados',
-                              'Desesperados',
-                              'Molestos',
-                              'Aburridos',
-                              'Otro'),
-                            size=113, replace=T,
-                            prob=c(.1,.1,.2,.1,.1,.1,.2)),
-             
-             animo_otro = sample(c('deprimido',
-                                   'triste',
-                                   'ansioso',
-                                   'borracho'),
-                                 size=113, replace=T),
-             
-             incidente = sample(c('Perdida del sonido o audio', 'Perdida de corriente eléctrica',
-                                  'Los asistentes no llegaron a tiempo','El recinto no era adecuado',
-                                  'Insultos por parte de los participantes', 'Enfrentamiento entre participantes',
-                                  'Salida repentina de participantes antes de que finalice el evento',
-                                  'Constantes interrupciones al discurso del candidato',
-                                  'Hackeo del evento (en caso de ser virtual)', 'Otro'),
-                                size=113, replace=T),
-             incidente_otro = sample(c('Se congelaba la pantalla',
-                                       'Hubo balazos',
-                                       'Se rompió el templete',
-                                       'Las autoridad local no lo permitió'),
-                                     size=113, replace=T,
-                                     prob=c(.3,.1,.2,.2)),
-             
-             duracion = sample(c("Debía de haber durado menos tiempo",
-                                 "Adecuado", "Debía de haber durado más tiempo"),
-                               prob = c(.3, .7, .2), size = 113, replace= T ),
-             
-             calidad =  sample(c("Muy buena calidad",
-                                 "Buena calidad",
-                                 "Mala calidad" ,
-                                 "Muy mala calidad"),
-                               prob = c(.5, .7, .3, .2), size = 113, replace= T ),
-             calif = sample(c(0:10), size = 113, replace = T,
-                            prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
-      )
     
-    lineaCalificacion(bd, fecha = fecha, calificacion = calif, lugar = lugar, asistentes = asistentes)
+    lineaCalificacion(bd$evaluacionEventos, 
+                      fecha = fechaAlta, calificacion = expectativas, 
+                      lugar = actitud, asistentes = asistentes)
   })
   
   output$nAsistentes <- renderPlot({
     # fake data as the real structure
-    bd <- select(DB_Mich, c(MUNICIPIO, lugar =CABECERA_MUNICIPAL)) %>%
-      mutate(fecha= seq(from = dmy_hm("06-01-21 11:00"), to = dmy_hm("06-02-21 11:00"), length.out =113),
-             asistentes = sample(c("Debían de haber sido más personas",
-                                   "Adecuado",
-                                   "Debían haber sido menos personas"),
-                                 prob = c(.3, .7, .2), size = 113, replace= T ),
-             animo = sample(c('Interesados',
-                              'Participativos',
-                              'Emocionados',
-                              'Desesperados',
-                              'Molestos',
-                              'Aburridos',
-                              'Otro'),
-                            size=113, replace=T,
-                            prob=c(.1,.1,.2,.1,.1,.1,.2)),
-             
-             animo_otro = sample(c('deprimido',
-                                   'triste',
-                                   'ansioso',
-                                   'borracho'),
-                                 size=113, replace=T),
-             
-             incidente = sample(c('Perdida del sonido o audio', 'Perdida de corriente eléctrica',
-                                  'Los asistentes no llegaron a tiempo','El recinto no era adecuado',
-                                  'Insultos por parte de los participantes', 'Enfrentamiento entre participantes',
-                                  'Salida repentina de participantes antes de que finalice el evento',
-                                  'Constantes interrupciones al discurso del candidato',
-                                  'Hackeo del evento (en caso de ser virtual)', 'Otro'),
-                                size=113, replace=T),
-             incidente_otro = sample(c('Se congelaba la pantalla',
-                                       'Hubo balazos',
-                                       'Se rompió el templete',
-                                       'Las autoridad local no lo permitió'),
-                                     size=113, replace=T,
-                                     prob=c(.3,.1,.2,.2)),
-             
-             duracion = sample(c("Debía de haber durado menos tiempo",
-                                 "Adecuado", "Debía de haber durado más tiempo"),
-                               prob = c(.3, .7, .2), size = 113, replace= T ),
-             
-             calidad =  sample(c("Muy buena calidad",
-                                 "Buena calidad",
-                                 "Mala calidad" ,
-                                 "Muy mala calidad"),
-                               prob = c(.5, .7, .3, .2), size = 113, replace= T ),
-             calif = sample(c(0:10), size = 113, replace = T,
-                            prob=c(.005,.01,.02,.1,.2,.3,.4,.6,.5,.4,.3))
-      )
-    burbujas(bd, pregunta1 = asistentes, pregunta2 = duracion)
+    burbujas(bd$evaluacionEventos, pregunta1 = asistentes, pregunta2 = duracion)
   })
   
   output$llmapa <- renderLeaflet({
@@ -320,10 +137,6 @@ mod_analisisEventos_server <- function(input, output, session){
   })
   
 }
-  # output$ggmapa <- renderPlot({
-  #   ggMapaEstado(DB_MichGeograf)
-  # })
-
 
 ## To be copied in the UI
 # 

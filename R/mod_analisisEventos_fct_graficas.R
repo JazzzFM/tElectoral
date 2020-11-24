@@ -263,11 +263,12 @@ burbujas <- function(bd, pregunta1, pregunta2){
     gather(grupo, resp, c({{pregunta1}}, {{pregunta2}})) %>% 
     group_by(grupo) %>%  count(resp) %>% 
     mutate(n = round(n/sum(n), 2), 
-           etiqueta = case_when(resp%in% c("Debían haber sido menos personas",
+           etiqueta = case_when(resp%in% c("Debían de haber sido menos personas",
                                            "Debía de haber durado menos tiempo")~ "Debió haber sido menor",
                                 resp%in% c("Debían de haber sido más personas", 
                                            "Debía de haber durado más tiempo")~"Debió haber sido mayor",
-                                resp%in% c("Adecuado")~"Adecuado",
+                                resp%in% c("En número de asistentes fue adecuado",
+                                           "La duración fue adecuada")~"Adecuado",
            ),
            etiqueta2 = case_when(grupo == "duracion"~"Duración del evento", 
                                  grupo == "asistentes"~"Número de asistentes"
@@ -471,7 +472,7 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
 llMapaEstado <- function(Estado){
   
   labels <- sprintf(
-    "<strong>%s</strong><br/>%g representantes de casilla",
+    "<strong>%s</strong><br/>%g Eventos",
     Estado$NOMBRE, Estado$n
   ) %>% lapply(htmltools::HTML)
   
@@ -499,7 +500,7 @@ llMapaEstado <- function(Estado){
           style = list("font-weight" = "normal", padding = "3px 8px"),
           textsize = "15px",
           direction = "auto"))%>%
-        addLegend(pal = pal, values = ~n, opacity = 0.7, title = "No. Representantes",
+        addLegend(pal = pal, values = ~n, opacity = 1, title = "No. Eventos",
                   position = "bottomright") 
     
   return(Graph)

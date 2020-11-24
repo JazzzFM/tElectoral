@@ -14,15 +14,13 @@ mod_investigacionAnalisis_ui <- function(id){
   tagList(
     # Letreros
     fluidRow(
-      column(width = 3,
-             plotOutput(ns("caja1"))),
-      column(width = 3,
-            plotOutput(ns("caja2"))),
-      column(width = 3,
-            plotOutput(ns("caja3"))),
-      column(width = 3,
-             plotOutput(ns("caja4")))
-    ),
+      column(width = 4,
+             valueBoxOutput(ns("caja1"), width = "100%")),
+       column(width = 4,
+              valueBoxOutput(ns("caja2"), width = "100%")),
+       column(width = 4,
+              valueBoxOutput(ns("caja3"), width = "100%")),
+             ),
     # Gráficos
     fluidRow(
       column(width = 12,
@@ -42,6 +40,27 @@ mod_investigacionAnalisis_ui <- function(id){
 #' @noRd 
 mod_investigacionAnalisis_server <- function(input, output, session){
   ns <- session$ns
+  #Letreros
+  output$caja1 <- renderValueBox({
+    DB_MichEncuesta %>% nrow() %>% 
+      valueBox(subtitle = "Encuestas Realizadas", icon = icon("address-book-o"), color = "light-blue")
+  })
+  output$caja2 <- renderValueBox({
+    start <- datetime <- ymd_hms(now("GMT"))
+    end <- ymd_hms("2021-06-06 5:21:00", tz = "GMT")
+    d <- as.numeric(round(end - start)) 
+    d %>% valueBox(subtitle = "Días para la Elección", icon = icon("calendar"), color = "light-blue")
+  })
+  output$caja3 <- renderValueBox({
+    DB_MichEncuesta %>% select(fecha_final) %>% tail(1) %>%
+      valueBox(subtitle = "Fecha de Última Encuesta", icon = icon("calendar-o"), color = "light-blue")
+  })
+  # Probabilidad de triunfo
+  # Pendiente a donde quedar
+  output$caja4 <- renderPlot({
+    BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
+    cajaResume(BB, 4)
+  })
   # Prueba
   output$intervalos <- renderHighchart({
     # real data
@@ -57,21 +76,23 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   #Probabilidad de triunfo
   
   output$gPdt <- renderPlot({
-    # Temporal: Fake data!!!!!
-    
-    nCand <- 3 + rpois(1,2)
-    cand <- tibble(prob = abs(rnorm(n = nCand, 18, 25))) %>% 
-      mutate(prob=round(100*prob/sum(prob)), 
-             rw=row_number(),
-             cand=paste("Candidato", rw))
-    
-    #Real data, I cannot understant how does it works! ask him first!
-    # cand <- procesamiento_graph(DB_MichEncuesta) %>% 
-    #      group_by(candidato, colores) %>% summarise()
-    # cand <- cand %>% mutate(prob = runif(1, min = 0, max = 26))
+    # Fake data
+    # nCand <- 3 + rpois(1,2)
+    # cand <- tibble(prob = abs(rnorm(n = nCand, 18, 25))) %>% 
+    #   mutate(prob=round(100*prob/sum(prob)), 
+    #          rw=row_number(),
+    #          cand=paste("Candidato", rw))
+    # Real data
+    cand <- procesamiento_graph(DB_MichEncuesta) %>%
+         group_by(candidato, colores) %>% summarise()
+    cand <- cand %>% mutate(prob = runif(1, min = 0, max = 26))  
+      
+    cand<-cand %>% arrange(desc(prob)) %>% 
+      ungroup() %>%  mutate(cand = candidato, rw = seq(1:9), prob = round(prob)) %>%
+      head(5)
     
     # Función
-    probGanar(cand, candidato = "Candidato 2", nCand)
+    probGanar(cand, candidato = "MORENA", 5)
     })
   
   # output$votopopu <- renderPlot({
@@ -87,26 +108,7 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   #   
   #   hVotoPopu(bd)
   # })
-  
-   output$caja1 <- renderPlot({
-    cajaResume(DB_MichEncuesta, 1)
-   })
-  
-   output$caja2 <- renderPlot({
-     cajaResume(DB_MichEncuesta, 2)
-   })
-   
-   output$caja3 <- renderPlot({
-     cajaResume(DB_MichEncuesta, 3)
-   })
-   
-   output$caja4 <- renderPlot({
-     BB <- tibble(x = rnorm(n = 30, sd = .06, mean = .3), y = rnorm(n = 30, sd = .06, mean = .10))
-     cajaResume(BB, 4)
-   })
 }
-
-
 ## To be copied in the UI
 # 
 

@@ -1,0 +1,6 @@
+default:
+    server: 'mysql.cduzrgqgkfht.us-east-2.rds.amazonaws.com'
+    uid: 'root'
+    pwd: '9Blw33caY'
+    port: 3306
+    database: 'db_gp'

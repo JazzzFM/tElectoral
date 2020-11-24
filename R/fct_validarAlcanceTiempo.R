@@ -1,10 +1,10 @@
-validarAlcanceTiempo <- function(evt,eventos,tiempoAntes, lugarAntes, lugar, uiCount){
+validarAlcanceTiempo <- function(evt,eventos,tiempoAntes, lugarAntes, lugar){
   valido <- TRUE
   fechaAnterior <- glue::glue("1985-01-01 00:30") %>% ymd_hm()
   horaFinalAnterior <- glue::glue("1985-01-01 00:30") %>% ymd_hm()
-  for(i in 1:sum(uiCount$val,-1)){
-    if(!is.na(eventos[[as.character(i)]]$inicioEvento)){
-      tmp <- eventos[[as.character(i)]]
+  for(i in seq_along(eventos)){
+    if(!is.null(eventos[[i]]$inicioEvento)){
+      tmp <- eventos[[i]]
       
       if(tmp$lugar == lugarAntes){
         # Se reasigna fecha mayor
