@@ -24,7 +24,6 @@ mod_evaluacionGira_ui <- function(id){
 #' @noRd 
 mod_evaluacionGira_server <- function(input, output, session, parent_session = NULL, bd, res_auth){
   ns <- session$ns
-  # a <- tibble(abc = c(a = "Evento 1", b = "Evento 2", c= "Evento 3"), Acciones = c(a = 1, b = 2, c= 3))
   observeEvent(bd$giras,{
     aux <- bd$giras %>% filter(activo == 1) %>%
       mutate(nombre = glue::glue("{LugarInicio} {FechaInicio} - {LugarFinal} {FechaFinal}"))
@@ -36,10 +35,6 @@ mod_evaluacionGira_server <- function(input, output, session, parent_session = N
   )
   
   output$eventos <- DT::renderDT({
-    # seleccion() 
-    # a$Acciones$a <- 
-    # a$Acciones$b <- 
-    # a$Acciones$c <- HTML(input_btns(ns("evaluar"), 3, "Evaluar", icon = "edit", status = "primary"), input_btns(ns("ver"), 3, "Ver", icon = "eye", status = "info"))
     seleccion() %>% select(idEvento,nombre, lugar) %>%
       mutate(Evaluar = input_btns(ns("evaluar"), idEvento, "Evaluar", icon = "edit", status = "primary"),
              Ver  = input_btns(ns("ver"), idEvento, "Ver", icon = "eye", status = "info")

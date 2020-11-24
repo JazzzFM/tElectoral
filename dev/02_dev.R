@@ -64,12 +64,13 @@ golem::add_module( name = "investigacionAnalisis",
 golem::add_module( name = "investigacionFormularioGeneral" )
 golem::add_module( name = "investigacionFormularioDisMuestral" )
 golem::add_module( name = "investigacionFormularioIntVoto" )
-golem::add_module( name = "investigacionEncuestas" )
-golem::add_module( name = "investigacionCompartido" )
-# Comunicación
-golem::add_module( name = "comunicacion" )
-
+golem::add_module( name = "investigacionEncuestas" ) # Listado de encuestas
+golem::add_module( name = "investigacionCompartido" ) # Módulo general desde donde se muestra todo en investigación
+golem::add_module( name = "investigacionListadoIntVoto" )
+golem::add_module( name = "investigacionListadoDisMuestral" )
+golem::add_module( name = "investigacionListadoCuestionario" )
 # Cuestionario
+golem::add_module( name = "comunicacion" ) # Punto de inicio de cuestionario
 golem::add_module( name = "cuestionario_paso_1" )
 golem::add_module( name = "cuestionario_paso_2" )
 golem::add_module( name = "cuestionario_paso_3" )

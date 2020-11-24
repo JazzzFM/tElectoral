@@ -54,16 +54,16 @@ mod_investigacionFormularioGeneral_server <- function(input, output, session, bd
         activo = 1
       )
       insertBd(pool, formGeneralBd, bd = formGeneral)
-      expr = {
-        leerBd(pool, formGeneralBd)
-        shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
-        }
-      error = function(e){    
-        shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
-      }
-      warning = function(w){    
-        shinyalert::shinyalert(title = "Revise su conexión.")
-      }
+      # expr = {
+      #   leerBd(pool, formGeneralBd)
+      #   shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
+      #   }
+      # error = function(e){    
+      #   shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
+      # }
+      # warning = function(w){    
+      #   shinyalert::shinyalert(title = "Revise su conexión.")
+      # }
     }
   })
 }
