@@ -360,3 +360,27 @@ cajaResume <- function(DB, x){
     return(Graph)
   }
 }
+
+gglevantamiento <- function(BD) {
+  data <- BD %>% select(modoLevantamiento)
+  Graph <- ggplot(data, aes(x = modoLevantamiento, fill = modoLevantamiento)) + 
+           geom_bar(position = "dodge") + 
+           theme_minimal() +
+           labs(title = "Modo de Levantamiento") +
+           theme(
+            axis.title.y = element_blank(),
+            axis.title.x = element_blank(),
+            text = element_text(family = "Avenir Next", size = 20),
+            plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face="bold"),
+            axis.text.y = element_text(color = "#41657A"),
+            axis.text.x = element_text(color = "#41657A"),
+            axis.line.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            legend.title = element_blank(),
+            legend.position = "none",
+            panel.grid = element_blank())
+           
+  return(Graph)
+}

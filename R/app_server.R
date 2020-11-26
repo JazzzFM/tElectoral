@@ -24,7 +24,7 @@ app_server <- function( input, output, session ) {
   # Portada
   callModule(mod_portada_server, "portada_ui_1")
   # Investigación
-  callModule(mod_investigacionAnalisis_server, "investigacionAnalisis_ui_1")
+  callModule(mod_investigacionAnalisis_server, "investigacionAnalisis_ui_1", bd)
   callModule(mod_investigacionFormularioGeneral_server, "investigacionFormularioGeneral_ui_1", bd, res_auth, parent_session = session)
   callModule(mod_investigacionCompartido_server, "investigacionCompartido_ui_1", bd, res_auth, session)
   #callModule(mod_investigacionFormularioIntVoto_server, "investigacionFormularioIntVoto_ui_1", res_auth, session, NULL)
