@@ -73,21 +73,11 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   #Probabilidad de triunfo
   
   output$gPdt <- renderPlot({
-    # Fake data
-    # nCand <- 3 + rpois(1,2)
-    # cand <- tibble(prob = abs(rnorm(n = nCand, 18, 25))) %>% 
-    #   mutate(prob=round(100*prob/sum(prob)), 
-    #          rw=row_number(),
-    #          cand=paste("Candidato", rw))
-    # Real data
     cand <- procesamiento_graph(DB_MichEncuesta) %>%
-         group_by(candidato, colores) %>% summarise()
-    cand <- cand %>% mutate(prob = runif(1, min = 0, max = 26))  
-      
-    cand<-cand %>% arrange(desc(prob)) %>% 
-      ungroup() %>%  mutate(cand = candidato, rw = seq(1:9), prob = round(prob)) %>%
-      head(5)
-    
+            group_by(candidato, colores) %>% summarise() %>%
+            mutate(prob = runif(1, min = 0, max = 26))  %>%
+            arrange(desc(prob)) %>% ungroup() %>% 
+            mutate(cand = candidato, rw = seq(1:9), prob = round(prob)) 
     # Función
     probGanar(cand, candidato = "MORENA", 5)
     })
