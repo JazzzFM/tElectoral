@@ -13,23 +13,20 @@ mod_investigacionAnalisis_ui <- function(id){
   ns <- NS(id)
   tagList(
     # Letreros
-    fluidRow(
-      column(width = 4,
-             valueBoxOutput(ns("caja1"), width = "100%")),
-       column(width = 4,
-              valueBoxOutput(ns("caja2"), width = "100%")),
-       column(width = 4,
-              valueBoxOutput(ns("caja3"), width = "100%")),
-             ),
+    fluidRow(class="analisisValueBoxes",
+      valueBoxOutput(ns("caja1")),
+      valueBoxOutput(ns("caja2")),
+      valueBoxOutput(ns("caja3"))
+     ),
     # Gráficos
     fluidRow(
-      column(width = 12,
+      column(width = 12, class="shadowBox",
              highchartOutput(ns("intervalos")))
     ),
     fluidRow(
-      column(width = 6,
+      column(width = 6, class="shadowBox",
              plotOutput(ns("intencion"))),
-      column(width = 6,
+      column(width = 6, class="shadowBox",
              plotOutput(ns("gPdt")))
     )
   )
@@ -43,17 +40,17 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   #Letreros
   output$caja1 <- renderValueBox({
     DB_MichEncuesta %>% nrow() %>% 
-      valueBox(subtitle = "Encuestas Realizadas", icon = icon("address-book-o"), color = "light-blue")
+      valueBox(subtitle = "Encuestas Realizadas", color = "light-blue", width = 12)
   })
   output$caja2 <- renderValueBox({
     start <- datetime <- ymd_hms(now("GMT"))
     end <- ymd_hms("2021-06-06 5:21:00", tz = "GMT")
     d <- as.numeric(round(end - start)) 
-    d %>% valueBox(subtitle = "Días para la Elección", icon = icon("calendar"), color = "light-blue")
+    d %>% valueBox(subtitle = "Días para la Elección", color = "light-blue", width = 12)
   })
   output$caja3 <- renderValueBox({
     DB_MichEncuesta %>% select(fecha_final) %>% tail(1) %>%
-      valueBox(subtitle = "Fecha de Última Encuesta", icon = icon("calendar-o"), color = "light-blue")
+      valueBox(subtitle = "Fecha de Última Encuesta", color = "light-blue", width = 12)
   })
   # Probabilidad de triunfo
   # Pendiente a donde quedar
