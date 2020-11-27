@@ -32,7 +32,7 @@ mod_investigacionAnalisis_ui <- function(id){
     h3("Resultados Diseño Muestral"),
     tags$hr(),
     fluidRow(
-      column(width = 6,
+      column(width = 6, class="shadowBox",
              plotOutput(ns("levantamiento")))
     )
     
@@ -57,7 +57,7 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   })
   output$caja3 <- renderValueBox({
     f <- DB_MichEncuesta %>% select(fecha_final) %>% tail(1) 
-    f %>% valueBox(subtitle = "Fecha de Última Encuesta", icon = icon("calendar-o"), color = "light-blue")
+    f %>% valueBox(subtitle = "Fecha de Última Encuesta", color = "light-blue")
   })
   # Probabilidad de triunfo
   # Pendiente a donde quedar
