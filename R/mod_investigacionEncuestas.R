@@ -10,10 +10,9 @@
 mod_investigacionEncuestas_ui <- function(id){
   ns <- NS(id)
   tagList(
-      h3("Encuestas realizadas y por completar"),
+      h3("Registro de encuestas"),
+      p("Se muestra el listado de encuestas registradas hasta el momento."),
       tags$hr(),
-      p("Se muestran las encuestas realizadas hasta el momento y por completar los formularios restantes."),
-      h4("Encuestas"),
       DT::DTOutput(ns("encuestas"))
     )
 }
@@ -45,10 +44,12 @@ mod_investigacionEncuestas_server <- function(input, output, session, bd, parent
   observeEvent(input$disMuestral, {
     showForm$val <- 2
     idFormGeneral$val <- input$disMuestral
+    gargoyle::trigger("disMuestral")
   })
   observeEvent(input$intVoto, {
     showForm$val <- 3
     idFormGeneral$val <- input$intVoto
+    gargoyle::trigger("intencionVoto")
   })
   observeEvent(input$cuestionario, {
     showForm$val <- 4

@@ -10,7 +10,12 @@
 mod_investigacionFormularioDisMuestral_ui <- function(id){
   ns <- NS(id)
   tagList(
-    h3("Formulario de Diseño Muestral"),
+    fluidRow(
+      column(width = 6,
+             actionButton(inputId = ns("atras"), label = "Regresar al listado de intención de voto", class ="btn-default")
+      )
+    ),
+    h3("Formulario de diseño muestral "),
     tags$hr(),
     p("Llene los siguientes campos ..."),
     fluidRow(
@@ -86,7 +91,9 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
       column(width = 12,
              textAreaInput(inputId = ns("observaciones"), label = 'Observaciones', placeholder = "Respuesta libre ..."),
       ),
-      actionButton(inputId = ns("guardar"), "Guardar", class = "btn btn-definitive")
+    ),
+    fluidRow(
+      uiOutput(ns("outGuardar"))
     )
   )
 }
@@ -95,7 +102,7 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
 #'
 #' @noRd 
 
-mod_investigacionFormularioDisMuestral_server <- function(input, output, session, usuario, parent_session = NULL, showForm = NULL){
+mod_investigacionFormularioDisMuestral_server <- function(input, output, session,  bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idDMuestral = NULL){
   ns <- session$ns
   observeEvent(input$poliEtapa, {
     if(input$poliEtapa == "Sí"){
@@ -162,22 +169,57 @@ mod_investigacionFormularioDisMuestral_server <- function(input, output, session
           usuarioEdicion = NULL,
           activo = 1)
     insertBd(pool, formDisMuestralBd, bd = disMuestral)
-    # tryCatch(                      
-    #   expr = {
-    #     leerBd(pool, formDisMuestralBd)
-    #     shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
-    #     },
-    #   error = function(e){    
-    #     shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
-    #   },
-    #   warning = function(w){    
-    #     shinyalert::shinyalert(title = "Revise su conexión.")
-    #   }
-    # )
-    
+    showListadoForm$val <- 1 # Se regresa al listado
+    gargoyle::trigger("disMuestral")
     }
   })
-     
+  observeEvent(input$agregarCareo, {
+    if(validarFormularioDisMuestral(input$modoLevantamiento, input$marcoMuestral, input$numeroEntrevistas,
+                                    input$aleatoria, input$poliEtapa, input$estratificada, input$conglomerados,
+                                    input$nivelpoliEtapa, input$nivielEstratificada, input$nivielConglomerados,
+                                    input$unidadMuestral, input$nivelConfianza, input$margenError)){
+      
+      fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
+      disMuestral <- tibble::tibble(
+        idFormGeneral = 1,
+        modoLevantamiento = input$modoLevantamiento,
+        marcoMuestral = input$marcoMuestral,
+        numeroEntrevistas = input$numeroEntrevistas,
+        aleatoria = input$aleatoria,
+        poliEtapa = input$poliEtapa,
+        nivelpoliEtapa = input$nivelpoliEtapa,
+        estratificada = input$estratificada,
+        nivielEstratificada = input$nivielEstratificada,
+        conglomerados = input$conglomerados,
+        nivielConglomerados = input$nivielConglomerados,
+        unidadMuestral = input$unidadMuestral,
+        nivelConfianza = input$nivelConfianza,
+        margenError = input$margenError,
+        observaciones = input$observaciones,
+        fechaAlta = fA,
+        fechaEdicion = NULL,
+        usuarioCrea = usuario$user,
+        usuarioEdicion = NULL,
+        activo = 1)
+      insertBd(pool, formDisMuestralBd, bd = disMuestral)
+      
+    }
+  })
+  observeEvent(input$atras,{
+    showListadoForm$val <- 1
+  })
+  output$outGuardar <- renderUI({
+    if(readOnly$val == FALSE){
+      tagList(
+        column(width = 6,
+               actionButton(inputId = ns("agregarCareo"), label = "Guardar y agregar otro", class ="btn-default")
+        ),
+        column(width = 6,
+               actionButton(inputId = ns("guardar"), label = "Guardar y terminar", class ="btn-primary pull-right")
+        )
+      )
+    }
+  }) 
 }
     
 ## To be copied in the UI

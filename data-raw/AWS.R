@@ -128,7 +128,6 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_intencionVoto (
   tipoIntencionVoto VARCHAR(25),
   pregunta VARCHAR(250),
   siNoExplicacion VARCHAR(250),
-  careos INT,
   fechaAlta DATETIME,
   fechaEdicion DATETIME,
   usuarioCrea VARCHAR(100),

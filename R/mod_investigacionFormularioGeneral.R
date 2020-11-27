@@ -10,7 +10,7 @@
 mod_investigacionFormularioGeneral_ui <- function(id){
   ns <- NS(id)
   tagList(
-    h3("Formulario General"),
+    h3("Formulario general de encuestas"),
     p("Llene los siguientes campos para ..."),
     fluidRow(
       column(width = 6,
@@ -53,7 +53,18 @@ mod_investigacionFormularioGeneral_server <- function(input, output, session, bd
         usuarioEdicion = NULL,
         activo = 1
       )
-      insertBd(pool, formGeneralBd, bd = formGeneral)
+      tryCatch(
+      expr = {
+        insertBd(pool, formGeneralBd, bd = formGeneral)
+        shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
+        },
+      error = function(e){    
+        shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
+      },
+      warning = function(w){    
+        shinyalert::shinyalert(title = "Revise su conexión.")
+      }
+    )
     }
   })
 }
