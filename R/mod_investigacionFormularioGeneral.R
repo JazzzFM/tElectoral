@@ -10,7 +10,7 @@
 mod_investigacionFormularioGeneral_ui <- function(id){
   ns <- NS(id)
   tagList(
-    h3("Formulario General"),
+    h3("Formulario general de encuestas"),
     p("Llene los siguientes campos para ..."),
     fluidRow(
       column(width = 6,

@@ -229,15 +229,15 @@ $(document).on("click",".AyudasContainer button",function(){
 
 /* Formulario de intención de voto */
 $(document).on("click", 'button', function(){
-    let a = document.querySelector("select[id='investigacionFormularioIntVoto_ui_1-tipoIntVoto']");    
+    let a = document.querySelector("select[id='investigacionCompartido_ui_1-investigacionListadoIntVoto_ui_1-investigacionFormularioIntVoto_ui_1-tipoIntVoto']");    
     if(a != null){
         $(a).on("change", function(e){
     	    setColumnsIntVoto(e.currentTarget.value);
     	});
     }
 });
-$(document).on("click", 'button#investigacionFormularioIntVoto_ui_1-addFila', function(){
-    let a = document.querySelector("select[id='investigacionFormularioIntVoto_ui_1-tipoIntVoto']");    
+$(document).on("click", 'button#investigacionCompartido_ui_1-investigacionListadoIntVoto_ui_1-investigacionFormularioIntVoto_ui_1-addFila', function(){
+    let a = document.querySelector("select[id='investigacionCompartido_ui_1-investigacionListadoIntVoto_ui_1-investigacionFormularioIntVoto_ui_1-tipoIntVoto']");    
     if(a!= null)
         setColumnsIntVoto(a.value);
 });

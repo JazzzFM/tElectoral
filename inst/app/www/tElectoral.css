@@ -136,13 +136,13 @@
 /* General */
 @font-face {
   font-family: 'DIN A1';
-  src: url('webfonts/DIN Alternate Bold.ttf'); /* IE9 Compat Modes */
-  src: url('webfonts/DIN Alternate Bold.ttf')  format('truetype'); /* Safari, Android, iOS */
+  src: url('webfonts/Poppins-Light.ttf'); /* IE9 Compat Modes */
+  src: url('webfonts/Poppins-Light.ttf')  format('truetype'); /* Safari, Android, iOS */
 }
 @font-face {
   font-family: 'DIN A2';
-  src: url('webfonts/DIN Condensed Bold.ttf'); /* IE9 Compat Modes */
-  src: url('webfonts/DIN Condensed Bold.ttf')  format('truetype'); /* Safari, Android, iOS */
+  src: url('webfonts/Poppins-Bold.ttf'); /* IE9 Compat Modes */
+  src: url('webfonts/Poppins-Bold.ttf')  format('truetype'); /* Safari, Android, iOS */
 }
 .row{
   display: flex;
@@ -161,7 +161,7 @@ body{
   color: var(--m-red-color);
 }
 .wrapper .content-wrapper{
-  background-color: #fff ;
+  background-color: #fafafb ;
 }
 .skin-blue .left-side, .skin-blue .main-sidebar, .skin-blue .wrapper{
   background-color: #fff;
@@ -730,18 +730,27 @@ i.fa-chart-bar::after{
 */
 
 .small-box{
-  background-color: #fff;
   text-align: center;
   min-height: 170px;
+  background-color: #fff !important;
+  border-radius: 5px;
+  box-shadow: -1px 2px 3px 2px rgba(51,51,51,.1);
+  color: #333 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .small-box p{
   font-size: 1em;
 }
-.small-box p:first-child{
+.small-box h3{
+  font-weight: normal !important;
+}
+/*.small-box p:first-child{
   font-size: 2.2em;
   font-weight: bold;
   margin: 0;
-}
+}*/
 
 /* End content */
 
@@ -1610,3 +1619,22 @@ width: calc(100% / 2) !important;
 .four-columns .form-group {
   height: 54px;
 }
+/* Candidatos */
+.candContainer .input-group{
+  display: flex;
+}
+
+/* End Candidatos*/
+
+/* Analisis de investigación */
+.analisisValueBoxes [class*='col-']{
+  float: none;
+}
+.shadowBox > * {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: -1px 2px 3px 2px rgba(51,51,51,.1);
+    color: #333 !important;
+    margin-bottom: 17px
+}
+/* End análisis de investigación */

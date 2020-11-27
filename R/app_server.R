@@ -6,7 +6,7 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   # List the first level callModules here
-  
+  gargoyle::init("intencionVoto")
   # Login
   res_auth <- shinymanager::secure_server(
     check_credentials = shinymanager::check_credentials(db = tibble(user ="admin",
@@ -14,12 +14,13 @@ app_server <- function( input, output, session ) {
   )
   
   bd <- reactiveValues(
-    eventos = leerBd(pool,eventosBd),
-    giras = leerBd(pool,girasBd),
-    evaluacionEventos = leerBd(pool,evaluacionEventosBd),
-    encuestas = leerBd(pool, formGeneralBd),
-    listadoDisMuestral = leerBd(pool, formDisMuestralBd),
-    listadoIntVoto = leerBd(pool, formIntVotoBd)
+    eventos = leerBd(pool,eventosBd) %>% collect(),
+    giras = leerBd(pool,girasBd) %>% collect(),
+    evaluacionEventos = leerBd(pool,evaluacionEventosBd) %>% collect(),
+    encuestas = leerBd(pool, formGeneralBd) %>% collect(),
+    listadoDisMuestral = leerBd(pool, formDisMuestralBd),# %>% collect(),
+    listadoIntVoto = leerBd(pool, formIntVotoBd), #%>% collect(),
+    intVotoRegistro = leerBd(pool, formIntVotoRegistroBd) #%>% collect()# Se traen candidatos
   )
   # Portada
   callModule(mod_portada_server, "portada_ui_1")
