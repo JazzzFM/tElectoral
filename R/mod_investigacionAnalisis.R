@@ -7,7 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-#' @import dplyr ggplot2 highcharter tidyr
+#' @import dplyr ggplot2 highcharter tidyr ggrepel
 
 mod_investigacionAnalisis_ui <- function(id){
   ns <- NS(id)
@@ -28,14 +28,21 @@ mod_investigacionAnalisis_ui <- function(id){
              plotOutput(ns("intencion"))),
       column(width = 6, class="shadowBox",
              plotOutput(ns("gPdt")))
+    ),
+    h3("Resultados Diseño Muestral"),
+    tags$hr(),
+    fluidRow(
+      column(width = 6,
+             plotOutput(ns("levantamiento")))
     )
+    
   )
 }
 
 #' investigacionAnalisis Server Function
 #'
-#' @noRd 
-mod_investigacionAnalisis_server <- function(input, output, session){
+#' @noRd
+mod_investigacionAnalisis_server <- function(input, output, session, bd){
   ns <- session$ns
   #Letreros
   output$caja1 <- renderValueBox({
@@ -49,8 +56,8 @@ mod_investigacionAnalisis_server <- function(input, output, session){
     d %>% valueBox(subtitle = "Días para la Elección", color = "light-blue", width = 12)
   })
   output$caja3 <- renderValueBox({
-    DB_MichEncuesta %>% select(fecha_final) %>% tail(1) %>%
-      valueBox(subtitle = "Fecha de Última Encuesta", color = "light-blue", width = 12)
+    f <- DB_MichEncuesta %>% select(fecha_final) %>% tail(1) 
+    f %>% valueBox(subtitle = "Fecha de Última Encuesta", icon = icon("calendar-o"), color = "light-blue")
   })
   # Probabilidad de triunfo
   # Pendiente a donde quedar
@@ -62,7 +69,7 @@ mod_investigacionAnalisis_server <- function(input, output, session){
   output$intervalos <- renderHighchart({
     # real data
     bd <- procesamiento_graph(DB_MichEncuesta)
-    hPollofPolls(bd)
+    hPollofPolls2(bd)
   })
   # Probabilidad de triunfo
   output$intencion <- renderPlot({
@@ -79,22 +86,14 @@ mod_investigacionAnalisis_server <- function(input, output, session){
             arrange(desc(prob)) %>% ungroup() %>% 
             mutate(cand = candidato, rw = seq(1:9), prob = round(prob)) 
     # Función
-    probGanar(cand, candidato = "MORENA", 5)
+    probGanarOld(cand, candidato = "MORENA", 5)
     })
   
-  # output$votopopu <- renderPlot({
-  #   # Temporal: Fake data!!!!!!
-  #   bd <- tibble(cand1 = rnorm(n = 30, sd = .06, mean = .3),
-  #                cand2 = rnorm(n = 30, sd = .05, mean = .20),
-  #                cand3 = rnorm(n = 30, sd = .06, mean = .10),
-  #                cand4 = rnorm(n = 30, sd = .04, mean = .25),
-  #                fecha = seq(from = as.Date("2020/12/01"),as.Date("2021/06/25"), by = "week" )) %>%
-  #     gather(candidato, votacion, cand1:cand4) %>%
-  #     mutate(min = votacion-rnorm(mean = .03, sd = .01, n =120),
-  #            max = votacion+rnorm(mean = .03, sd = .01, n =120))
-  #   
-  #   hVotoPopu(bd)
-  # })
+  output$levantamiento <- renderPlot({
+    # Función
+    gglevantamiento(bd$listadoDisMuestral)
+  })
+  
 }
 ## To be copied in the UI
 # 

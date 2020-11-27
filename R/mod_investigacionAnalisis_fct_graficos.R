@@ -111,17 +111,61 @@ probGanar <- function(bd, candidato, nCand){
   c <- bd %>% 
     filter(cand == {{candidato}})
   
+  bd <- bd %>% filter(cand != {{candidato}}) %>% head(4) %>%
+        union(c) %>% data.frame(x = 1:5 )  %>% arrange(prob)
+  
+  Graph <- ggplot(bd, aes(x = x, y = 0, xend = x, yend = prob, fill = candidato, colour = candidato)) +
+    # Marcas
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25), alpha = 0.2, fill = "#C5C3C4")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50), alpha = 0.4, fill = "#C5C3C4")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75), alpha = 0.6, fill = "#C5C3C4")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100), alpha = 0.8, fill = "#C5C3C4")+
+    scale_fill_manual(values = c("#C5C3C4", "#C5C3C4", "#C5C3C4", "#C5C3C4", "#C5C3C4")) +
+    # Indicadores
+    #geom_rect(aes(xmin=rw, xmax=rw+.8, ymin=0, ymax=prob, fill=candidato), size=.3,color="white") +
+    geom_segment(lineend = "round", linejoin = "round", size = 3, arrow = arrow(length = unit(.0001, "inches"))) +
+    scale_color_manual(values = c("#600B10", "#00539B", "#FAB855", "#EB0E0E", "#199121", "#C5C3C4")) +
+    coord_polar(theta = "y") +
+    geom_text(aes(x=-nCand, y=0, label=scales::percent(pCand/100)), size=8) +
+   labs(title = "Probabilidad de triunfo")+
+   xlim(c(-nCand,nCand+1))+
+   ylim(c(0,100))+
+   tema_probGanar() +
+    theme(
+      text = element_text(family = "Avenir Next", size = 20),
+      plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face="bold"),
+      axis.text.y = element_blank(),
+      axis.line.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      legend.title = element_blank(),
+      panel.grid = element_blank()
+    )
+  
+  return(Graph)
+}
+
+probGanarOld <- function(bd, candidato, nCand){
+  
+  pCand <- bd %>% 
+    filter(cand == {{candidato}}) %>% 
+    pull("prob") 
+  
+  c <- bd %>% 
+    filter(cand == {{candidato}})
+  
   bd <- bd %>% filter(cand != {{candidato}}) %>% head(4)
   bd <- union(c, bd)
-
+  
   # browser()
   g <- bd %>% 
     ggplot()+
     # Marcas
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25),alpha=.8, fill="#8DB1AB")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50),alpha=.5, fill="#ADECFF")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75),alpha=.5, fill="#0081A7")+
-    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100),alpha=.8, fill="#587792")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=0, ymax=25), alpha = 0.05, fill = "#C5C3C4")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=25, ymax=50), alpha = 0.10, fill = "#C5C3C4")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=50, ymax=75), alpha = 0.15, fill = "#C5C3C4")+
+    geom_rect(aes(xmin=0, xmax=nCand+1, ymin=75, ymax=100), alpha = 0.20, fill = "#C5C3C4")+
     # Indicadores
     geom_rect(aes(xmin=rw, xmax=rw+.8, ymin=0, ymax=prob, fill=candidato), size=.3,color="white") +
     coord_polar(theta = "y")+
@@ -215,6 +259,68 @@ hPollofPolls <- function(DB){
   return(Graph)
 }
 
+hPollofPolls2 <- function(DB){
+  # Funciones para volver al español
+  hcoptslang <- getOption("highcharter.lang")
+  hcoptslang$weekdays<- c("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
+  hcoptslang$shortMonths <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
+  hcoptslang$months <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+  hcoptslang$thousandsSep <- c(",")
+  options(highcharter.lang = hcoptslang)
+  
+  # Formato redondeado
+  paleta <- tibble(candidato = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
+                                 "PRD", "PRI", "PT", "PVEM"),
+                   colores = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
+                               "#FAB855", "#EB0E0E", "#D63131", "#199121")) %>%  
+    arrange(candidato)
+  DB <-DB %>% mutate(votacion_r = round(votacion*100),
+                     votacion_min = round(min*100),
+                     votacion_max = round(max*100),
+                     votacion = votacion *100,
+                     min = min * 100,
+                     max = max * 100) %>% 
+    # na.omit() %>% 
+    left_join(paleta) 
+  # Tooltip
+  tt <- tooltip_table(c("{point.series.name}: "),
+                      c("{point.votacion_r}%"))
+  # browser()
+  # Gráfica
+  Graph <- DB %>% 
+    hchart(hcaes(x = fecha,  low = 0, 
+                 high = votacion, group = candidato),
+           type = "arearange", enableMouseTracking= F, fillOpacity = 0.15)%>% 
+    hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>%
+    # hc_subtitle(text = "Data from Different Survey Houses") %>% 
+    hc_add_series(data = DB,
+                  hcaes(x = fecha, y = votacion,
+                        group = candidato),
+                  type = "line") %>% 
+    hc_colors(colors = paleta$colores) %>% 
+    hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
+    hc_xAxis(crosshair = T, 
+             labels = list(step = 2,style = list(fontSize = "18px",color = "#13384D")),
+             title = list(text = "Fecha", style = list( fontSize = "16px", color = "#41657A"))) %>% 
+    hc_plotOptions(line = list(colorByPoint = F, showInLegend = F),
+                   arearange = list(lineWidth = 0)) %>% 
+    hc_tooltip(sort = F,
+               shared = T,
+               borderWidth= 0,
+               split = T,
+               pointFormat = tt, 
+               headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
+               style = list(fontSize = "16px", color = "#41657A"), 
+               useHTML = TRUE) %>%
+    # hc_add_theme(hc_theme_hcrt()) %>%
+    hc_legend(enabled = T) %>% 
+    # hc_colors(DB$colores) %>% 
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"),zoomType = "x")
+  
+  
+  return(Graph)
+}
+
 iVotoBarras <- function(DB){
 
   paleta <- tibble(candidato = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
@@ -227,25 +333,33 @@ iVotoBarras <- function(DB){
     mutate(label = sprintf("%1.1f%%", voto)) %>% 
     na.omit() %>%  left_join(paleta)
   
-  Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = colores))+
-    geom_bar(stat = "identity", width = .7) + 
-    scale_fill_identity()+
-    coord_flip() + theme_minimal() +
-    labs(title = "Intención de Voto", subtitle = "(2020)", caption = "",
-         y = "Porcentaje de voto", x = "candidatos") +
-    geom_text(aes(label = label, hjust = 1.2), color = "white")+
-    theme(
-          axis.title.y = element_blank(),
-          text = element_text(family = "Avenir Next", size = 20),
-          plot.title = element_text(size = 22, colour =  "#13384D",
-                                    hjust = 0, face="bold"),
-          axis.text.y = element_text(color = "#41657A"),
-          axis.text.x = element_text(color = "#41657A"),
-          axis.line.x = element_blank(),
-          panel.grid.major.y = element_blank(),
-          legend.title = element_blank(),
-          legend.position = "none",
-          panel.grid = element_blank()) 
+  barras <- data.frame(barras %>% arrange(voto), y = 1:5)
+  
+  Annotations <- data.frame(x = barras %>% select(voto), y = 1:5, barras %>% select(label))
+  candidates <- data.frame(barras %>% select(candidato), y = 1:5, x = c(3.0, 0.7, 0.7, 0.7, 1.5))
+  
+  Graph <- ggplot(barras, aes(x = 0, y = y, xend = voto, yend = y, fill = colores, colour = colores)) +
+              geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
+              annotate("text", label = Annotations$label, x = Annotations$voto-2.3, y = Annotations$y, size = 6, colour = "white") +
+              scale_fill_identity() + theme_minimal() +
+              labs(title = "Intención de Voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
+              annotate("text", label = candidates$candidato, x = candidates$x, y = candidates$y + 0.3, size = 5, colour = "#8b878d") +
+              scale_color_manual(values= c("#17418A", "#751438", "#925AAD", "#EB0E0E", "#FAB855", "#925AAD")) +
+              theme(
+                axis.title.y = element_blank(),
+                axis.title.x = element_text(color = "#8b878d"),
+                text = element_text(family = "Avenir Next", size = 20),
+                plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+                axis.text.y = element_blank(),
+                axis.text.x = element_text(family = "Avenir Next", size = 15),
+                axis.line.x = element_blank(),
+                panel.grid.major.y = element_blank(),
+                legend.title = element_blank(),
+                legend.position = "none",
+                panel.grid.major.x = element_blank(),
+                panel.grid = element_blank())
   
   return(Graph)
 }
@@ -358,4 +472,28 @@ cajaResume <- function(DB, x){
 
     return(Graph)
   }
+}
+
+gglevantamiento <- function(BD) {
+  data <- BD %>% select(modoLevantamiento)
+  Graph <- ggplot(data, aes(x = modoLevantamiento, fill = modoLevantamiento)) + 
+           geom_bar(position = "dodge") + 
+           theme_minimal() +
+           labs(title = "Modo de Levantamiento") +
+           theme(
+            axis.title.y = element_blank(),
+            axis.title.x = element_blank(),
+            text = element_text(family = "Avenir Next", size = 20),
+            plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face="bold"),
+            axis.text.y = element_text(color = "#41657A"),
+            axis.text.x = element_text(color = "#41657A"),
+            axis.line.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            legend.title = element_blank(),
+            legend.position = "none",
+            panel.grid = element_blank())
+           
+  return(Graph)
 }
