@@ -44,7 +44,7 @@ mod_investigacionListadoDisMuestral_server <- function(input, output, session, b
   
   
   seleccion <- reactiveVal(NULL)
-  observeEvent(c(gargoyle::watch("intencionVoto")), {
+  observeEvent(c(gargoyle::watch("disMuestral")), {
     seleccion(bd$listadoDisMuestral %>% filter(activo == 1 & idFormGeneral == !! idFormGeneral$val) %>% collect()) 
   })
   output$listadoDisMuestral <- DT::renderDT({
@@ -81,7 +81,7 @@ mod_investigacionListadoDisMuestral_server <- function(input, output, session, b
                            callbackR = function(x) if(x) {
                              c1 <- glue::glue("idDMuestral = {input$eliminar}")
                              disableBd(pool = pool, nombre = formDisMuestralBd, condition = c1)
-                             gargoyle::trigger("intencionVoto")
+                             gargoyle::trigger("disMuestral")
                            })
   })
 }

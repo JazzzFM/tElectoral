@@ -32,7 +32,7 @@ mod_investigacionAnalisis_ui <- function(id){
     h3("Resultados Diseño Muestral"),
     tags$hr(),
     fluidRow(
-      column(width = 6,
+      column(width = 6, class="shadowBox",
              plotOutput(ns("levantamiento")))
     )
     

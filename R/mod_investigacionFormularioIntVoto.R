@@ -236,7 +236,7 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
       updatePickerInput(session = parent_session, inputId = ns("tipoIntVoto"), selected = infoIntencion()$tipoIntencionVoto)
       updateTextInput(session = parent_session, inputId = ns("pregunta"), value = infoIntencion()$pregunta)
       updateTextInput(session = parent_session, inputId = ns("noSabeNoContesto"), value = infoIntencion()$siNoExplicacion)
-      disable(id = ns("tipoIntVoto"), selector = paste0("#",ns("tipoIntVoto")))
+      disable(id = "tipoIntVoto")
       
       # Inserción de filas
       clase <- ""

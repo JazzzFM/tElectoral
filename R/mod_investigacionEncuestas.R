@@ -44,6 +44,7 @@ mod_investigacionEncuestas_server <- function(input, output, session, bd, parent
   observeEvent(input$disMuestral, {
     showForm$val <- 2
     idFormGeneral$val <- input$disMuestral
+    gargoyle::trigger("disMuestral")
   })
   observeEvent(input$intVoto, {
     showForm$val <- 3
