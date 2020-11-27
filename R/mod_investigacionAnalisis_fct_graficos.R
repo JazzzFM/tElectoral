@@ -269,11 +269,8 @@ hPollofPolls2 <- function(DB){
   options(highcharter.lang = hcoptslang)
   
   # Formato redondeado
-  paleta <- tibble(candidato = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
-                                 "PRD", "PRI", "PT", "PVEM"),
-                   colores = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
-                               "#FAB855", "#EB0E0E", "#D63131", "#199121")) %>%  
-    arrange(candidato)
+  paleta <- tibble(candidato = c("MORENA", "PAN", "PRD", "PRI"),
+                   colores = c("#751438", "#17418A","#ED6B40", "#EB0E0E")) %>% arrange(candidato)
   DB <-DB %>% mutate(votacion_r = round(votacion*100),
                      votacion_min = round(min*100),
                      votacion_max = round(max*100),

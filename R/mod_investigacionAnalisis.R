@@ -56,8 +56,11 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
     d %>% valueBox(subtitle = "Días para la Elección", color = "light-blue", width = 12)
   })
   output$caja3 <- renderValueBox({
-    f <- DB_MichEncuesta %>% select(fecha_final) %>% tail(1) 
-    f %>% valueBox(subtitle = "Fecha de Última Encuesta", icon = icon("calendar-o"), color = "light-blue")
+    Sys.setlocale(locale = "es_MX.utf8")
+    DB_MichEncuesta %>% select(fecha_final) %>% tail(1) 
+    dmy(f) %>% format("%d %B %Y")%>%
+      valueBox(subtitle = "Fecha de Última Encuesta",
+               icon = icon("calendar-o"), color = "light-blue")
   })
   # Probabilidad de triunfo
   # Pendiente a donde quedar
@@ -68,7 +71,8 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   # Prueba
   output$intervalos <- renderHighchart({
     # real data
-    bd <- procesamiento_graph(DB_MichEncuesta)
+    bd <- procesamiento_graph(DB_MichEncuesta) %>%
+      filter(!candidato %in% c("PVEM", "PES", "PT", "MC", "INDEPENDIENTE"))
     hPollofPolls2(bd)
   })
   # Probabilidad de triunfo
