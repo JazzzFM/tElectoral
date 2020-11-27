@@ -227,26 +227,33 @@ iVotoBarras <- function(DB){
     mutate(label = sprintf("%1.1f%%", voto)) %>% 
     na.omit() %>%  left_join(paleta)
   
-  Graph <- ggplot(barras, mapping = aes(x = forcats::fct_reorder(candidato,voto), y = voto, fill = colores))+
-    geom_bar(stat = "identity", width = .7) + 
-    scale_fill_identity()+
-    coord_flip() + theme_minimal() +
-    labs(title = "Intención de Voto", subtitle = "(2020)", caption = "",
-         y = "Porcentaje de voto", x = "candidatos") +
-    geom_text(aes(label = label, hjust = 1.2), color = "white")+
-    theme(
-          axis.title.y = element_blank(),
-          text = element_text(family = "Avenir Next", size = 20),
-          plot.title = element_text(size = 22,
-                                    colour =  "#13384D",
-                                    hjust = 0, face="bold"),
-          axis.text.y = element_text(color = "#41657A"),
-          axis.text.x = element_text(color = "#41657A"),
-          axis.line.x = element_blank(),
-          panel.grid.major.y = element_blank(),
-          legend.title = element_blank(),
-          legend.position = "none",
-          panel.grid = element_blank()) 
+  barras <- data.frame(barras %>% arrange(voto), y = 1:5)
+  
+  Annotations <- data.frame(x = barras %>% select(voto), y = 1:5, barras %>% select(label))
+  candidates <- data.frame(barras %>% select(candidato), y = 1:5, x = c(3.0, 0.7, 0.7, 0.7, 1.5))
+  
+  Graph <- ggplot(barras, aes(x = 0, y = y, xend = voto, yend = y, fill = colores, colour = colores)) +
+              geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
+              annotate("text", label = Annotations$label, x = Annotations$voto-2.3, y = Annotations$y, size = 6, colour = "white") +
+              scale_fill_identity() + theme_minimal() +
+              labs(title = "Intención de Voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
+              annotate("text", label = candidates$candidato, x = candidates$x, y = candidates$y + 0.3, size = 5, colour = "#8b878d") +
+              scale_color_manual(values= c("#17418A", "#751438", "#925AAD", "#EB0E0E", "#FAB855", "#925AAD")) +
+              theme(
+                axis.title.y = element_blank(),
+                axis.title.x = element_text(color = "#8b878d"),
+                text = element_text(family = "Avenir Next", size = 20),
+                plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+                axis.text.y = element_blank(),
+                axis.text.x = element_text(family = "Avenir Next", size = 15),
+                axis.line.x = element_blank(),
+                panel.grid.major.y = element_blank(),
+                legend.title = element_blank(),
+                legend.position = "none",
+                panel.grid.major.x = element_blank(),
+                panel.grid = element_blank())
   
   return(Graph)
 }

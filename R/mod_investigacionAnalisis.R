@@ -7,7 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-#' @import dplyr ggplot2 highcharter tidyr
+#' @import dplyr ggplot2 highcharter tidyr ggrepel
 
 mod_investigacionAnalisis_ui <- function(id){
   ns <- NS(id)
