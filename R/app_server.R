@@ -6,7 +6,7 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   # List the first level callModules here
-  gargoyle::init("intencionVoto")
+  gargoyle::init("intencionVoto","disMuestral")
   # Login
   res_auth <- shinymanager::secure_server(
     check_credentials = shinymanager::check_credentials(db = tibble(user ="admin",
