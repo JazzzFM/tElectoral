@@ -416,6 +416,7 @@ iVotoBarras <- function(DB){
      barras <- data.frame(barras %>% arrange(voto), y = 1:5)
    
   Annotations <- data.frame(x = barras %>% select(voto), y = 1:5, barras %>% select(label))
+  #mejorar esto con un left_join
   candidates <- data.frame(barras %>% select(candidato), y = 1:5, x = c(2.0, 3.0, 0.7, 0.7, 1.5))
 
   Graph <- ggplot(barras, aes(x = 0, y = y, xend = voto, yend = y, fill = colores, colour = colores)) +
@@ -439,7 +440,8 @@ iVotoBarras <- function(DB){
                 legend.title = element_blank(),
                 legend.position = "none",
                 panel.grid.major.x = element_blank(),
-                panel.grid = element_blank())
+                panel.grid = element_blank()
+                )
 
   return(Graph)
 }

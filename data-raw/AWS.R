@@ -178,4 +178,24 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_disenoMuestral (
 );" )
 #DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_disenoMuestral")
 
+#Candidatos y Colores Oficiales
+
+DBI::dbExecute(pool, "CREATE TABLE coloresOficiales (
+  idColor INT AUTO_INCREMENT PRIMARY KEY,
+  colorCandidato VARCHAR(50) NOT NULL,
+  colorHex VARCHAR(50) NOT NULL,
+  colorRgb VARCHAR(50) NOT NULL,
+  opacity VARCHAR(50),
+  fechaAlta DATETIME
+  );" )
+
+DBI::dbExecute(pool, "CREATE TABLE partidoCandidato (
+  idPartido INT AUTO_INCREMENT PRIMARY KEY,
+  idColor INT NOT NULL,
+  nombrePartido VARCHAR(50) NOT NULL,
+  nombreCandidato VARCHAR(50) NOT NULL,   
+  CONSTRAINT FK_PartidoColor FOREIGN KEY (idColor) REFERENCES coloresOficiales(idColor) 
+  );" )
+
+
 # usethis::use_data(AWS, overwrite = TRUE)

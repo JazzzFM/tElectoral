@@ -7,7 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-#' @import dplyr ggplot2 highcharter tidyr 
+#' @import dplyr ggplot2 highcharter tidyr shinycssloaders
 
 mod_investigacionAnalisis_ui <- function(id){
   ns <- NS(id)
@@ -21,21 +21,27 @@ mod_investigacionAnalisis_ui <- function(id){
     # Gráficos
     fluidRow(
       column(width = 12, class="shadowBox",
-             highchartOutput(ns("intervalos")))
+             shinycssloaders::withSpinner(highchartOutput(ns("intervalos"))
+                                          ))
     ),
     fluidRow(
       column(width = 6, class="shadowBox",
-             plotOutput(ns("intencion"))),
+             shinycssloaders::withSpinner(
+               plotOutput(ns("intencion"))
+               )),
       column(width = 6, class="shadowBox",
-             plotOutput(ns("gPdt")))
+             shinycssloaders::withSpinner(
+             plotOutput(ns("gPdt"))
+             ))
     ),
     h3("Resultados Diseño Muestral"),
     tags$hr(),
     fluidRow(
       column(width = 6, class="shadowBox",
-             plotOutput(ns("levantamiento")))
+             shinycssloaders::withSpinner(
+               plotOutput(ns("levantamiento"))
+               ))
     )
-    
   )
 }
 
