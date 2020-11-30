@@ -416,7 +416,7 @@ iVotoBarras <- function(DB){
      barras <- data.frame(barras %>% arrange(voto), y = 1:5)
    
   Annotations <- data.frame(x = barras %>% select(voto), y = 1:5, barras %>% select(label))
-  candidates <- data.frame(barras %>% select(candidato), y = 1:5, x = c(3.0, 0.7, 0.7, 0.7, 1.5))
+  candidates <- data.frame(barras %>% select(candidato), y = 1:5, x = c(2.0, 3.0, 0.7, 0.7, 1.5))
 
   Graph <- ggplot(barras, aes(x = 0, y = y, xend = voto, yend = y, fill = colores, colour = colores)) +
               geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
