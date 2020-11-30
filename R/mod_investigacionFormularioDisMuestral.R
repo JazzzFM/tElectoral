@@ -170,7 +170,7 @@ mod_investigacionFormularioDisMuestral_server <- function(input, output, session
           activo = 1)
     insertBd(pool, formDisMuestralBd, bd = disMuestral)
     showListadoForm$val <- 1 # Se regresa al listado
-    gargoyle::trigger("intencionVoto")
+    gargoyle::trigger("disMuestral")
     }
   })
   observeEvent(input$agregarCareo, {
