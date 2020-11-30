@@ -53,6 +53,7 @@ usethis::use_package("lubridate")
 usethis::use_package("sf")
 usethis::use_package("pool")
 usethis::use_package("RMariaDB")
+usethis::use_package("gargoyle")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
