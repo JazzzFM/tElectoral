@@ -46,7 +46,8 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   ns <- session$ns
   #Letreros
   output$caja1 <- renderValueBox({
-    DB_MichEncuesta %>% nrow() %>% 
+    #DB_MichEncuesta %>% nrow() %>% 
+    leerBd(pool, formGeneralBd) %>% collect() %>% nrow() %>% 
       valueBox(subtitle = "Encuestas Realizadas", color = "light-blue", width = 12)
   })
   output$caja2 <- renderValueBox({
@@ -57,8 +58,11 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   })
   output$caja3 <- renderValueBox({
     Sys.setlocale(locale = "es_MX.utf8")
-    DB_MichEncuesta %>% select(fecha_final) %>% tail(1) 
-    dmy(f) %>% format("%d %B %Y")%>%
+    #DB_MichEncuesta %>% select(fecha_final) %>% tail(1) 
+    f <- leerBd(pool, formGeneralBd) %>%
+         collect() %>% pull(fechaAlta) %>%
+         tail(1)
+    as.Date(f) %>% format("%d de %B, %Y") %>% 
       valueBox(subtitle = "Fecha de Última Encuesta",
                icon = icon("calendar-o"), color = "light-blue")
   })

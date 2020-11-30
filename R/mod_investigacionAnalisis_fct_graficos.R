@@ -69,6 +69,60 @@ procesamiento_graph <- function(DB){
   return(BB)
 }
 
+procesamientoFormularios <- function(DB) {
+  
+  BB <- DB %>% select(fechaAlta, partido, resultado) %>% 
+    mutate(fecha = as.Date(fechaAlta),
+           candidato = partido,
+           voto = as.double(resultado),
+           votacion = as.double(resultado)/100) %>%
+    group_by(fecha, candidato) %>% 
+    summarise(across(where(is.numeric), sum, na.rm=TRUE)) %>% 
+    ungroup()
+  
+  BB <- BB %>% mutate(fecha = ymd(fecha))
+  
+  X <- BB %>% group_by(fecha) %>%
+    summarise(across(where(is.numeric), sum, .names ="Tot_{col}", na.rm=TRUE)) %>%
+    ungroup() %>% na.omit()
+
+  BB <- BB %>%
+    full_join(y = X, by = "fecha")
+
+  PROM <- BB %>% group_by(fecha) %>%
+    summarise(across(c(where(is.numeric), -Tot_voto), mean, .names ="prom_r_{col}", na.rm=TRUE)) %>%
+    ungroup() %>% na.omit()
+
+  BB <- BB %>%
+    full_join(y = PROM, by = "fecha")
+
+  BB <- BB %>% mutate(votacion = voto/Tot_voto,
+                      prom_r_voto = prom_r_voto/Tot_voto,
+                      sigma = (votacion - prom_r_voto)^2)
+
+  Vari <- BB %>% group_by(fecha) %>%
+    summarise(across(sigma, sum, .names ="var", na.rm=TRUE)) %>%
+    ungroup() %>% na.omit()
+
+  BB <- BB %>%
+    full_join(y = Vari, by = "fecha")
+
+  BB <- BB %>% mutate(min = votacion - var/sqrt(50),
+                      max = votacion + var/sqrt(50))
+
+  BB <- BB %>% arrange(fecha)
+
+  BAUX = tibble(candidato = c("PRI", "PAN", "MORENA", "PRD", "PES", "PVEM",
+                              "PT", "MC", "INDEPENDIENTE"),
+                colores = c("#00A453", "#00539B", "#600B10", "#FED90E",
+                            "#7030A0", "#FD2017", "#00B83A", "#F05606",
+                            "#E29578"))
+
+  BB <- BB %>% full_join(y = BAUX, by = "candidato") %>% na.omit()
+  
+  return(BB)
+}
+
 # Temas
 tema_intCred <- function(){
   fuente <- "Georgia"   
@@ -270,8 +324,10 @@ hPollofPolls2 <- function(DB){
   
   # Formato redondeado
   paleta <- tibble(candidato = c("MORENA", "PAN", "PRD", "PRI"),
-                   colores = c("#751438", "#17418A","#ED6B40", "#EB0E0E")) %>% arrange(candidato)
-  DB <-DB %>% mutate(votacion_r = round(votacion*100),
+                   colores = c("#751438", "#17418A","#ED6B40", "#EB0E0E")) %>%
+            arrange(candidato)
+  
+  DB <- bd %>% mutate(votacion_r = round(votacion*100),
                      votacion_min = round(min*100),
                      votacion_max = round(max*100),
                      votacion = votacion *100,
@@ -279,10 +335,27 @@ hPollofPolls2 <- function(DB){
                      max = max * 100) %>% 
     # na.omit() %>% 
     left_join(paleta) 
+  
+  ################################################
+  # juntar con procesamiento de formularios
+  D <- leerBd(pool, formIntVotoRegistroBd) %>% collect()
+  DBf <- procesamientoFormularios(D)
+  
+  DBf <- DBf %>% mutate(votacion_r = round(votacion*100),
+                      votacion_min = round(min*100),
+                      votacion_max = round(max*100),
+                      votacion = votacion *100,
+                      min = min * 100,
+                      max = max * 100) %>% 
+                      left_join(paleta)
+  
+  #DB <- union(DB, DBf)
+  
+  #################################################
   # Tooltip
   tt <- tooltip_table(c("{point.series.name}: "),
                       c("{point.votacion_r}%"))
-  # browser()
+
   # Gráfica
   Graph <- DB %>% 
     hchart(hcaes(x = fecha,  low = 0, 
@@ -319,22 +392,32 @@ hPollofPolls2 <- function(DB){
 }
 
 iVotoBarras <- function(DB){
-
   paleta <- tibble(candidato = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
                                  "PRD", "PRI", "PT", "PVEM"),
                    colores = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
                                "#FAB855", "#EB0E0E", "#D63131", "#199121")) %>%  arrange(candidato)
-  # browser()
-  barras <- DB %>% group_by(candidato)%>%
-    summarise(voto = mean(votacion)*100) %>% 
-    mutate(label = sprintf("%1.1f%%", voto)) %>% 
-    na.omit() %>%  left_join(paleta)
+    
+    DB <- DB %>% select(candidato, votacion)
   
-  barras <- data.frame(barras %>% arrange(voto), y = 1:5)
-  
+    DBformulario <- leerBd(pool, formIntVotoRegistroBd) %>%
+                    collect() %>% 
+                    select(partido, resultado) %>% 
+                    mutate(candidato = partido,
+                           votacion = as.double(resultado)/100) %>%
+                    select(candidato, votacion)
+    
+     barras <- union(DB, DBformulario)
+    
+     barras <-  barras %>% group_by(candidato)%>%
+     summarise(voto = mean(votacion)*100) %>% 
+     mutate(label = sprintf("%1.1f%%", voto)) %>% 
+     left_join(paleta) %>% na.omit()
+     
+     barras <- data.frame(barras %>% arrange(voto), y = 1:5)
+   
   Annotations <- data.frame(x = barras %>% select(voto), y = 1:5, barras %>% select(label))
   candidates <- data.frame(barras %>% select(candidato), y = 1:5, x = c(3.0, 0.7, 0.7, 0.7, 1.5))
-  
+
   Graph <- ggplot(barras, aes(x = 0, y = y, xend = voto, yend = y, fill = colores, colour = colores)) +
               geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
               annotate("text", label = Annotations$label, x = Annotations$voto-2.3, y = Annotations$y, size = 6, colour = "white") +
@@ -357,7 +440,7 @@ iVotoBarras <- function(DB){
                 legend.position = "none",
                 panel.grid.major.x = element_blank(),
                 panel.grid = element_blank())
-  
+
   return(Graph)
 }
 
