@@ -327,7 +327,7 @@ hPollofPolls2 <- function(DB){
                    colores = c("#751438", "#17418A","#ED6B40", "#EB0E0E")) %>%
             arrange(candidato)
   
-  DB <- bd %>% mutate(votacion_r = round(votacion*100),
+  DB <- DB %>% mutate(votacion_r = round(votacion*100),
                      votacion_min = round(min*100),
                      votacion_max = round(max*100),
                      votacion = votacion *100,
@@ -338,18 +338,18 @@ hPollofPolls2 <- function(DB){
   
   ################################################
   # juntar con procesamiento de formularios
-  D <- leerBd(pool, formIntVotoRegistroBd) %>% collect()
-  DBf <- procesamientoFormularios(D)
   
-  DBf <- DBf %>% mutate(votacion_r = round(votacion*100),
+   D <- leerBd(pool, formIntVotoRegistroBd) %>% collect()
+   DBf <- procesamientoFormularios(D)
+   DBf <- DBf %>% mutate(votacion_r = round(votacion*100),
                       votacion_min = round(min*100),
                       votacion_max = round(max*100),
-                      votacion = votacion *100,
+                      votacion = votacion*100,
                       min = min * 100,
-                      max = max * 100) %>% 
+                      max = max * 100) %>%
                       left_join(paleta)
-  
-  #DB <- union(DB, DBf)
+  DBf <- DBf %>% select(names(DB))
+  DB <- union(DB, DBf) %>% filter(!votacion %in% c(100.000000))
   
   #################################################
   # Tooltip
