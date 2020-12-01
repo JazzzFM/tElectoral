@@ -122,7 +122,7 @@
   --gradient-button-definitive: linear-gradient(107deg, rgba(189,199,51,1) 30%, rgba(157,151,27,1) 88%); */
   
   /* DEGRADADOS PRI */
-  --gray-third: #df5252;
+  --gray-third: #B5261E;
   --button-definitive: #15980c;
   --gradient-sidebar: #fff;
   --sidebar-font-color: #B5261E;
@@ -150,11 +150,21 @@
   display: flex;
   flex-wrap: wrap;
 }
+.padding15-25{
+  padding: 15px 25px !important;
+}
 body{
   font-family: "DIN A1", sans-serif;
 }
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
+  font-family: "DIN A2", sans-serif !important;
+}
+label{
+  font-weight: normal;
+}
+.form-group {
+  margin-top: 15px;
 }
 .m-red-color{
   color: var(--m-red-color);
@@ -215,7 +225,7 @@ body{
       max-width: 25%;
       display: flex;
       justify-content: start;
-      align-items: center;
+      align-items: flex-start;
   }
 }
 .wrapper .content-wrapper::before{
@@ -317,7 +327,7 @@ a{
   background: var(--sidebar-font-color) !important;
 }
 .btn-primary{
-  background: transparent;
+  background: #fff !important;
   color: var(--sidebar-font-color);
 }
 .btn-secondary{
@@ -352,7 +362,7 @@ a{
   color: #333;
 }
 .btn-primary:hover{
-  background: var(--sidebar-font-color);
+  background: var(--sidebar-font-color) !important;
   color: #fff;
 }
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show>.btn-primary.dropdown-toggle,
@@ -378,6 +388,7 @@ a{
 .dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover{
   background-color: var(--gray-third);
   color: #fff;
+  font-weight: bold;
 }
 .form-control:focus {
         border-color: var(--gray-third);
@@ -1671,4 +1682,40 @@ table.dataTable.no-footer {
   box-shadow: -1px 2px 3px 2px rgba(51,51,51,.1);
   border-radius: 10px;
 }
+table .btn {
+display: block;
+margin: auto;
+}
 /* End tables */
+
+/* Select Picker */
+.bootstrap-select>.dropdown-toggle{
+  background-color: #fff !important;
+  border-radius: 3px;
+  color: var(--sidebar-font-color);
+  box-shadow: 1px 2px 2px 0px rgba(0,0,0,.2) !important;
+  border: 1px solid #eaeaea;
+}
+
+/* End select picker */
+
+
+/* Estilo formularios */
+.shadowForm {
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: -1px 2px 3px 2px rgba(51,51,51,.1);
+  border-radius: 3px;
+  margin-top: 25px;
+}
+.shadowForm input {
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+.input-group .input-group-addon{
+  border: none;
+}
+.selectize-input.full{
+  box-shadow: 1px 2px 2px 0px rgba(0,0,0,.1);
+}
+/* End estilo formularios */
