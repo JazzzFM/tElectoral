@@ -11,25 +11,28 @@ mod_investigacionFormularioGeneral_ui <- function(id){
   ns <- NS(id)
   tagList(
     h3("Formulario general de encuestas"),
-    p("Llene los siguientes campos para ..."),
-    fluidRow(
-      column(width = 6,
-             textInput(inputId = ns("nombre"), label = "Nombre de la encuesta", placeholder = "...")
-      ),
-      column(width = 6,
-             textInput(inputId = ns("casaEncuestadora"), label = "Casa encuestadora", placeholder = "...")
-      ),
-      column(width = 12,
-             textInput(inputId = ns("poblacionObjetivo"), label = "Población objetivo", placeholder = "...")
-      ),
-      column(width = 6,
-             dateInput(inputId = ns("fechaInicio"), label = "Fecha de inicio", value = Sys.Date(), min = Sys.Date())
-      ),
-      column(width = 6,
-             dateInput(inputId = ns("fechaFin"), label = "Fecha de finalización", value = Sys.Date(), min = Sys.Date())
-      ),
-      actionButton(inputId = ns("guardar"), "Guardar", class = "btn btn-definitive")
-    )
+    hr(),
+    div(class="shadowForm",
+        fluidRow(
+          column(width = 6,
+                 textInput(inputId = ns("nombre"), label = "Nombre de la encuesta", placeholder = "...")
+          ),
+          column(width = 6,
+                 textInput(inputId = ns("casaEncuestadora"), label = "Casa encuestadora", placeholder = "...")
+          ),
+          column(width = 12,
+                 textInput(inputId = ns("poblacionObjetivo"), label = "Población objetivo", placeholder = "...")
+          ),
+          column(width = 6,
+                 dateInput(inputId = ns("fechaInicio"), label = "Fecha de inicio", value = Sys.Date(), min = Sys.Date())
+          ),
+          column(width = 6,
+                 dateInput(inputId = ns("fechaFin"), label = "Fecha de finalización", value = Sys.Date(), min = Sys.Date())
+          )
+        ),
+        hr(),
+        actionButton(inputId = ns("guardar"), "Guardar", class = "btn btn-primary")
+      )
   )
 }
 
