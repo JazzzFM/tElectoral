@@ -65,12 +65,12 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   output$caja3 <- renderValueBox({
     Sys.setlocale(locale = "es_MX.utf8")
     #DB_MichEncuesta %>% select(fecha_final) %>% tail(1) 
-    f <- leerBd(pool, formGeneralBd) %>%
-          collect() %>%
-            pull(fechaEncuesta) %>%
-            tail(1)
-    as.Date(f) %>% format("%d de %B, %Y") %>% 
-      valueBox(subtitle = "Fecha de Última Encuesta",
+    leerBd(pool, formIntVotoBd) %>%
+    collect() %>%
+    pull(fechaEncuesta) %>%
+    tail(1) %>% 
+    as.Date() %>% format("%d de %b, %Y") %>% 
+    valueBox(subtitle = "Fecha de Última Encuesta",
                icon = icon("calendar-o"), color = "light-blue")
   })
   # Probabilidad de triunfo
@@ -85,30 +85,29 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
      # bd <- procesamiento_graph(DB_MichEncuesta) %>%
      #   filter(!candidato %in% c("PVEM", "PES", "PT", "MC", "INDEPENDIENTE"))
     
-    DBf <- DBI::dbGetQuery(pool,"SELECT fechaEncuesta, partido, resultado
-                       FROM tElectoralTest_investigacion_intencionVoto as i
-                       JOIN tElectoralTest_investigacion_intencionVotoRegistro as r
-                       ON i.idIntencionVoto = r.idIntencionVoto;") %>%
-      procesamientoFormularios() %>%
-          select(fecha, candidato, voto, Tot_voto, prom_r_voto,
-                  votacion, sigma, var, min, max, colores) %>%
-          filter(!votacion %in% c(100.000000))
-    
-    hPollofPolls3(DBf)
+    DBI::dbGetQuery(pool,"SELECT fechaEncuesta, partido, resultado
+                          FROM tElectoralTest_investigacion_intencionVoto as i
+                          JOIN tElectoralTest_investigacion_intencionVotoRegistro as r
+                          ON i.idIntencionVoto = r.idIntencionVoto;") %>%
+    procesamientoFormularios() %>%
+    select(fecha, candidato, voto, Tot_voto, prom_r_voto,
+           votacion, sigma, var, min, max, colores) %>%
+          filter(!votacion %in% c(100.000000)) %>% 
+    hPollofPolls3()
   })
   # Probabilidad de triunfo
   output$intencion <- renderPlot({
     # Real Data
     #bd <- procesamiento_graph(DB_MichEncuesta)
     # Forms Data
-    DBf <- leerBd(pool, formIntVotoRegistroBd) %>%
-            collect() %>% 
-            select(partido, resultado) %>% 
-            mutate(candidato = partido,
-                  votacion = as.double(resultado)/100) %>%
-            select(candidato, votacion)
+    leerBd(pool, formIntVotoRegistroBd) %>%
+    collect() %>% 
+    select(partido, resultado) %>% 
+    mutate(candidato = partido,
+           votacion = as.double(resultado)/100) %>%
+    select(candidato, votacion) %>% 
+    iVotoBarras()
     
-    iVotoBarras(DBf)
     })
   #Probabilidad de triunfo
   

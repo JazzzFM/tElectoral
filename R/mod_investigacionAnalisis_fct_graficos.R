@@ -406,12 +406,13 @@ hPollofPolls3 <- function(DB){
                    colores = c("#751438", "#17418A","#ED6B40", "#EB0E0E")) %>%
     arrange(candidato)
   
-  DB <- DB %>% mutate(votacion_r = round(votacion*100),
-                      votacion_min = round(min*100),
-                      votacion_max = round(max*100),
-                      votacion = votacion *100,
-                      min = min * 100,
-                      max = max * 100) %>% 
+  DB <- DB %>% mutate(votacion_r = round(votacion),
+                      #votacion_r = round(votacion*100),
+                      votacion_min = round(min),
+                      votacion_max = round(max),
+                      votacion_copy = votacion,
+                      min = min,
+                      max = max) %>% 
                left_join(paleta) 
   
   # Tooltip
@@ -477,7 +478,7 @@ iVotoBarras <- function(DB){
               scale_fill_identity() + theme_minimal() +
               labs(title = "Intención de Voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
               annotate("text", label = candidates$candidato, x = candidates$x, y = candidates$y + 0.3, size = 5, colour = "#8b878d") +
-              scale_color_manual(values= c("#17418A", "#EB0E0E", "#FAB855", "#EB0E0E", "#FAB855", "#925AAD")) +
+              scale_color_manual(values= c("#751438", "#17418A", "#EB0E0E", "#FAB855", "#EB0E0E", "#FAB855", "#925AAD")) +
               theme(
                 axis.title.y = element_blank(),
                 axis.title.x = element_text(color = "#8b878d"),
