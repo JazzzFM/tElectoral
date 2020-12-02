@@ -13,17 +13,20 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
     fluidRow(
       column(width = 6,
              actionButton(inputId = ns("atras"), label = "Regresar al listado de intención de voto", class ="btn-default")
-             )
+      )
     ),
     h3("Formulario de intención de voto"),
     useShinyjs(),
     fluidRow(
       column(12, 
              pickerInput(inputId = ns("tipoIntVoto"), label = "Tipo de intención de voto", choices = c("Candidato + Partido", "Candidato", "Partido"))
-       ),
+      ),
+      column(12, #fecha de encuesta
+             dateInput(inputId = ns("fechaEncuesta"), label = "Fecha de la Encuesta", format = "dd/mm/yyyy", language = "es", value = Sys.Date())
+      ),
       column(12,
              textInput(inputId=ns("pregunta"), label = "Escriba la pregunta tal y como viene en la encuesta", placeholder = "...")
-       ),
+      ),
       column(12,
              textInput(inputId=ns("noSabeNoContesto"), label = "Escriba como se reportó la opción 'No sabe/No contestó'", placeholder = "Explique...")
       )
@@ -32,10 +35,10 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
     h3("Registro"),
     div(class = "flexTable", id = "tablaCandidatos",
         div( class="four-columns", id="tableHeader",
-          h4("Candidato"),
-          h4("Partido"),
-          h4("Resultado"),
-          h4("Acciones")
+             h4("Candidato"),
+             h4("Partido"),
+             h4("Resultado"),
+             h4("Acciones")
         ),
         div(class="candContainer",
             
@@ -52,7 +55,7 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
     
   )
 }
-    
+
 #' investigacionFormularioIntVoto Server Function
 #'
 #' @noRd 
@@ -74,12 +77,12 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
     }
     insertUI(selector = "#tablaCandidatos .candContainer", where = "beforeEnd",
              ui = div(class=clase, id=glue::glue("row-candidato-{uiCount$val}"),
-                      div(class=glue::glue("ctr-1 {claseCandidato}"), selectizeInput(inputId = ns(glue::glue("nombreCandidato-{uiCount$val}")), choices = c("Juan", "Alejandro", "María"), label = "")),
-                      div(class=glue::glue("ctr-2 {clasePartido}"), selectizeInput(inputId = ns(glue::glue("partido-{uiCount$val}")), choices = c("PRD", "PRI", "PAN"), label = "")),
+                      div(class=glue::glue("ctr-1 {claseCandidato}"), selectizeInput(inputId = ns(glue::glue("nombreCandidato-{uiCount$val}")), choices = c("Seleccione un candidato" = "", DBI::dbGetQuery(pool,"SELECT nombreCandidato FROM partidoCandidato;") %>% pull(nombreCandidato)), label = "")),
+                      div(class=glue::glue("ctr-2 {clasePartido}"), selectizeInput(inputId = ns(glue::glue("partido-{uiCount$val}")), choices = c("Seleccione un partido" = "", DBI::dbGetQuery(pool,"SELECT nombrePartido FROM partidoCandidato;") %>% pull(nombrePartido)) , label = "")),
                       numericInputIcon(icon = list(icon("percent"),NULL),inputId = ns(glue::glue("resultado-{uiCount$val}")), value = 0, min = 0, max= 100, label = ""),
                       HTML(input_btns(ns("eliminar"), users = uiCount$val, tooltip = "Eliminar", icon ="trash-o", status = "danger"))
-                  )
              )
+    )
     uiCount$val <- uiCount$val+1
   })
   observeEvent(input$agregarCareo, {
@@ -91,6 +94,7 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
         intencionVoto <- tibble::tibble(
           idFormGeneral = idFormGeneral$val,
           tipoIntencionVoto = input$tipoIntVoto,
+          fechaEncuesta = input$fechaEncuesta,
           pregunta = input$pregunta,
           siNoExplicacion = input$noSabeNoContesto,
           fechaAlta = fA,
@@ -151,6 +155,7 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
         intencionVoto <- tibble::tibble(
           idFormGeneral = idFormGeneral$val,
           tipoIntencionVoto = input$tipoIntVoto,
+          fechaEncuesta = input$fechaEncuesta,
           pregunta = input$pregunta,
           siNoExplicacion = input$noSabeNoContesto,
           fechaAlta = fA,
@@ -185,6 +190,7 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
           idIntencionVoto = id,
           candidato = cand,
           partido = part,
+          #fechaEncuesta = input$fechaEncuesta,
           resultado = res,
           fechaAlta = fechaAlta,
           usuarioCrea = usuarioCrea,
@@ -235,6 +241,7 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
       infoCandidatos(bd$intVotoRegistro %>% filter(activo == 1 & idIntencionVoto == !! idIntencionVoto$val) %>% collect())
       updatePickerInput(session = parent_session, inputId = ns("tipoIntVoto"), selected = infoIntencion()$tipoIntencionVoto)
       updateTextInput(session = parent_session, inputId = ns("pregunta"), value = infoIntencion()$pregunta)
+      updatedateInput(session = parent_session, inputId = ns("fechaEncuesta"), value = infoIntencion()$fechaEncuesta)
       updateTextInput(session = parent_session, inputId = ns("noSabeNoContesto"), value = infoIntencion()$siNoExplicacion)
       disable(id = "tipoIntVoto")
       
@@ -267,10 +274,9 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
     }
   })
 }
-    
+
 ## To be copied in the UI
 # mod_investigacionFormularioIntVoto_ui("investigacionFormularioIntVoto_ui_1")
-    
+
 ## To be copied in the server
 # callModule(mod_investigacionFormularioIntVoto_server, "investigacionFormularioIntVoto_ui_1")
- 
