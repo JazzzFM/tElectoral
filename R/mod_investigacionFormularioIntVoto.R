@@ -17,42 +17,44 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
     ),
     h3("Formulario de intención de voto"),
     useShinyjs(),
-    fluidRow(
-      column(12, 
-             pickerInput(inputId = ns("tipoIntVoto"), label = "Tipo de intención de voto", choices = c("Candidato + Partido", "Candidato", "Partido"))
-      ),
-      column(12, #fecha de encuesta
+    div(class="shadowForm",
+        fluidRow(
+          column(12, 
+                 pickerInput(inputId = ns("tipoIntVoto"), label = "Tipo de intención de voto", choices = c("Candidato + Partido", "Candidato", "Partido"))
+          ),
+          column(12, #fecha de encuesta
              dateInput(inputId = ns("fechaEncuesta"), label = "Fecha de la Encuesta", format = "dd/mm/yyyy", language = "es", value = Sys.Date())
-      ),
-      column(12,
-             textInput(inputId=ns("pregunta"), label = "Escriba la pregunta tal y como viene en la encuesta", placeholder = "...")
-      ),
-      column(12,
-             textInput(inputId=ns("noSabeNoContesto"), label = "Escriba como se reportó la opción 'No sabe/No contestó'", placeholder = "Explique...")
-      )
+          ),
+          column(12,
+                 textInput(inputId=ns("pregunta"), label = "Escriba la pregunta tal y como viene en la encuesta", placeholder = "...")
+          ),
+          column(12,
+                 textInput(inputId=ns("noSabeNoContesto"), label = "Escriba como se reportó la opción 'No sabe/No contestó'", placeholder = "Explique...")
+          )
+        ),
     ),
     
     h3("Registro"),
-    div(class = "flexTable", id = "tablaCandidatos",
-        div( class="four-columns", id="tableHeader",
-             h4("Candidato"),
-             h4("Partido"),
-             h4("Resultado"),
-             h4("Acciones")
+    div(class="shadowForm",
+        div(class = "flexTable", id = "tablaCandidatos",
+            div( class="four-columns", id="tableHeader",
+                 h4("Candidato"),
+                 h4("Partido"),
+                 h4("Resultado"),
+                 h4("Acciones")
+            ),
+            div(class="candContainer",
+                
+            ),
+            div(class="footer",
+                uiOutput(ns("outAddFila"))
+            )
         ),
-        div(class="candContainer",
-            
-        ),
-        div(class="footer",
-            uiOutput(ns("outAddFila"))
+        hr(),
+        fluidRow(
+          uiOutput(ns("outGuardar"), style = "width: 100%")
         )
-    ),
-    hr(),
-    fluidRow(
-      uiOutput(ns("outGuardar"))
     )
-    
-    
   )
 }
 
@@ -224,11 +226,13 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
   output$outGuardar <- renderUI({
     if(readOnly$val == FALSE){
       tagList(
-        column(width = 6,
-               actionButton(inputId = ns("agregarCareo"), label = "Guardar y agregar otro careo", class ="btn-default")
-        ),
-        column(width = 6,
-               actionButton(inputId = ns("guardar"), label = "Guardar y terminar", class ="btn-primary pull-right")
+        fluidRow( class ="padding15-25",
+          column(width = 6,
+                 actionButton(inputId = ns("agregarCareo"), label = "Guardar y agregar otro careo", class ="btn-default")
+          ),
+          column(width = 6,
+                 actionButton(inputId = ns("guardar"), label = "Guardar y terminar", class ="btn-primary pull-right")
+          ) 
         )
       )
     }
