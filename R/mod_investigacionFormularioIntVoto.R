@@ -89,7 +89,7 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
     if(uiCount$val > 1){
       fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
       
-      if(validarFormularioIntVoto(input$tipoIntVoto, input$pregunta, input$noSabeNoContesto)){
+      if(validarFormularioIntVoto(input$tipoIntVoto, input$fechaEncuesta, input$pregunta, input$noSabeNoContesto)){
         
         intencionVoto <- tibble::tibble(
           idFormGeneral = idFormGeneral$val,
@@ -190,7 +190,6 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
           idIntencionVoto = id,
           candidato = cand,
           partido = part,
-          #fechaEncuesta = input$fechaEncuesta,
           resultado = res,
           fechaAlta = fechaAlta,
           usuarioCrea = usuarioCrea,

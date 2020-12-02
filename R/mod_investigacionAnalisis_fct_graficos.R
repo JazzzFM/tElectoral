@@ -71,8 +71,8 @@ procesamiento_graph <- function(DB){
 
 procesamientoFormularios <- function(DB) {
   
-  BB <- DB %>% select(fechaAlta, partido, resultado) %>% 
-    mutate(fecha = as.Date(fechaAlta),
+  BB <- DB %>% select(fechaEncuesta, partido, resultado) %>% 
+    mutate(fecha = as.Date(fechaEncuesta),
            candidato = partido,
            voto = as.double(resultado),
            votacion = as.double(resultado)/100) %>%

@@ -1,9 +1,13 @@
-validarFormularioIntVoto <- function(tipoIntVoto, pregunta, noSabeNoContesto){
+validarFormularioIntVoto <- function(tipoIntVoto, fechaEncuesta, pregunta, noSabeNoContesto){
   allValido <- TRUE
   mensaje <- ""
   if(!validarVacio(tipoIntVoto)){
     allValido <- FALSE
     mensaje <- paste(mensaje, "Debe seleccionar un tipo de intención de voto.", sep = "\n")
+  }
+  if(!validarVacio(fechaEncuesta)){
+    allValido <- FALSE
+    mensaje <- paste(mensaje, "La fecha de la encuesta no puede estar vacía.", sep = "\n")
   }
   if(!validarVacio(pregunta)){
     allValido <- FALSE
