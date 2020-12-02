@@ -7,7 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-#' @import dplyr ggplot2 highcharter tidyr 
+#' @import dplyr ggplot2 highcharter tidyr shinycssloaders
 
 mod_investigacionAnalisis_ui <- function(id){
   ns <- NS(id)
@@ -21,21 +21,27 @@ mod_investigacionAnalisis_ui <- function(id){
     # Gráficos
     fluidRow(
       column(width = 12, class="shadowBox",
-             highchartOutput(ns("intervalos")))
+             shinycssloaders::withSpinner(highchartOutput(ns("intervalos"))
+                                          ))
     ),
     fluidRow(
       column(width = 6, class="shadowBox",
-             plotOutput(ns("intencion"))),
+             shinycssloaders::withSpinner(
+               plotOutput(ns("intencion"))
+               )),
       column(width = 6, class="shadowBox",
-             plotOutput(ns("gPdt")))
+             shinycssloaders::withSpinner(
+             plotOutput(ns("gPdt"))
+             ))
     ),
     h3("Resultados Diseño Muestral"),
     tags$hr(),
     fluidRow(
       column(width = 6, class="shadowBox",
-             plotOutput(ns("levantamiento")))
+             shinycssloaders::withSpinner(
+               plotOutput(ns("levantamiento"))
+               ))
     )
-    
   )
 }
 
@@ -75,15 +81,33 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   # Prueba
   output$intervalos <- renderHighchart({
     # real data
-    bd <- procesamiento_graph(DB_MichEncuesta) %>%
-      filter(!candidato %in% c("PVEM", "PES", "PT", "MC", "INDEPENDIENTE"))
-    hPollofPolls2(bd)
+     # bd <- procesamiento_graph(DB_MichEncuesta) %>%
+     #   filter(!candidato %in% c("PVEM", "PES", "PT", "MC", "INDEPENDIENTE"))
+    
+    DBf <- leerBd(pool, formIntVotoRegistroBd) %>%
+          collect() %>% 
+      
+          procesamientoFormularios() %>%
+          select(fecha, candidato, voto, Tot_voto, prom_r_voto,
+                  votacion, sigma, var, min, max, colores) %>%
+          filter(!votacion %in% c(100.000000))
+    
+    hPollofPolls3(DBf)
   })
   # Probabilidad de triunfo
   output$intencion <- renderPlot({
     # Real Data
-    bd <- procesamiento_graph(DB_MichEncuesta)
-    iVotoBarras(bd)
+    #bd <- procesamiento_graph(DB_MichEncuesta)
+    # Forms Data
+    DBf <- leerBd(pool, formIntVotoRegistroBd) %>%
+            collect() %>% 
+      
+            select(partido, resultado) %>% 
+            mutate(candidato = partido,
+                  votacion = as.double(resultado)/100) %>%
+            select(candidato, votacion)
+    
+    iVotoBarras(DBf)
     })
   #Probabilidad de triunfo
   

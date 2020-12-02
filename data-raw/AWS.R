@@ -107,7 +107,53 @@ DBI::dbExecute(pool,"CREATE TABLE tElectoral_prueba_eventos (
   usElimina TEXT
 );")
 
-#pruebas
+## Investigacion
+#Candidatos y Colores Oficiales
+
+DBI::dbExecute(pool, "CREATE TABLE IF NOT EXISTS partidoCandidato (
+  idPartido INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  nombrePartido VARCHAR(50) NOT NULL,
+  nombreCandidato VARCHAR(50) NOT NULL  
+  );")
+
+# DBI::dbExecute(pool, "INSERT INTO `partidoCandidato` VALUES (1, 'PRI', 'Juan'),
+# (2, 'PAN', 'Juan'),
+# (3, 'PRD', 'Pedro'),
+# (4, 'MORENA', 'Angel'),
+# (5, 'PT', 'Gerardo'),
+# (6, 'PVEM', 'Emilio'),
+# (7, 'MC', 'Jesús'),
+# (8, 'PES', 'Esteban'),
+# (9, 'INDEPENDIENTE', 'Oscar');")
+#tbl(pool,"partidoCandidato") %>% collect() 
+#DBI::dbRemoveTable(pool, "partidoCandidato")
+
+
+DBI::dbExecute(pool, "CREATE TABLE IF NOT EXISTS coloresOficiales(
+  idColor INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  idPartido INTEGER UNSIGNED NOT NULL REFERENCES partidoCandidato(idPartido),
+  colorHex VARCHAR(50),
+  colorRgb VARCHAR(50),
+  opacity VARCHAR(50)
+);")
+
+# DBI::dbExecute(pool, "INSERT INTO `coloresOficiales` VALUES (1, 1,'#EB0E0E','rgb(235, 14, 14)',''),
+# (2, 2,'#17418A','rgb(23, 65, 138)',''),
+# (3, 3,'#FAB855','rgb(250, 184, 85)',''),
+# (4, 4,'#751438','rgb(117, 20, 56)',''),
+# (5, 5,'#D63131','rgb(214, 49, 49)',''),
+# (6, 6,'#199121','rgb(25, 145, 33)',''),
+# (7, 7,'#ED6B40','rgb(237, 107, 64)',''),
+# (8, 8,'#54218A','rgb(84, 33, 138)',''),
+# (9, 9,'#AD9B9A','rgb(173, 155, 154)','');")
+# tbl(pool,"coloresOficiales") %>% collect()
+# DBI::dbRemoveTable(pool,"coloresOficiales")
+
+# DBI::dbGetQuery(pool,"SELECT p.idPartido, p.nombrePartido, p.nombreCandidato, c.colorHex
+#                       FROM partidoCandidato as p
+#                       JOIN coloresOficiales c
+#                       ON p.idPartido = c.idPartido;")
+
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_formularioGeneral (
   idFormGeneral INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100),
@@ -121,11 +167,13 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_formularioGenera
   usuarioEdicion VARCHAR(100),
   activo TINYINT
 );" )
+#DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_formularioGeneral")
 
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_intencionVoto (
   idIntencionVoto INT AUTO_INCREMENT PRIMARY KEY,
   idFormGeneral INT NOT NULL,
   tipoIntencionVoto VARCHAR(25),
+  fechaEncuesta DATETIME, 
   pregunta VARCHAR(250),
   siNoExplicacion VARCHAR(250),
   fechaAlta DATETIME,
@@ -137,7 +185,7 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_intencionVoto (
 );" )
 #DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_intencionVoto")
 
-DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_intencionVotoRegistro (
+DBI::dbExecute(pool, "CREATE TABLE IF NOT EXISTS tElectoralTest_investigacion_intencionVotoRegistro (
   idIntencionVotoRegistro INT AUTO_INCREMENT PRIMARY KEY,
   idIntencionVoto INT NOT NULL,
   candidato VARCHAR(25),
@@ -149,7 +197,7 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_intencionVotoReg
   usuarioEdicion VARCHAR(100),
   activo TINYINT,
   CONSTRAINT FK_intencionVotoRegistro_intencionVoto FOREIGN KEY (idIntencionVoto) REFERENCES tElectoralTest_investigacion_intencionVoto(idIntencionVoto)
-);" )
+);")
 #DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_intencionVotoRegistro")
 
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_disenoMuestral (
@@ -177,5 +225,6 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_disenoMuestral (
   CONSTRAINT FK_DisMuestral_FormGeneral FOREIGN KEY (idFormGeneral) REFERENCES tElectoralTest_investigacion_formularioGeneral(idFormGeneral)
 );" )
 #DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_disenoMuestral")
+
 
 # usethis::use_data(AWS, overwrite = TRUE)

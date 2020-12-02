@@ -262,7 +262,7 @@ hPollofPolls <- function(DB){
   
   # Formato redondeado
   paleta <- tibble(candidato = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
-                                "PRD", "PRI", "PT", "PVEM"),
+                                 "PRD", "PRI", "PT", "PVEM"),
                     colores = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
                               "#FAB855", "#EB0E0E", "#D63131", "#199121")) %>%  
     arrange(candidato)
@@ -348,8 +348,8 @@ hPollofPolls2 <- function(DB){
                       min = min * 100,
                       max = max * 100) %>%
                       left_join(paleta)
-  DBf <- DBf %>% select(names(DB))
-  DB <- union(DB, DBf) %>% filter(!votacion %in% c(100.000000))
+  DB <- DBf %>% select(names(DB)) %>%
+          filter(!votacion %in% c(100.000000))
   
   #################################################
   # Tooltip
@@ -391,32 +391,85 @@ hPollofPolls2 <- function(DB){
   return(Graph)
 }
 
+
+hPollofPolls3 <- function(DB){
+  # Funciones para volver al español
+  hcoptslang <- getOption("highcharter.lang")
+  hcoptslang$weekdays<- c("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
+  hcoptslang$shortMonths <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
+  hcoptslang$months <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+  hcoptslang$thousandsSep <- c(",")
+  options(highcharter.lang = hcoptslang)
+  
+  # Formato redondeado
+  paleta <- tibble(candidato = c("MORENA", "PAN", "PRD", "PRI"),
+                   colores = c("#751438", "#17418A","#ED6B40", "#EB0E0E")) %>%
+    arrange(candidato)
+  
+  DB <- DB %>% mutate(votacion_r = round(votacion*100),
+                      votacion_min = round(min*100),
+                      votacion_max = round(max*100),
+                      votacion = votacion *100,
+                      min = min * 100,
+                      max = max * 100) %>% 
+               left_join(paleta) 
+  
+  # Tooltip
+  tt <- tooltip_table(c("{point.series.name}: "),
+                      c("{point.votacion_r}%"))
+  
+  # Gráfica
+  Graph <- DB %>% 
+    hchart(hcaes(x = fecha,  low = 0, 
+                 high = votacion, group = candidato),
+           type = "arearange", enableMouseTracking= F, fillOpacity = 0.15)%>% 
+    hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>%
+    # hc_subtitle(text = "Data from Different Survey Houses") %>% 
+    hc_add_series(data = DB,
+                  hcaes(x = fecha, y = votacion,
+                        group = candidato),
+                  type = "line") %>% 
+    hc_colors(colors = paleta$colores) %>% 
+    hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
+    hc_xAxis(crosshair = T, 
+             labels = list(step = 2,style = list(fontSize = "18px",color = "#13384D")),
+             title = list(text = "Fecha", style = list( fontSize = "16px", color = "#41657A"))) %>% 
+    hc_plotOptions(line = list(colorByPoint = F, showInLegend = F),
+                   arearange = list(lineWidth = 0)) %>% 
+    hc_tooltip(sort = F,
+               shared = T,
+               borderWidth= 0,
+               split = T,
+               pointFormat = tt, 
+               headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
+               style = list(fontSize = "16px", color = "#41657A"), 
+               useHTML = TRUE) %>%
+    # hc_add_theme(hc_theme_hcrt()) %>%
+    hc_legend(enabled = T) %>% 
+    # hc_colors(DB$colores) %>% 
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"),zoomType = "x")
+  
+  
+  return(Graph)
+}
+
 iVotoBarras <- function(DB){
   paleta <- tibble(candidato = c("INDEPENDIENTE", "MC", "MORENA", "PAN", "PES",
                                  "PRD", "PRI", "PT", "PVEM"),
                    colores = c("#925AAD", "#ED6B40", "#751438", "#17418A", "#54218A",
                                "#FAB855", "#EB0E0E", "#D63131", "#199121")) %>%  arrange(candidato)
     
-    DB <- DB %>% select(candidato, votacion)
+    barras <- DB %>% select(candidato, votacion)
   
-    DBformulario <- leerBd(pool, formIntVotoRegistroBd) %>%
-                    collect() %>% 
-                    select(partido, resultado) %>% 
-                    mutate(candidato = partido,
-                           votacion = as.double(resultado)/100) %>%
-                    select(candidato, votacion)
-    
-     barras <- union(DB, DBformulario)
-    
      barras <-  barras %>% group_by(candidato)%>%
      summarise(voto = mean(votacion)*100) %>% 
      mutate(label = sprintf("%1.1f%%", voto)) %>% 
      left_join(paleta) %>% na.omit()
      
-     barras <- data.frame(barras %>% arrange(voto), y = 1:5)
-   
-  Annotations <- data.frame(x = barras %>% select(voto), y = 1:5, barras %>% select(label))
-  candidates <- data.frame(barras %>% select(candidato), y = 1:5, x = c(2.0, 3.0, 0.7, 0.7, 1.5))
+   barras <- data.frame(barras %>% arrange(voto), y = 1:3)
+   Annotations <- data.frame(x = barras %>% select(voto), y = 1:3, barras %>% select(label))
+   #mejorar esto con un left_join
+   candidates <- data.frame(barras %>% select(candidato), y = 1:3, x = c(2.0, 0.7, 0.7))
 
   Graph <- ggplot(barras, aes(x = 0, y = y, xend = voto, yend = y, fill = colores, colour = colores)) +
               geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
@@ -424,7 +477,7 @@ iVotoBarras <- function(DB){
               scale_fill_identity() + theme_minimal() +
               labs(title = "Intención de Voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
               annotate("text", label = candidates$candidato, x = candidates$x, y = candidates$y + 0.3, size = 5, colour = "#8b878d") +
-              scale_color_manual(values= c("#17418A", "#751438", "#925AAD", "#EB0E0E", "#FAB855", "#925AAD")) +
+              scale_color_manual(values= c("#17418A", "#EB0E0E", "#FAB855", "#EB0E0E", "#FAB855", "#925AAD")) +
               theme(
                 axis.title.y = element_blank(),
                 axis.title.x = element_text(color = "#8b878d"),
@@ -439,7 +492,8 @@ iVotoBarras <- function(DB){
                 legend.title = element_blank(),
                 legend.position = "none",
                 panel.grid.major.x = element_blank(),
-                panel.grid = element_blank())
+                panel.grid = element_blank()
+                )
 
   return(Graph)
 }
