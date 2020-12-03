@@ -14,22 +14,25 @@ mod_cuestionario_paso_2_ui <- function(id){
     h3("Bloques del cuestionario"),
     p("Introduzca una cantidad de bloques, de click en el botón que sigue para generar los títulos y llenarlos."),
     tags$hr(),
-    fluidRow(
-      class = "NombreBloquesContainer",
-      column(
-        width = 6,
-        class = "FlexColumn",
-        numericInputIcon(inputId = ns("CantidadBloques"),
-                         label = "Cantidad de bloques",
-                         value = 0,
-                         min = 0,
-                         icon = list(NULL, 
-                                     actionButton(inputId = ns("genBloques"), icon = icon("cog") ,"", class="btn btn-primary")
-                         )
-        )
-      )
-    ),
-    actionButton(inputId = ns("guardarPaso2"), "Guardar paso 2")
+    div(class="shadowForm",
+        fluidRow(
+          class = "NombreBloquesContainer",
+          column(
+            width = 6,
+            class = "FlexColumn",
+            numericInputIcon(inputId = ns("CantidadBloques"),
+                             label = "Cantidad de bloques",
+                             value = 0,
+                             min = 0,
+                             icon = list(NULL, 
+                                         actionButton(inputId = ns("genBloques"), icon = icon("cog") ,"", class="btn btn-primary")
+                             )
+            )
+          )
+        ),
+        hr(),
+        actionButton(inputId = ns("guardarPaso2"), "Guardar paso 2", class="btn btn-primary")
+    )
   )
 }
 
