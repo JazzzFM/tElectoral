@@ -27,9 +27,9 @@ app_ui <- function(request) {
                    menuItem("Encuestas", tabName="invEncuestas"),
                    menuItem("Resultados", tabName="invResultados")
                    ),
-          menuItem("Protocolo de cuestionarios",
-                   tabName = "comunicacion",
-                   icon = icon("dashboard")),
+          # menuItem("Protocolo de cuestionarios",
+          #          tabName = "comunicacion",
+          #          icon = icon("dashboard")),
           menuItem("Gira",
                    tabName = "gira",
                    icon = icon("th"),
@@ -70,8 +70,8 @@ app_ui <- function(request) {
           tabItem(tabName = "invEncuestas",
                   mod_investigacionCompartido_ui("investigacionCompartido_ui_1")
                   ),
-          tabItem(tabName = "comunicacion",
-                  mod_comunicacion_ui("comunicacion_ui_1")),
+          # tabItem(tabName = "comunicacion",
+          #         mod_comunicacion_ui("comunicacion_ui_1")),
           tabItem(tabName = "analisisEventos",
                   mod_analisisEventos_ui("analisisEventos_ui_1")
                   ),

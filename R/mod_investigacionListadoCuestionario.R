@@ -10,13 +10,7 @@
 mod_investigacionListadoCuestionario_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fluidRow(
-      actionButton(ns("atras"), "Regresar a encuestas", class="btn-secondary"),
-      actionButton(ns("crearCuestionario"), "Nuevo cuestionario", class="btn-primary pull-right"),
-    ),
-    h3("Listado de cuestionarios"),
-    hr(),
-    DT::DTOutput(ns("listadoCuestionario"))
+    uiOutput(ns("listadoForm"))
   )
 }
     
@@ -25,44 +19,61 @@ mod_investigacionListadoCuestionario_ui <- function(id){
 #' @noRd 
 mod_investigacionListadoCuestionario_server <- function(input, output, session, bd, usuario, parent_session, showForm, idFormGeneral){
   ns <- session$ns
-  t <- tibble(Nombre = c(a = "Encuesta 1", b = "Encuesta 2", c= "Encuesta 3"),
-              Fecha_inicio = c(a = today(), b = today(), c = today()),
-              Fecha_fin = c(a = today(), b = today(), c = today()), 
-              FM = c(a = 1, b = 2, c= 3), 
-              FC = c(a = 1, b = 2, c= 3), 
-              FV = c(a = 1, b = 2, c= 3),
-              Editar =  c(a = 1, b = 2, c= 3),
-              Eliminar = c(a = 1, b = 2, c= 3))
   
+  showListadoForm <- reactiveValues(val = 1)
+  readOnly <- reactiveValues(val = FALSE)
+  idCuestionario <- reactiveValues(val = 0)
+  
+  output$listadoForm <- renderUI({
+    if(showListadoForm$val == 1){
+      tagList(
+        fluidRow(
+          column(width = 6,
+                 actionButton(ns("atras"), "Regresar a encuestas", class="btn-secondary")
+          ),
+          column(width = 6,
+                 actionButton(ns("crearCuestionario"), "Nuevo cuestionario", class="btn-primary pull-right")
+          )
+        ),
+        h3("Listado de cuestionarios"),
+        hr(),
+        DT::DTOutput(ns("listadoCuestionario"))
+      )
+    }
+    else if(showListadoForm$val == 2){
+      mod_comunicacion_ui(ns("comunicacion_ui_1"))
+    }
+  })
+  callModule(mod_comunicacion_server, "comunicacion_ui_1", bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
+  
+  seleccion <- reactiveVal(NULL)
+  observeEvent(c(gargoyle::watch("cuestionario")), {
+    seleccion(bd$listadoCuestionario %>% filter(activo == 1 & idFormGeneral == !! idFormGeneral$val) %>% collect()) 
+  })
   output$listadoCuestionario <- DT::renderDT({
-    
-    t$FM$a <- input_btns(ns("disMuestral"), 1, "Editar", icon = "pie-chart", status = "primary")
-    t$FM$b <- input_btns(ns("disMuestral"), 2, "Editar", icon = "pie-chart", status = "primary")
-    t$FM$c <- input_btns(ns("disMuestral"), 3, "Editar", icon = "pie-chart", status = "primary")
-    
-    t$FC$a <- input_btns(ns("cuestionario"), 1, "Editar", icon = "question-circle", status = "primary")
-    t$FC$b <- input_btns(ns("cuestionario"), 2, "Editar", icon = "question-circle", status = "primary")
-    t$FC$c <- input_btns(ns("cuestionario"), 3, "Editar", icon = "question-circle", status = "primary")
-    
-    t$FV$a <- input_btns(ns("intVoto"), 1, "Editar", icon = "hand-pointer-o", status = "primary")
-    t$FV$b <- input_btns(ns("intVoto"), 2, "Editar", icon = "hand-pointer-o", status = "primary")
-    t$FV$c <- input_btns(ns("intVoto"), 3, "Editar", icon = "hand-pointer-o", status = "primary")
-    
-    
-    t$Editar$a <- input_btns(ns("editar"), 1, "Editar", icon = "edit", status = "primary")
-    t$Editar$b <- input_btns(ns("editar"), 2, "Editar", icon = "edit", status = "primary")
-    t$Editar$c <- input_btns(ns("editar"), 3, "Editar", icon = "edit", status = "primary")
-    
-    t$Eliminar$a <- input_btns(ns("eliminar"), 1, "Eliminar", icon = "trash-o", status = "primary")
-    t$Eliminar$b <- input_btns(ns("eliminar"), 2, "Eliminar", icon = "trash-o", status = "primary")
-    t$Eliminar$c <- input_btns(ns("eliminar"), 3, "Eliminarr", icon = "trash-o", status = "primary")
-    
-    DT::datatable(data = t)
-  }, escape = F)
+    validate(need(!is.null(seleccion()), message = "Cargando datos ..."))
+    seleccion() %>% select(idCuestionario,nivelClaridad,cantidadBloques, correo, obsGenerales, fechaAlta) %>%
+      mutate(FechaAlta= as_date(fechaAlta),
+             Ver = input_btns(ns("ver"), idCuestionario, "Ver", icon = "eye", status = "info"),
+             Eliminar = input_btns(ns("eliminar"), idCuestionario, "Eliminar", icon = "trash-o", status = "danger"),
+      ) %>% select(-idCuestionario, -fechaAlta)
+  }, selection = 'none',rownames = FALSE,
+  options = list(language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json',searchPlaceholder = "Buscar..."),
+                 lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5
+  ),
+  escape = F)
   
+  observeEvent(input$ver,{
+    showListadoForm$val <- 2
+    readOnly$val <- T
+    idCuestionario$val <- input$ver
+  })
   observeEvent(input$atras,{
-    print(idFormGeneral$val)
     showForm$val <- 1
+  })
+  observeEvent(input$crearCuestionario,{
+    showListadoForm$val <- 2
+    readOnly$val <- F
   })
 }
     

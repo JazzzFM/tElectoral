@@ -11,6 +11,11 @@
 mod_comunicacion_ui <- function(id){
   ns <- NS(id)
   tagList(
+    fluidRow(
+      column(width = 6,
+             actionButton(inputId = ns("atras"), label = "Regresar al listado de cuestionarios", class ="btn-default")
+      )
+    ),
     tabsetPanel(id = "tabsCuestionario",
     tabPanel(title = "Paso 1", value = "paso1",
              mod_cuestionario_paso_1_ui(ns("cuestionario_paso_1_ui_1"))
@@ -38,7 +43,7 @@ mod_comunicacion_ui <- function(id){
 #' comunicacion Server Function
 #'
 #' @noRd 
-mod_comunicacion_server <- function(input, output, session, parent_session = NULL){
+mod_comunicacion_server <- function(input, output, session, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario){
   ns <- session$ns
   cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso3 = c(), paso4 = NULL)
   # Paso 1
@@ -48,7 +53,9 @@ mod_comunicacion_server <- function(input, output, session, parent_session = NUL
   callModule(mod_cuestionario_paso_3_server, "cuestionario_paso_3_ui_1", cuestionario, parent_session)
   callModule(mod_cuestionario_paso_4_server, "cuestionario_paso_4_ui_1", cuestionario, parent_session)
   callModule(mod_cuestionario_paso_5_server, "cuestionario_paso_5_ui_1", parent_session)
-  
+  observeEvent(input$atras,{
+    showListadoForm$val <- 1
+  })
   # observe({
   #   if(!is.null(cuestionario$paso1)){
   #     shinyjs::show(selector = paste0("#", ns("Paso2Cuestionario")))

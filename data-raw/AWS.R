@@ -169,6 +169,59 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_formularioGenera
 );" )
 #DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_formularioGeneral")
 
+#DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_cuestionario")
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_cuestionario (
+  idCuestionario INT AUTO_INCREMENT PRIMARY KEY,
+  idFormGeneral INT,
+  urlArchivo VARCHAR(300),
+  nivelClaridad VARCHAR(50),
+  obsNivelClaridad VARCHAR(300),
+  operacionalizacion VARCHAR(50),
+  obsOperacionalizacion VARCHAR(300),
+  poblacionObjetivo VARCHAR(50),
+  obsPoblacionObjetivo VARCHAR(300),
+  cantidadBloques INT,
+  obsGenerales VARCHAR(300),
+  correo VARCHAR(100),
+  fechaAlta DATETIME,
+  fechaEdicion DATETIME,
+  usuarioCrea VARCHAR(100),
+  usuarioEdicion VARCHAR(100),
+  activo TINYINT,
+  CONSTRAINT FK_cuestionario_FormGeneral FOREIGN KEY (idFormGeneral) REFERENCES tElectoralTest_investigacion_formularioGeneral(idFormGeneral)
+);" )
+
+#DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_cuestionario_preguntasXBloque")
+DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_cuestionario_preguntasXBloque (
+  idPreguntaXBloque INT AUTO_INCREMENT PRIMARY KEY,
+  idCuestionario INT,
+  nombre VARCHAR(100),
+  numTotalPreguntasBloque INT,
+  numDeseabilidadSocial INT,
+  obsDeseabilidadSocial VARCHAR(300),
+  numSupuestosImplicitos INT,
+  obsSupuestosImplicitos VARCHAR(300),
+  numDobleBarril INT,
+  obsDobleBarril VARCHAR(300),
+  numSinBalanceRedaccion INT,
+  obsSinBalanceRedaccion VARCHAR(300),
+  numNoMutuamenteExcluyentes INT,
+  obsNoMutuamenteExcluyentes VARCHAR(300),
+  numRespuestaSinEquilibrio INT,
+  obsRespuestaSinEquilibrio VARCHAR(300),
+  numDiezOpciones INT,
+  obsDiezOpciones VARCHAR(300),
+  numCategoriaNeutral INT,
+  obsCategoriaNeutral VARCHAR(300),
+  fechaAlta DATETIME,
+  fechaEdicion DATETIME,
+  usuarioCrea VARCHAR(100),
+  usuarioEdicion VARCHAR(100),
+  activo TINYINT,
+  CONSTRAINT FK_preguntaxbloque_cuestionario FOREIGN KEY (idCuestionario) REFERENCES tElectoralTest_investigacion_cuestionario(idCuestionario)
+);" )
+
+
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_intencionVoto (
   idIntencionVoto INT AUTO_INCREMENT PRIMARY KEY,
   idFormGeneral INT NOT NULL,
