@@ -20,6 +20,9 @@ pool <- pool::dbPool(
 onStop(function() {
   pool::poolClose(pool)
 })
+#candidatos y colores
+partidoCandidatoBd <- "tElectoralTest_partidoCandidato"
+coloresOficialesBd <- "tElectoralTest_coloresOficiales"
 #gira
 eventosBd <- "tElectoralTest_eventos"
 girasBd <- "tElectoralTest_giras"

@@ -14,6 +14,8 @@ app_server <- function( input, output, session ) {
   )
   
   bd <- reactiveValues(
+    candidatos = tbl(pool,partidoCandidatoBd), #%>% collect()
+    coloresOff = tbl(pool,coloresOficialesBd),#%>% collect()
     eventos = leerBd(pool,eventosBd) %>% collect(),
     giras = leerBd(pool,girasBd) %>% collect(),
     evaluacionEventos = leerBd(pool,evaluacionEventosBd) %>% collect(),

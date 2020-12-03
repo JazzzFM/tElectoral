@@ -22,7 +22,7 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
           column(12, 
                  pickerInput(inputId = ns("tipoIntVoto"), label = "Tipo de intención de voto", choices = c("Candidato + Partido", "Candidato", "Partido"))
           ),
-          column(12, #fecha de encuesta
+          column(12, 
              dateInput(inputId = ns("fechaEncuesta"), label = "Fecha de la Encuesta", format = "dd/mm/yyyy", language = "es", value = Sys.Date())
           ),
           column(12,
@@ -79,8 +79,8 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
     }
     insertUI(selector = "#tablaCandidatos .candContainer", where = "beforeEnd",
              ui = div(class=clase, id=glue::glue("row-candidato-{uiCount$val}"),
-                      div(class=glue::glue("ctr-1 {claseCandidato}"), selectizeInput(inputId = ns(glue::glue("nombreCandidato-{uiCount$val}")), choices = c("Seleccione un candidato" = "", DBI::dbGetQuery(pool,"SELECT nombreCandidato FROM partidoCandidato;") %>% pull(nombreCandidato)), label = "")),
-                      div(class=glue::glue("ctr-2 {clasePartido}"), selectizeInput(inputId = ns(glue::glue("partido-{uiCount$val}")), choices = c("Seleccione un partido" = "", DBI::dbGetQuery(pool,"SELECT nombrePartido FROM partidoCandidato;") %>% pull(nombrePartido)) , label = "")),
+                      div(class=glue::glue("ctr-1 {claseCandidato}"), selectizeInput(inputId = ns(glue::glue("nombreCandidato-{uiCount$val}")), choices = c("Seleccione un candidato" = "", bd$candidatos %>% collect()%>% pull(nombreCandidato)), label = "")),
+                      div(class=glue::glue("ctr-2 {clasePartido}"), selectizeInput(inputId = ns(glue::glue("partido-{uiCount$val}")), choices = c("Seleccione un partido" = "", bd$candidatos %>% collect() %>% pull(nombrePartido) ) , label = "")),
                       numericInputIcon(icon = list(icon("percent"),NULL),inputId = ns(glue::glue("resultado-{uiCount$val}")), value = 0, min = 0, max= 100, label = ""),
                       HTML(input_btns(ns("eliminar"), users = uiCount$val, tooltip = "Eliminar", icon ="trash-o", status = "danger"))
              )
@@ -92,7 +92,6 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
       fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
       
       if(validarFormularioIntVoto(input$tipoIntVoto, input$pregunta, input$noSabeNoContesto)){
-        
         intencionVoto <- tibble::tibble(
           idFormGeneral = idFormGeneral$val,
           tipoIntencionVoto = input$tipoIntVoto,
@@ -110,6 +109,7 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
         id <- c()
         cand <- c()
         part <- c()
+        #fechaEncuesta <- c()
         res <- c()
         fechaAlta <- c()
         usuarioCrea <- c()
@@ -192,7 +192,6 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
           idIntencionVoto = id,
           candidato = cand,
           partido = part,
-          #fechaEncuesta = input$fechaEncuesta,
           resultado = res,
           fechaAlta = fechaAlta,
           usuarioCrea = usuarioCrea,
@@ -244,8 +243,8 @@ mod_investigacionFormularioIntVoto_server <- function(input, output, session, bd
       infoIntencion(bd$listadoIntVoto %>% filter(activo == 1 & idFormGeneral == !! idFormGeneral$val & idIntencionVoto == !! idIntencionVoto$val) %>% collect())
       infoCandidatos(bd$intVotoRegistro %>% filter(activo == 1 & idIntencionVoto == !! idIntencionVoto$val) %>% collect())
       updatePickerInput(session = parent_session, inputId = ns("tipoIntVoto"), selected = infoIntencion()$tipoIntencionVoto)
+      updateDateInput(session = parent_session, inputId = ns("fechaEncuesta"), value = infoIntencion()$fechaEncuesta)
       updateTextInput(session = parent_session, inputId = ns("pregunta"), value = infoIntencion()$pregunta)
-      updatedateInput(session = parent_session, inputId = ns("fechaEncuesta"), value = infoIntencion()$fechaEncuesta)
       updateTextInput(session = parent_session, inputId = ns("noSabeNoContesto"), value = infoIntencion()$siNoExplicacion)
       disable(id = "tipoIntVoto")
       
