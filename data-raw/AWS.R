@@ -125,7 +125,9 @@ DBI::dbExecute(pool, "CREATE TABLE IF NOT EXISTS tElectoralTest_partidoCandidato
 # (7, 'MC', 'Jesús'),
 # (8, 'PES', 'Esteban'),
 # (9, 'INDEPENDIENTE', 'Oscar');")
-# tbl(pool,"tElectoralTest_partidoCandidato") %>% collect()
+# DBI::dbExecute(pool, "INSERT INTO `tElectoralTest_partidoCandidato` VALUES (10, 'No sabe', 'No sabe'),
+# (11, 'No contestó', 'No contestó');")
+#tbl(pool,"tElectoralTest_partidoCandidato") %>% collect()
 #DBI::dbRemoveTable(pool, "partidoCandidato")
 
 
@@ -146,7 +148,10 @@ DBI::dbExecute(pool, "CREATE TABLE IF NOT EXISTS tElectoralTest_coloresOficiales
 # (7, 7,'#ED6B40','rgb(237, 107, 64)',''),
 # (8, 8,'#54218A','rgb(84, 33, 138)',''),
 # (9, 9,'#AD9B9A','rgb(173, 155, 154)','');")
-# tbl(pool,"tElectoralTest_coloresOficiales") %>% collect()
+#tbl(pool,"tElectoralTest_coloresOficiales") %>% collect()
+# DBI::dbExecute(pool, "INSERT INTO `tElectoralTest_coloresOficiales` VALUES 
+# (10, 10, '#404040', 'rgb(64,64,64)', ''),
+# (11, 10, '#000000','rgb(0,0,0)', '');")
 #DBI::dbRemoveTable(pool,"tElectoralTest_coloresOficiales")
 
 # DBI::dbGetQuery(pool,"SELECT p.idPartido, p.nombrePartido, p.nombreCandidato, c.colorHex
