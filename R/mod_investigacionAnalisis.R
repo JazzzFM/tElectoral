@@ -84,40 +84,32 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
     # real data
      # bd <- procesamiento_graph(DB_MichEncuesta) %>%
      #   filter(!candidato %in% c("PVEM", "PES", "PT", "MC", "INDEPENDIENTE"))
-    
-    DBI::dbGetQuery(pool,"SELECT fechaEncuesta, partido, resultado
-                          FROM tElectoralTest_investigacion_intencionVoto as i
-                          JOIN tElectoralTest_investigacion_intencionVotoRegistro as r
-                          ON i.idIntencionVoto = r.idIntencionVoto;") %>%
-    procesamientoFormularios() %>%
-    select(fecha, candidato, voto, Tot_voto, prom_r_voto,
-           votacion, sigma, var, min, max, colores) %>%
-          filter(!votacion %in% c(100.000000)) %>% 
+    procesamientoPollofPolls() %>% 
     hPollofPolls3()
+    
   })
   # Probabilidad de triunfo
   output$intencion <- renderPlot({
     # Real Data
     #bd <- procesamiento_graph(DB_MichEncuesta)
     # Forms Data
-    leerBd(pool, formIntVotoRegistroBd) %>%
-    collect() %>% 
-    select(partido, resultado) %>% 
-    mutate(candidato = partido,
-           votacion = as.double(resultado)/100) %>%
-    select(candidato, votacion) %>% 
+    procesamientoBrras()%>% 
     iVotoBarras()
-    
     })
   #Probabilidad de triunfo
   
   output$gPdt <- renderPlot({
-    cand <- procesamiento_graph(DB_MichEncuesta) %>%
-            group_by(candidato, colores) %>% summarise() %>%
-            mutate(prob = runif(1, min = 0, max = 26))  %>%
-            arrange(desc(prob)) %>% ungroup() %>% 
-            mutate(cand = candidato, rw = seq(1:9), prob = round(prob)) 
+    # cand <- procesamiento_graph(DB_MichEncuesta) %>%
+    #         group_by(candidato, colores) %>% summarise() %>%
+    #         mutate(prob = runif(1, min = 0, max = 26))  %>%
+    #         arrange(desc(prob)) %>% ungroup() %>% 
+    #         mutate(cand = candidato, rw = seq(1:9), prob = round(prob)) 
+    
     # Función
+    cand <- procesamientoBrras() %>% 
+    mutate(prob = votacion) %>%
+    tibble(rw = 1:5) 
+    
     probGanarOld(cand, candidato = "MORENA", 5)
     })
   
