@@ -54,6 +54,7 @@ mod_investigacionEncuestas_server <- function(input, output, session, bd, parent
   observeEvent(input$cuestionario, {
     showForm$val <- 4
     idFormGeneral$val <- input$cuestionario
+    gargoyle::trigger("cuestionario")
   })
   
   

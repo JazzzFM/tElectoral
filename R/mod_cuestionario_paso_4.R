@@ -10,15 +10,18 @@
 mod_cuestionario_paso_4_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fluidRow(
-      column(width = 12,
-             p("Aquí irá gráfico de reporte")
-      ),
-      column(width = 12,
-             textAreaInput(inputId = ns("observacionesGenerales"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
-      )
-    ),
-    actionButton(ns("guardarCuestionario"), "Guardar cuestionario", class="btn-definitive")
+    div(class="shadowForm",
+        fluidRow(
+          column(width = 12,
+                 p("Aquí irá gráfico de reporte")
+          ),
+          column(width = 12,
+                 textAreaInput(inputId = ns("observacionesGenerales"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+          )
+        ),
+        hr(),
+        actionButton(ns("guardarCuestionario"), "Guardar cuestionario", class="btn btn-primary")
+    )
   )
 }
     

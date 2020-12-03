@@ -14,35 +14,35 @@ mod_cuestionario_pregunta_ui <- function(id){
     fluidRow(
       column(
         width = 12,
-        numericInput(inputId = ns("numPreguntas"), label = "Indique el total de preguntas que constituyen al bloque", value = 1, min = 1, max = 100)
+        numericInput(inputId = ns("numTotalPreguntasBloque"), label = "Indique el total de preguntas que constituyen al bloque", value = 1, min = 1, max = 100)
       )
     ),
     h3("Análisis de solicitudes de respuesta"),
     tags$hr(),
     fluidRow(
       column(width = 6,
-             numericInput(inputId = ns("deseabilidadSocial"), label = "Número de preguntas con deseabilidad social", value= 0, min = 0, max = 100)
+             numericInput(inputId = ns("numDeseabilidadSocial"), label = "Número de preguntas con deseabilidad social", value= 0, min = 0, max = 100)
       ),
       column(width = 6,
-             textAreaInput(inputId = ns("observacionDeseabilidadSocial"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+             textAreaInput(inputId = ns("obsDeseabilidadSocial"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
       column(width = 6,
-             numericInput(inputId = ns("supuestosImplicitos"), label = "Número de preguntas con supuestos implícitos",value= 0, min = 0, max = 100)
+             numericInput(inputId = ns("numSupuestosImplicitos"), label = "Número de preguntas con supuestos implícitos",value= 0, min = 0, max = 100)
       ),
       column(width = 6,
-             textAreaInput(inputId = ns("observacionSupuestosImplicitos"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+             textAreaInput(inputId = ns("obsSupuestosImplicitos"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
       column(width = 6,
-             numericInput(inputId = ns("dobleBarril"), label = "Número de preguntas con doble barril", min = 0,value= 0,max = 100)
+             numericInput(inputId = ns("numDobleBarril"), label = "Número de preguntas con doble barril", min = 0,value= 0,max = 100)
       ),
       column(width = 6,
-             textAreaInput(inputId = ns("observacionDobleBarril"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+             textAreaInput(inputId = ns("obsDobleBarril"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
       column(width = 6,
-             numericInput(inputId = ns("balanceRedaccion"), label = "Número de preguntas sin balance en su redacción", value= 0,min = 0, max = 100)
+             numericInput(inputId = ns("numSinBalanceRedaccion"), label = "Número de preguntas sin balance en su redacción", value= 0,min = 0, max = 100)
       ),
       column(width = 6,
-             textAreaInput(inputId = ns("observacionBalanceRedaccion"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+             textAreaInput(inputId = ns("obsSinBalanceRedaccion"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       )
     ),
     # End solicitud de respuesta
@@ -52,28 +52,28 @@ mod_cuestionario_pregunta_ui <- function(id){
     tags$hr(),
     fluidRow(
       column(width = 6,
-             numericInput(inputId = ns("opcionesNoMutuamenteExcluyentes"), label = "Número de preguntas con opciones de respuesta que no son mutuamente excluyentes", value= 0,min = 0, max = 100)
+             numericInput(inputId = ns("numNoMutuamenteExcluyentes"), label = "Número de preguntas con opciones de respuesta que no son mutuamente excluyentes", value= 0,min = 0, max = 100)
       ),
       column(width = 6,
-             textAreaInput(inputId = ns("observacionOpcionesNoMutuamenteExcluyentes"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+             textAreaInput(inputId = ns("obsNoMutuamenteExcluyentes"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
       column(width = 6,
-             numericInput(inputId = ns("opcionesSinEquilibrio"), label = "Número de preguntas con opciones de respuesta sin equilibrio entre ellas",value= 0, min = 0, max = 100)
+             numericInput(inputId = ns("numRespuestaSinEquilibrio"), label = "Número de preguntas con opciones de respuesta sin equilibrio entre ellas",value= 0, min = 0, max = 100)
       ),
       column(width = 6,
-             textAreaInput(inputId = ns("observacionOpcionesSinEquilibrio"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+             textAreaInput(inputId = ns("obsRespuestaSinEquilibrio"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
       column(width = 6,
-             numericInput(inputId = ns("masDiezRespuesta"), label = "Número de preguntas que tienen más de 10 opciones de respuesta",value= 0, min = 0, max = 100)
+             numericInput(inputId = ns("numDiezOpciones"), label = "Número de preguntas que tienen más de 10 opciones de respuesta",value= 0, min = 0, max = 100)
       ),
       column(width = 6,
-             textAreaInput(inputId = ns("observacionMasDiezRespuesta"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+             textAreaInput(inputId = ns("obsDiezOpciones"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
       column(width = 6,
-             numericInput(inputId = ns("respuestaNeutral"), label = "Número de preguntas que necesitan una categoría de respuesta “neutral” o la opción de “otro” y no cuentan con ella", min = 0, value= 0,max = 100)
+             numericInput(inputId = ns("numCategoriaNeutral"), label = "Número de preguntas que necesitan una categoría de respuesta “neutral” o la opción de “otro” y no cuentan con ella", min = 0, value= 0,max = 100)
       ),
       column(width = 6,
-             textAreaInput(inputId = ns("observacionRespuestaNeutral"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+             textAreaInput(inputId = ns("obsCategoriaNeutral"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
       ),
     ),
     
@@ -117,26 +117,28 @@ mod_cuestionario_pregunta_server <- function(input, output, session, valores = N
   ns <- session$ns
   out <- reactive({
     tibble(
-      Pregunta = input$Pregunta,
-      DeseabilidadSocial = input$DeseabilidadSocial,
-      Centralidad = input$Centralidad,
-      EnfasisSRespuesta = input$EnfasisSRespuesta,
-      BalanceSRespuesta = input$BalanceSRespuesta,
-      SolicitudesImplicitos = input$SolicitudesImplicitos,
-      DobleBarril = input$DobleBarril,
-      NEnunciadosRespuesta = input$NEnunciadosRespuesta,
-      CategoriaRespuesta = input$CategoriaRespuesta,
-      NCategorias = input$NCategorias,
-      CatExcluyentes = input$CatExcluyentes,
-      CatNeutral = input$CatNeutral,
-      EquilibrioCat = input$EquilibrioCat,
-      NoSabeNoContest = input$NoSabeNoContest,
-      CatOtro = input$CatOtro,
-      InfExtra = input$InfExtra,
-      material = input$material,
-      SuperposicionCategoriaEtiquetaEscala = input$SuperposicionCategoriaEtiquetaEscala,
-      InicioFraseRespuesta = input$InicioFraseRespuesta,
-      ImagenApoyo = input$ImagenApoyo
+      idCuestionario = 0,
+      nombre = "",
+      numTotalPreguntasBloque = input$numTotalPreguntasBloque,
+      numDeseabilidadSocial = input$numDeseabilidadSocial,
+      obsDeseabilidadSocial = input$obsDeseabilidadSocial,
+      numSupuestosImplicitos = input$numSupuestosImplicitos,
+      obsSupuestosImplicitos = input$obsSupuestosImplicitos,
+      numDobleBarril = input$numDobleBarril,
+      obsDobleBarril = input$obsDobleBarril,
+      numSinBalanceRedaccion = input$numSinBalanceRedaccion,
+      obsSinBalanceRedaccion = input$obsSinBalanceRedaccion,
+      numNoMutuamenteExcluyentes = input$numNoMutuamenteExcluyentes,
+      obsNoMutuamenteExcluyentes = input$obsNoMutuamenteExcluyentes,
+      numRespuestaSinEquilibrio = input$numRespuestaSinEquilibrio,
+      obsRespuestaSinEquilibrio = input$obsRespuestaSinEquilibrio,
+      numDiezOpciones = input$numDiezOpciones,
+      obsDiezOpciones = input$obsDiezOpciones,
+      numCategoriaNeutral = input$numCategoriaNeutral,
+      obsCategoriaNeutral = input$obsCategoriaNeutral,
+      fechaAlta = "",
+      usuarioCrea = "",
+      activo = 1
       )
   })
   
