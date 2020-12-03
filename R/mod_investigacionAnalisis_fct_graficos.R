@@ -467,10 +467,9 @@ iVotoBarras <- function(DB){
      mutate(label = sprintf("%1.1f%%", voto)) %>% 
      left_join(paleta) %>% na.omit()
      
-   barras <- data.frame(barras %>% arrange(voto), y = 1:3)
-   Annotations <- data.frame(x = barras %>% select(voto), y = 1:3, barras %>% select(label))
-   #mejorar esto con un left_join
-   candidates <- data.frame(barras %>% select(candidato), y = 1:3, x = c(2.0, 0.7, 0.7))
+    barras <- data.frame(barras %>% arrange(voto), y = 1:4)
+    Annotations <- data.frame(x = barras %>% select(voto), y = 1:4, barras %>% select(label))
+    candidates <- data.frame(barras %>% select(candidato), y = 1:4, x = c(2.0, 0.7, 0.7, 0.7))
 
   Graph <- ggplot(barras, aes(x = 0, y = y, xend = voto, yend = y, fill = colores, colour = colores)) +
               geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
