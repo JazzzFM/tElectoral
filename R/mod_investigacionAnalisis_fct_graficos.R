@@ -149,13 +149,13 @@ probGanar <- function(bd, candidato, nCand){
 probGanarOld <- function(bd, candidato, nCand){
   
   pCand <- bd %>% 
-    filter(cand == {{candidato}}) %>% 
+    filter(candidato == {{candidato}}) %>% 
     pull("prob") 
   
   c <- bd %>% 
-    filter(cand == {{candidato}})
+    filter(candidato == {{candidato}})
   
-  bd <- bd %>% filter(cand != {{candidato}}) %>% head(4)
+  bd <- bd %>% filter(candidato != {{candidato}}) %>% head(4)
   bd <- union(c, bd)
   
   # browser()
