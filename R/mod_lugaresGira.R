@@ -82,8 +82,8 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL, parent_s
   a <- reactive({
     municipios <- actualTableData$data %>% slice(input$recomendaciones_rows_selected) %>% pull(CABECERA_MUNICIPAL)
     camino_mas_corto(municipios_seleccionados = municipios,
-                     info=munRPAP,
-                     municipios = DB_Mich2,
+                     info=munRPAP, # Info externa
+                     municipios = DB_Mich2, # Info externa
                      gira$paso1$LugarInicio,
                      gira$paso1$LugarFinal)
   })

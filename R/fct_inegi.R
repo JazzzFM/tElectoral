@@ -1,5 +1,5 @@
 # Crear matriz distancia de los municipios seleccionados
-crearMD <- function(info){
+crearMD <- function(info,ini, fin){
   N <- n_distinct(c(info$origen, info$destino))
   # Convertir a matriz
   (b <- info %>%
@@ -9,52 +9,79 @@ crearMD <- function(info){
       column_to_rownames(var="origen") %>%
       as.matrix())
   # Matriz simétrica
-  c <- matrix(nrow = N, ncol=N)
-  c[lower.tri(c)] <- b[lower.tri(b,diag = T)]
-  c[upper.tri(c)] <- t(b)[upper.tri(b,diag = T)]
-  diag(c) <- 0
-  c
+  md<- matrix(nrow = N, ncol=N)
+  md[lower.tri(md)] <- b[lower.tri(b,diag = T)]
+  md[upper.tri(md)] <- t(b)[upper.tri(b,diag = T)]
+  diag(md) <- 0
+  rownames(md) <- c(first(colnames(b)),rownames(b))
+  colnames(md) <- rownames(md)
+  
+  # Agregar dummy Inicio
+  md <- rbind(rep(Inf,N),md)
+  # Distancia de dummy a Inicio
+  md[1,colnames(md)==ini] <- 0
+  # Distancia de todos a dummy
+  md <- cbind(c(0, rep(Inf, N)),md)
+  rownames(md)[1] <- colnames(md)[1] <- "dSalida"
+  
+  # Agregar dummy para Final
+  md <- rbind(rep(Inf,N+1),md)
+  # Distancia de todos a Final
+  md <- cbind(c(0, rep(Inf, N+1)),md)
+  md[rownames(md)==fin,1] <- 0
+  # Distancia de todos a Inicio
+  rownames(md)[1] <- colnames(md)[1] <- "dFinal"
+  
+  
+  
+  return(md)
 }
 
 # Calcular el camino más corto entre los municipios seleccionados
 camino_mas_corto <- function(municipios_seleccionados, info, municipios, inicio, fin){
-  municipios_seleccionados <- municipios_seleccionados #%>% sort()
+  municipios_seleccionados <- c(municipios_seleccionados, inicio, fin)
   # Reservar info de origen y destino de paso 1
-  
   # Filtrar la matriz de información
   globalInfo <- info
   info <- info %>%
     filter(origen %in% municipios_seleccionados,
            destino %in% municipios_seleccionados)
   # Matriz de distancias
-  mDist <- crearMD(info)
+  mDist <- crearMD(info, ini=inicio, fin=fin)
+  # Convertir el problema a uno asimétrico y fijar ordne
+  mDist <- insert_dummy(ATSP(x = mDist))
   # Encontrar el camino más corto
-  rmc <- solve_TSP(TSP(x = mDist))
+  # browser()
+  rmc <- solve_TSP(mDist,method = "two_opt", rep=20)
   # Encontrar ruta
-  ruta <- rmc %>%
-    as.integer()
-  ruta_info <- map2_df(.x=ruta[1:(length(ruta)-1)],
-          .y=ruta[2:length(ruta)],
-          ~munRPAP %>%
-            filter((origen == municipios_seleccionados [.x] & destino == municipios_seleccionados [.y]) |
-                     (origen == municipios_seleccionados [.y] & destino == municipios_seleccionados [.x])
+  ruta <- names(cut_tour(rmc,"dSalida"))
+  primerosRuta <- ruta[1:length(municipios_seleccionados)-1]
+  ultimosRuta <- ruta[2:(length(municipios_seleccionados))]
+  # browser()
+  ruta_info <- map2_df(.x=primerosRuta,
+          .y=ultimosRuta,
+          ~globalInfo %>%
+            filter((origen == .x & destino == .y) |
+                     (origen == .y & destino == .x)
                    ) %>%
-            mutate(origen=municipios_seleccionados [.x],
-                   destino=municipios_seleccionados [.y]))
+            mutate(origen=.x,
+                   destino=.y))
+
+    
   # se obtienen origen de tramo 1 y destino de tramo final en los datos de la ruta más corta
-  lugarOrigen <-  top_n(ruta_info, -1)
-  lugarDestino <- top_n(ruta_info, 1)
-  
-  # se obtiene info geo de origen y destino con respecto a paso 1
-  infoOrigen <- globalInfo %>%
-    filter(origen %in% inicio,
-           destino %in% lugarOrigen$origen)
-  
-  infoDestino <- globalInfo %>%
-    filter(origen %in% lugarDestino$destino,
-           destino %in% fin)
-  ruta_info <- ruta_info %>% add_row(infoOrigen, .before = 1)
-  ruta_info <- ruta_info %>% add_row(infoDestino)
+  # lugarOrigen <-  top_n(ruta_info, -1)
+  # lugarDestino <- top_n(ruta_info, 1)
+  # 
+  # # se obtiene info geo de origen y destino con respecto a paso 1
+  # infoOrigen <- globalInfo %>%
+  #   filter(origen %in% inicio,
+  #          destino %in% lugarOrigen$origen)
+  # 
+  # infoDestino <- globalInfo %>%
+  #   filter(origen %in% lugarDestino$destino,
+  #          destino %in% fin)
+  # ruta_info <- ruta_info %>% add_row(infoOrigen, .before = 1)
+  # ruta_info <- ruta_info %>% add_row(infoDestino)
   # Gráficas
   # b <- map(.x=ruta_info$geojson,
   #          ~jsonlite::fromJSON(.x) %>% pluck("coordinates") %>% reduce(rbind)) %>%
@@ -62,16 +89,22 @@ camino_mas_corto <- function(municipios_seleccionados, info, municipios, inicio,
   #   as_tibble()
   b <- pmap(.l=ruta_info, 
             function(geojson, origen, destino, ...){
-              jsonlite::fromJSON(geojson) %>% pluck("coordinates") %>% do.call(rbind,.) %>% 
+              jsonlite::fromJSON(geojson) %>% 
+                pluck("coordinates") %>%
+                do.call(rbind,.) %>% 
                 as_tibble() %>% 
                 mutate(
                   ruta = glue::glue("{origen} - {destino}"))
             }) %>%
-    do.call(rbind,.) %>% sf::st_as_sf(coords=c("V1","V2"), remove=T, crs = sf::st_crs(4326))
+    do.call(rbind,.) %>% 
+    sf::st_as_sf(coords=c("V1","V2"), remove=T, crs = sf::st_crs(4326))
   
-  cabeceras <-  municipios %>% select(CABECERA_MUNICIPAL,coord) %>%  filter(CABECERA_MUNICIPAL %in% !!municipios_seleccionados) %>% 
+  cabeceras <-  municipios %>% 
+    select(CABECERA_MUNICIPAL,coord) %>%  
+    filter(CABECERA_MUNICIPAL %in% !!municipios_seleccionados) %>% 
     deframe %>% do.call(rbind,.) %>% data.frame %>% 
-    rownames_to_column(var = "origen") %>% left_join(ruta_info %>% select(origen,costo_caseta,long_km)) %>% 
+    rownames_to_column(var = "origen") %>% 
+    left_join(ruta_info %>% select(origen,costo_caseta,long_km, tiempo_min)) %>% 
     sf::st_as_sf(coords=c("X1","X2"), remove=T, crs = sf::st_crs(4326))
   
   # mapa <- b %>%
@@ -81,7 +114,8 @@ camino_mas_corto <- function(municipios_seleccionados, info, municipios, inicio,
   #              lat=~V2,
   #              radius = .1)
   
-  pal <- colorFactor(palette = topo.colors(nrow(ruta_info)),domain = unique(b$ruta))
+  pal <- colorFactor(palette = topo.colors(nrow(ruta_info)),
+                     domain = unique(b$ruta))
   # limites <- st_bbox(b)
   mapa <- b %>% 
     leaflet(options = leafletOptions(zoomControl = FALSE,
@@ -92,7 +126,7 @@ camino_mas_corto <- function(municipios_seleccionados, info, municipios, inicio,
                radius = .1, color = ~pal(ruta),
                label = ~ruta) %>% 
     addMarkers(data = cabeceras,popup = ~glue::glue("<b> Cabecera municipal:</b> {origen} <br>
-                                                    <b> Distancia por recorrer: </b>{ifelse(paste(is.na(long_km),'km'), 'No hay registro',long_km)} <br>
+                                                    <b> Distancia por recorrer: </b>{ifelse(is.na(long_km), 'No hay registro',paste(long_km,'km'))} <br>
                                                     <b>costo_caseta:</b> {ifelse(is.na(costo_caseta), 'No hay registro',costo_caseta)}")) #%>% 
     # fitBounds( lng1 = limites$xmin, 
     #               lat1 = limites$ymin,
