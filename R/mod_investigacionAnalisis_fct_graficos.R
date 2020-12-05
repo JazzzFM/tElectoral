@@ -383,8 +383,8 @@ procesamientoPollofPolls <- function(){
 
    DB <- DB %>%
      full_join(y = Vari, by = "fecha") %>%
-     mutate(min = votacion - var/sqrt(50),
-            max = votacion + var/sqrt(50)) %>%
+     mutate(min = 5*sqrt((votacion - var)^2),
+            max = 5*sqrt((votacion + var)^2)) %>%
      arrange(fecha) %>%
     select(fecha, candidato, voto, Tot_voto, prom_r_voto,
            votacion, sigma, var, min, max, color) %>%
@@ -411,33 +411,32 @@ hPollofPolls3 <- function(DB) {
                       c("{point.votacion}%"))
   
   # Gráfica
+  
   Graph <- DB %>% 
-    hchart(hcaes(x = fecha,  low = 0, high = votacion, group = candidato, color = color),
-           type = "arearange", enableMouseTracking= F, fillOpacity = 0.15)%>% 
-    hc_colors(colors = DB$color) %>%
+    hchart(hcaes(x = fecha,  low = votacion - min, high = votacion + max, group = candidato),
+           type = "arearange", enableMouseTracking = T, fillOpacity = 0.15) %>% 
     hc_yAxis(min = 0, max = 100) %>% 
-    hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>%
+    hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
     hc_add_series(data = DB,
-                  hcaes(x = fecha, y = votacion, group = candidato, color = color),
+                  hcaes(x = fecha, y = votacion, group = candidato),
                   type = "line") %>% 
     hc_colors(colors = DB$color) %>% 
     hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
-    hc_xAxis(crosshair = T, 
-             labels = list(step = 2,style = list(fontSize = "18px",color = "#13384D")),
-             title = list(text = "Fecha", style = list( fontSize = "16px", color = "#41657A"))) %>% 
-    hc_plotOptions(line = list(colorByPoint = F, showInLegend = F),
-                   arearange = list(lineWidth = 0)) %>% 
+    hc_xAxis(crosshair = T,
+             labels = list(step = 2, style = list(fontSize = "18px",color = "#13384D")),
+             title = list(text = "Fecha", style = list( fontSize = "16px", color = "#41657A"))) %>%
+    hc_plotOptions(line = list(colorByPoint = F, showInLegend = T),
+                   arearange = list(lineWidth = 0, colorByPoint = F)) %>%
     hc_tooltip(sort = F,
                shared = T,
                borderWidth= 0,
                split = T,
-               pointFormat = tt, 
+               pointFormat = tt,
                headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
-               style = list(fontSize = "16px", color = "#41657A"), 
+               style = list(fontSize = "16px", color = "#41657A"),
                useHTML = TRUE) %>%
-    hc_legend(enabled = T) %>% 
-    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"),zoomType = "x")
-  
+    hc_legend(enabled = T) %>%
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"), zoomType = "x") 
   
   return(Graph)
 }
@@ -626,9 +625,32 @@ gglevantamiento <- function(BD) {
 }
 
 ggMarcoMuestral <- function(BD) {
-  data <- BD %>% select(marcoMuestral)
+  data <- BD %>% select(marcoMuestral) %>% tibble()
+  
+  Graph <- ggplot(barras, aes(x = 0, y = y, xend = votacion, yend = y, fill = colorHex, colour = colorHex))+
+    
   Graph <- ggplot(data, aes(x = marcoMuestral, fill = marcoMuestral)) + 
-    geom_bar(position = "dodge") + 
+    geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
+    annotate("text", hjust = 1, label = Annotations$label, x = Annotations$votacion, y = Annotations$y, size = 6, colour = "white") +
+    scale_color_identity() + theme_minimal() +
+    labs(title = "Intención de Voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
+    annotate("text", label = candidates$candidato, vjust = 0, hjust = 0, x = 0, y = candidates$y + 0.3, size = 5, colour = "#8b878d") +
+    theme(
+      axis.title.y = element_blank(),
+      axis.title.x = element_text(color = "#8b878d"),
+      text = element_text(family = "Avenir Next", size = 20),
+      plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+      axis.text.y = element_blank(),
+      axis.text.x = element_text(family = "Avenir Next", size = 15),
+      axis.line.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      legend.title = element_blank(),
+      legend.position = "none",
+      panel.grid.major.x = element_blank(),
+      panel.grid = element_blank()
+    )
     theme_minimal() +
     labs(title = "Marco Muestral") +
     theme(

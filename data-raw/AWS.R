@@ -258,6 +258,19 @@ DBI::dbExecute(pool, "CREATE TABLE IF NOT EXISTS tElectoralTest_investigacion_in
 );")
 #DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_intencionVotoRegistro")
 
+DBI::dbExecute(pool, "CREATE TABLE IF NOT EXISTS tElectoralTest_MarcoMuestral (
+  idMarco INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  nombreMarco VARCHAR(50) NOT NULL );")
+
+# DBI::dbExecute(pool, "INSERT INTO `tElectoralTest_MarcoMuestral` VALUES
+#  (1, 'manzana'),
+#  (2, 'sección'),
+#  (3,  'distrito local'),
+#  (4, 'distrito federal'),
+#  (5, 'estado');")
+# tbl(pool,"tElectoralTest_MarcoMuestral") %>% collect()
+# DBI::dbRemoveTable(pool, "partidoCandidato")
+
 DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_disenoMuestral (
   idDMuestral INT AUTO_INCREMENT PRIMARY KEY,
   idFormGeneral INT NOT NULL,
@@ -272,8 +285,8 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_disenoMuestral (
   conglomerados VARCHAR(10),
   nivielConglomerados INT NULL,
   unidadMuestral VARCHAR(200),
-  nivelConfianza VARCHAR(200),
-  margenError VARCHAR(200),
+  nivelConfianza INTEGER UNSIGNED,
+  margenError INTEGER UNSIGNED,
   observaciones VARCHAR(500) NULL,
   fechaAlta DATETIME,
   fechaEdicion DATETIME,
@@ -281,7 +294,8 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_disenoMuestral (
   usuarioEdicion VARCHAR(100),
   activo TINYINT,
   CONSTRAINT FK_DisMuestral_FormGeneral FOREIGN KEY (idFormGeneral) REFERENCES tElectoralTest_investigacion_formularioGeneral(idFormGeneral)
-);" )
+);")
+
 #DBI::dbRemoveTable(pool,"tElectoralTest_investigacion_disenoMuestral")
 
 

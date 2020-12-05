@@ -84,10 +84,8 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
     # real data
      # bd <- procesamiento_graph(DB_MichEncuesta) %>%
      #   filter(!candidato %in% c("PVEM", "PES", "PT", "MC", "INDEPENDIENTE"))
-    procesamientoPollofPolls() %>% 
-    hPollofPolls3()
-    
-  })
+    procesamientoPollofPolls() %>% hPollofPolls3()
+    })
   # Probabilidad de triunfo
   output$intencion <- renderPlot({
     # Real Data
@@ -116,6 +114,11 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   output$levantamiento <- renderPlot({
     # Función
     gglevantamiento(bd$listadoDisMuestral)
+  })
+  
+  output$marcoMuestral <- renderPlot({
+    # Función
+    ggMarcoMuestral(bd$listadoDisMuestral)
   })
   
 }
