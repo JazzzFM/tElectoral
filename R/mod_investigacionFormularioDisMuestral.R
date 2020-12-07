@@ -19,7 +19,6 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
     tags$hr(),
     div(class="shadowForm",
         fluidRow(
-          
           column(width = 4,
                  pickerInput(label = "Modo de levantamiento",
                              choices = c("Seleccione" = '',"Vivienda","Telefónica","Internet"),
@@ -74,9 +73,11 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
                                               max = 10))
           ),
           column(width = 12,
-                 #selectizeInput(inputId = ns(glue::glue("nombreCandidato-{uiCount$val}")), choices = c("Seleccione un candidato" = "", bd$candidatos %>% collect()%>% pull(nombreCandidato)), label = ""))
-                 textInput(inputId = ns("unidadMuestral"), label = "Unidad muestral",
-                           placeholder = "Respuesta libre ...")
+                 selectizeInput(inputId = ns("unidadMuestral"),
+                                choices = c("Seleccione un candidato" = "",
+                                            tbl(pool,"tElectoralTest_MarcoMuestral") %>%
+                                              collect() %>% pull(nombreMarco)),
+                                            label = "Unidad muestral")
           ),
           column(width = 12,
                  numericInput(inputId = ns("nivelConfianza"),
@@ -86,8 +87,8 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
                               max = 100)
           ),
           column(width = 12,
-                 numericInput(inputId = ns("nivelConfianza"),
-                              label = "Porcentaje de nivel de confianza",
+                 numericInput(inputId = ns("margenError"),
+                              label = "Porcentaje de margen de error",
                               value = 0,
                               min = 0,
                               max = 100)
