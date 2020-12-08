@@ -7,7 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-#' @import dplyr ggplot2 highcharter tidyr shinycssloaders
+#' @import dplyr ggplot2 highcharter tidyr shinycssloaders tidytext ggwordcloud 
 
 mod_investigacionAnalisis_ui <- function(id){
   ns <- NS(id)
@@ -40,7 +40,11 @@ mod_investigacionAnalisis_ui <- function(id){
       column(width = 6, class="shadowBox",
              shinycssloaders::withSpinner(
                plotOutput(ns("levantamiento"))
-               ))
+               )),
+      column(width = 6, class="shadowBox",
+             shinycssloaders::withSpinner(
+               plotOutput(ns("marcoMuestral"))
+             ))
     )
   )
 }
@@ -84,10 +88,8 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
     # real data
      # bd <- procesamiento_graph(DB_MichEncuesta) %>%
      #   filter(!candidato %in% c("PVEM", "PES", "PT", "MC", "INDEPENDIENTE"))
-    procesamientoPollofPolls() %>% 
-    hPollofPolls3()
-    
-  })
+    procesamientoPollofPolls() %>% hPollofPolls3()
+    })
   # Probabilidad de triunfo
   output$intencion <- renderPlot({
     # Real Data
@@ -115,7 +117,13 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   
   output$levantamiento <- renderPlot({
     # Función
-    gglevantamiento(bd$listadoDisMuestral)
+    #gglevantamiento(bd$listadoDisMuestral)
+    ggbarrasLevantamiento(bd$listadoDisMuestral)
+  })
+  
+  output$marcoMuestral <- renderPlot({
+    # Función
+    WordCldTV(bd$listadoDisMuestral)
   })
   
 }

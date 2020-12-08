@@ -56,6 +56,8 @@ usethis::use_package("RMariaDB")
 usethis::use_package("gargoyle")
 usethis::use_package("gargoyle")
 usethis::use_package("shinycssloaders")
+usethis::use_package("tidytext")
+usethis::use_package("ggwordcloud")
 ## Add modules ----
 ## Create a module infrastructure in R/
 # Portada

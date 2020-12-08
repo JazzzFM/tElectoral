@@ -383,8 +383,8 @@ procesamientoPollofPolls <- function(){
 
    DB <- DB %>%
      full_join(y = Vari, by = "fecha") %>%
-     mutate(min = votacion - var/sqrt(50),
-            max = votacion + var/sqrt(50)) %>%
+     mutate(min = 5*sqrt((votacion - var)^2),
+            max = 5*sqrt((votacion + var)^2)) %>%
      arrange(fecha) %>%
     select(fecha, candidato, voto, Tot_voto, prom_r_voto,
            votacion, sigma, var, min, max, color) %>%
@@ -411,33 +411,32 @@ hPollofPolls3 <- function(DB) {
                       c("{point.votacion}%"))
   
   # Gráfica
+  
   Graph <- DB %>% 
-    hchart(hcaes(x = fecha,  low = 0, high = votacion, group = candidato, color = color),
-           type = "arearange", enableMouseTracking= F, fillOpacity = 0.15)%>% 
-    hc_colors(colors = DB$color) %>%
+    hchart(hcaes(x = fecha,  low = votacion - min, high = votacion + max, group = candidato),
+           type = "arearange", enableMouseTracking = T, fillOpacity = 0.15) %>% 
     hc_yAxis(min = 0, max = 100) %>% 
-    hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>%
+    hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
     hc_add_series(data = DB,
-                  hcaes(x = fecha, y = votacion, group = candidato, color = color),
+                  hcaes(x = fecha, y = votacion, group = candidato),
                   type = "line") %>% 
     hc_colors(colors = DB$color) %>% 
     hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
-    hc_xAxis(crosshair = T, 
-             labels = list(step = 2,style = list(fontSize = "18px",color = "#13384D")),
-             title = list(text = "Fecha", style = list( fontSize = "16px", color = "#41657A"))) %>% 
-    hc_plotOptions(line = list(colorByPoint = F, showInLegend = F),
-                   arearange = list(lineWidth = 0)) %>% 
+    hc_xAxis(crosshair = T,
+             labels = list(step = 2, style = list(fontSize = "18px",color = "#13384D")),
+             title = list(text = "Fecha", style = list( fontSize = "16px", color = "#41657A"))) %>%
+    hc_plotOptions(line = list(colorByPoint = F, showInLegend = T),
+                   arearange = list(lineWidth = 0, colorByPoint = F)) %>%
     hc_tooltip(sort = F,
                shared = T,
                borderWidth= 0,
                split = T,
-               pointFormat = tt, 
+               pointFormat = tt,
                headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
-               style = list(fontSize = "16px", color = "#41657A"), 
+               style = list(fontSize = "16px", color = "#41657A"),
                useHTML = TRUE) %>%
-    hc_legend(enabled = T) %>% 
-    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"),zoomType = "x")
-  
+    hc_legend(enabled = T) %>%
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"), zoomType = "x") 
   
   return(Graph)
 }
@@ -469,7 +468,7 @@ iVotoBarras <- function(DB){
               geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
               annotate("text", hjust = 1, label = Annotations$label, x = Annotations$votacion, y = Annotations$y, size = 6, colour = "white") +
               scale_color_identity() + theme_minimal() +
-              labs(title = "Intención de Voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
+              labs(title = "Intención de voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
               annotate("text", label = candidates$candidato, vjust = 0, hjust = 0, x = 0, y = candidates$y + 0.3, size = 5, colour = "#8b878d") +
               theme(
                 axis.title.y = element_blank(),
@@ -602,49 +601,110 @@ cajaResume <- function(DB, x){
 }
 
 gglevantamiento <- function(BD) {
-  data <- BD %>% select(modoLevantamiento)
-  Graph <- ggplot(data, aes(x = modoLevantamiento, fill = modoLevantamiento)) + 
-           geom_bar(position = "dodge") + 
-           theme_minimal() +
-           labs(title = "Modo de Levantamiento") +
-           theme(
-            axis.title.y = element_blank(),
-            axis.title.x = element_blank(),
-            text = element_text(family = "Avenir Next", size = 20),
-            plot.title = element_text(size = 22,
-                                colour =  "#13384D",
-                                hjust = 0, face="bold"),
-            axis.text.y = element_text(color = "#41657A"),
-            axis.text.x = element_text(color = "#41657A"),
-            axis.line.x = element_blank(),
-            panel.grid.major.y = element_blank(),
-            legend.title = element_blank(),
-            legend.position = "none",
-            panel.grid = element_blank())
-           
-  return(Graph)
-}
-
-ggMarcoMuestral <- function(BD) {
-  data <- BD %>% select(marcoMuestral)
-  Graph <- ggplot(data, aes(x = marcoMuestral, fill = marcoMuestral)) + 
-    geom_bar(position = "dodge") + 
+  data <- BD %>%
+          select(modoLevantamiento) %>% 
+          mutate(n = 1) %>% 
+          group_by(modoLevantamiento) %>% 
+          summarise(across(n, sum)) %>%
+          tibble(x = 1:3)
+  
+  Annotations <- tibble(data %>% select(modoLevantamiento), x = 1:3)
+  
+  Graph <- ggplot(data, aes(x = x, y = 0, xend = x, yend = n, fill = modoLevantamiento, colour = modoLevantamiento, label = modoLevantamiento))+
+    scale_y_continuous(name = "Stopping distance", limits = c(-1, max(data$n) + 1)) +  
+    geom_segment(lineend = "round", linejoin = "round", size = 30, arrow = arrow(length = unit(.0001, "inches"))) +
+    annotate("text", hjust = 0.5, vjust = 0.5, label = Annotations$modoLevantamiento, x = Annotations$x, y = -1, size = 5, colour = "#13384D") +
+    # geom_fit_text(position = "dodge", grow = FALSE, reflow = TRUE, 
+    #               place = "left", color = "white") +
+    scale_color_manual(values = c("#9C607D", "#69353F", "#C4C798")) +
+    labs(title = "Modo de levantamiento", subtitle = "(2020)", caption = "") +
     theme_minimal() +
-    labs(title = "Marco Muestral") +
     theme(
       axis.title.y = element_blank(),
       axis.title.x = element_blank(),
       text = element_text(family = "Avenir Next", size = 20),
       plot.title = element_text(size = 22,
                                 colour =  "#13384D",
-                                hjust = 0, face="bold"),
-      axis.text.y = element_text(color = "#41657A"),
-      axis.text.x = element_text(color = "#41657A"),
+                                hjust = 0, face = "bold"),
+      axis.text.y = element_text(family = "Avenir Next", size = 15),
+      axis.text.x = element_blank(),
       axis.line.x = element_blank(),
       panel.grid.major.y = element_blank(),
       legend.title = element_blank(),
       legend.position = "none",
-      panel.grid = element_blank())
+      panel.grid.major.x = element_blank(),
+      panel.grid = element_blank()
+    )
   
   return(Graph)
+}
+
+ggbarrasLevantamiento <- function(DB) {
+
+   data <- DB %>% select("modoLevantamiento") %>%
+     mutate(n = 1) %>%
+     group_by(modoLevantamiento) %>%
+     summarise(across(n, sum))
+
+
+  Graph <- ggplot(data, aes(x = modoLevantamiento, y = n,
+                            fill = modoLevantamiento,
+                            label = modoLevantamiento))+
+    geom_bar(stat = "identity") +
+    geom_bar_text(position = "stack", reflow = TRUE, grow = TRUE, contrast = TRUE) +
+    scale_fill_manual(values = c("#9C607D", "#69353F", "#C4C798")) +
+    labs(title = "Modo de levantamiento", subtitle = "(2020)", caption = "") +
+    theme_minimal() +
+    theme(
+      axis.title.y = element_blank(),
+      axis.title.x = element_blank(),
+      text = element_text(family = "Avenir Next", size = 20),
+      plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+      axis.text.y = element_text(family = "Avenir Next", size = 15),
+      axis.text.x = element_blank(),
+      axis.line.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      legend.title = element_blank(),
+      legend.position = "none",
+      panel.grid.major.x = element_blank(),
+      panel.grid = element_blank()
+    )
+
+  return(Graph)
+}
+
+
+WordCldTV <- function(BD){
+  # Cuidar que no haya na
+
+  word <- select(BD, marcoMuestral) %>% na.omit() # Pregunta
+  #titulo <- "Marco Muestral"
+
+  # Frecuencias
+  palabras <- word %>%
+    tidytext::unnest_tokens(input = marcoMuestral, output = palabra, token = "words") %>%
+    count(palabra)
+
+  # Graficar
+
+  wrdcld <- ggwordcloud(palabras$palabra, freq = 1,
+                        #scale = c(4, 0.5),
+                        max.words = 30, color = palabras$palabra,
+                        random.order = TRUE, random.color = FALSE) +
+    scale_size_area(max_size = 20) +
+    scale_color_brewer(palette = "Paired", direction = -1)+
+    theme_minimal() +
+    labs(title = "Modo de levantamiento", subtitle = "(2020)", caption = "") +
+    theme(
+      text = element_text(family = "Avenir Next", size = 20),
+      plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+      axis.text.y = element_text(family = "Avenir Next", size = 15),
+    )
+
+
+  return(wrdcld)
 }

@@ -19,7 +19,6 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
     tags$hr(),
     div(class="shadowForm",
         fluidRow(
-          
           column(width = 4,
                  pickerInput(label = "Modo de levantamiento",
                              choices = c("Seleccione" = '',"Vivienda","Telefónica","Internet"),
@@ -74,16 +73,25 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
                                               max = 10))
           ),
           column(width = 12,
-                 textInput(inputId = ns("unidadMuestral"), label = "Unidad muestral",
-                           placeholder = "Respuesta libre ...")
+                 selectizeInput(inputId = ns("unidadMuestral"),
+                                choices = c("Seleccione un candidato" = "",
+                                            tbl(pool,"tElectoralTest_MarcoMuestral") %>%
+                                              collect() %>% pull(nombreMarco)),
+                                            label = "Unidad muestral")
           ),
           column(width = 12,
-                 textInput(inputId = ns("nivelConfianza"), label = "Nivel de confianza",
-                           placeholder = "Respuesta libre ...")
+                 numericInput(inputId = ns("nivelConfianza"),
+                              label = "Porcentaje de nivel de confianza",
+                              value = 0,
+                              min = 0,
+                              max = 100)
           ),
           column(width = 12,
-                 textInput(inputId = ns("margenError"), label = "Margen de error",
-                           placeholder = "Respuesta libre ...")
+                 numericInput(inputId = ns("margenError"),
+                              label = "Porcentaje de margen de error",
+                              value = 0,
+                              min = 0,
+                              max = 100)
           ),
           column(width = 12,
                  textAreaInput(inputId = ns("observaciones"), label = 'Observaciones', rows = 6,placeholder = "Respuesta libre ..."),
@@ -235,9 +243,9 @@ mod_investigacionFormularioDisMuestral_server <- function(input, output, session
       updateNumericInput(session = parent_session, inputId = ns("nivielEstratificada"), value = infoDisMuestral()$nivielEstratificada)
       updatePrettyRadioButtons(session = parent_session, inputId = ns("conglomerados"), selected = infoDisMuestral()$conglomerados)
       updateNumericInput(session = parent_session, inputId = ns("nivielConglomerados"), value = infoDisMuestral()$nivielConglomerados)
-      updateTextInput(session = parent_session, inputId = ns("unidadMuestral"), value = infoDisMuestral()$unidadMuestral)
-      updateTextInput(session = parent_session, inputId = ns("nivelConfianza"), value = infoDisMuestral()$nivelConfianza)
-      updateTextInput(session = parent_session, inputId = ns("margenError"), value = infoDisMuestral()$margenError)
+      updatePickerInput(session = parent_session, inputId = ns("unidadMuestral"), selected = infoDisMuestral()$unidadMuestral)
+      updateNumericInput(session = parent_session, inputId = ns("nivelConfianza"), value = infoDisMuestral()$nivelConfianza)
+      updateNumericInput(session = parent_session, inputId = ns("margenError"), value = infoDisMuestral()$margenError)
       updateTextAreaInput(session = parent_session , inputId = ns("observaciones"), value = infoDisMuestral()$observaciones)
     }
   })
