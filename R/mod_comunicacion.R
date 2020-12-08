@@ -16,16 +16,12 @@ mod_comunicacion_ui <- function(id){
              actionButton(inputId = ns("atras"), label = "Regresar al listado de cuestionarios", class ="btn-default")
       )
     ),
-    tabsetPanel(id = "tabsCuestionario",
+    tabsetPanel(id = "TabsCuestionario",
     tabPanel(title = "Paso 1", value = "paso1",
              mod_cuestionario_paso_1_ui(ns("cuestionario_paso_1_ui_1"))
     ),
     tabPanel(title = "Paso 2", value = "paso2",
-             # shinyjs::hidden(div(id = ns("Paso2Cuestionario"),
-             #     mod_cuestionario_paso_2_ui(ns("cuestionario_paso_2_ui_1")),
-             #     )),
              mod_cuestionario_paso_2_ui(ns("cuestionario_paso_2_ui_1")),
-             tags$hr()
        ),
     tabPanel(title = "Paso 3", value ="paso3",
              mod_cuestionario_paso_3_ui(ns("cuestionario_paso_3_ui_1"))
@@ -56,12 +52,28 @@ mod_comunicacion_server <- function(input, output, session, bd, usuario, parent_
   observeEvent(input$atras,{
     showListadoForm$val <- 1
   })
-  # observe({
-  #   if(!is.null(cuestionario$paso1)){
-  #     shinyjs::show(selector = paste0("#", ns("Paso2Cuestionario")))
-  #     updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso2", parent_session)
-  #   }
-  # })
+  
+  hideTab(inputId = "TabsCuestionario", target = "paso2", session = parent_session)
+  hideTab(inputId = "TabsCuestionario", target = "paso3", session = parent_session)
+  hideTab(inputId = "TabsCuestionario", target = "paso4", session = parent_session)
+  hideTab(inputId = "TabsCuestionario", target = "paso5", session = parent_session)
+  
+  observe({
+    if(!is.null(cuestionario$paso1)){
+      updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso2", parent_session)
+    }
+    if(!is.null(cuestionario$paso1)){
+      if(cuestionario$paso1$cantidadBloques != 0)
+      updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso3", parent_session)
+    }
+    if(!is.null(cuestionario$paso3)){
+      updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso4", parent_session)
+    }
+    if(!is.null(cuestionario$paso1)){
+      if(cuestionario$paso1$obsGenerales != "")
+        updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso5", parent_session)
+    }
+  })
 }
 
 ## To be copied in the UI

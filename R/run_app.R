@@ -20,7 +20,7 @@ run_app <- function(
                          tags$script(async = TRUE, src = "//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.14.0/jquery.validate.js"),
                          includeScript(app_sys("app/www/login.js"))
                        )
-                       , div(class="icon expanded white", icon("lock"))),
+                       , div(class="loginTitle", h3("Bienvenido"))),
         app_ui), 
       server = app_server
     ), 

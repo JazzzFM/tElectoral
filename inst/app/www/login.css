@@ -139,6 +139,9 @@
   
   
 }
+.bg-container-svg{
+  background-color: #fafafb;
+}
 .btn-primary:active:hover, .btn-primary.active:hover, .open>.dropdown-toggle.btn-primary:hover, .btn-primary:active:focus, .btn-primary.active:focus, .open>.dropdown-toggle.btn-primary:focus, .btn-primary:active.focus, .btn-primary.active.focus, .open>.dropdown-toggle.btn-primary.focus{
       background-color: var(--m-red-color) !important;
       color: #fff !important;
@@ -184,14 +187,24 @@ body{
   font-size: 1.2em;
 }
 .panel-auth .panel{
-  box-shadow: 0px 0px 55px 5px rgba(0,0,0,.3);
+  box-shadow: 1px 2px 5px 1px rgba(0,0,0,.1);
   border: none;
-  background: var(--gradient-sidebar);
-  color: #fff;
+  background: #fff;
+  color: #333;
   padding: 15px;
 }
 /* End panel */
+/* Login title */
 
+.loginTitle h3{
+  text-align: left;
+  color: #B5261E;
+}
+#auth-shinymanager-auth-head{
+  font-size: .8em;
+  text-align: left;
+}
+/* End login title */
 /* Icono Superior (Logo) */
 .panel-auth .headLogin .icon{
     width: 80px;
@@ -241,6 +254,7 @@ body{
   border-radius: 4px;
   transition: ease all .3s;
   font-weight: 400;
+  border-bottom: 1px solid #B5261E;
 }
 .panel-auth .shiny-input-container:not(.shiny-input-container-inline) input{
   margin-left: 11px;
@@ -260,7 +274,9 @@ body{
     fill: var(--m-red-color);
 }
 .panel-auth .shiny-input-container:not(.shiny-input-container-inline) label{
-  font-weight: 400;
+    font-weight: normal;
+    min-width: 70px;
+    font-size: .8em;
 }
 
 /* End Inputs */
@@ -268,19 +284,21 @@ body{
 /* Button */
 .panel-auth button[type="button"]{
     background-color: var(--white) !important;
-    color: var(--black-primary);
-    width: 100%;
+    color: #B5261E;
+    width: 150px !important;
     padding: 10px;
     border: none;
-    box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, .3);
+    box-shadow: none;
     transition: ease all .3s;
-    border-radius: 5px;
+    border-radius: 35px;
+    border: 1px solid #B5261E;
+    font-size: .8em;
 }
 
 .panel-auth button[type="button"]:hover{
     cursor: pointer;
-    transform: translateY(5px) scale(1.1);
-    border-radius: 15px;
+    background-color: #B5261E !important;
+    color: #fff !important;
 }
 .panel-auth button[type="button"]:focus{
     outline: none;
