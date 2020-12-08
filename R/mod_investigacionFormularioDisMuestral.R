@@ -40,7 +40,7 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
           ),
           
           column(width = 3,
-                 prettyRadioButtons(label = "Poloetápica", choices = c("Sí", "No"),
+                 prettyRadioButtons(label = "Polietápica", choices = c("Sí", "No"),
                                     inputId = ns("poliEtapa"), selected = 0)
           ),
           column(width = 3,
@@ -74,9 +74,7 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
           ),
           column(width = 12,
                  selectizeInput(inputId = ns("unidadMuestral"),
-                                choices = c("Seleccione un candidato" = "",
-                                            tbl(pool,"tElectoralTest_MarcoMuestral") %>%
-                                              collect() %>% pull(nombreMarco)),
+                                choices = c("Seleccione unidad" = ""),
                                             label = "Unidad muestral")
           ),
           column(width = 12,
@@ -111,6 +109,11 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
 
 mod_investigacionFormularioDisMuestral_server <- function(input, output, session,  bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idDMuestral = NULL){
   ns <- session$ns
+  observeEvent(input$unidadMuestral,{
+    updateSelectizeInput(session, 
+                         inputId = "unidadMuestral",
+                         choices = c("Seleccione unidad" = "", bd$marcoMuestral %>% pull(nombreMarco)))
+  })
   observeEvent(input$poliEtapa, {
     if(input$poliEtapa == "Sí"){
       shinyjs::show(

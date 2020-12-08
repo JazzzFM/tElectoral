@@ -45,6 +45,11 @@ mod_investigacionAnalisis_ui <- function(id){
              shinycssloaders::withSpinner(
                plotOutput(ns("marcoMuestral"))
              ))
+      # column(width = 12, 
+      #        div(class="topBoxInfo bordered-white ft-sm",
+      #            plotOutput(outputId = ns("pGauge")),
+      #            p("Calificación promedio")
+      #        ))
     )
   )
 }
@@ -125,6 +130,11 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
     # Función
     WordCldTV(bd$listadoDisMuestral)
   })
+  
+  # output$pGauge <- renderPlot({
+  #   # bd <- tibble(x = sample(0:10, size = 20, replace = T))
+  #   promedioGauge(bd$evaluacionEventos, calificacion = expectativas)
+  # })
   
 }
 ## To be copied in the UI
