@@ -20,9 +20,9 @@ app_server <- function( input, output, session ) {
     giras = leerBd(pool,girasBd) %>% collect(),
     evaluacionEventos = leerBd(pool,evaluacionEventosBd) %>% collect(),
     encuestas = leerBd(pool, formGeneralBd) %>% collect(),
-    listadoDisMuestral = leerBd(pool, formDisMuestralBd),# %>% collect(),
+    listadoDisMuestral = leerBd(pool, formDisMuestralBd) %>% collect(),
     listadoIntVoto = leerBd(pool, formIntVotoBd), #%>% collect(),
-    intVotoRegistro = leerBd(pool, formIntVotoRegistroBd), #%>% collect()# Se traen candidatos
+    intVotoRegistro = leerBd(pool, formIntVotoRegistroBd)%>% collect(), # Se traen candidatos
     listadoCuestionario = leerBd(pool, formCuestionarioBd),
     cuestionarioPreguntasXBloque = leerBd(pool, formCuestionarioPreguntasXBloqueBd)
   )

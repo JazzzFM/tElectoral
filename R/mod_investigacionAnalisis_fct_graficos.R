@@ -468,7 +468,7 @@ iVotoBarras <- function(DB){
               geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
               annotate("text", hjust = 1, label = Annotations$label, x = Annotations$votacion, y = Annotations$y, size = 6, colour = "white") +
               scale_color_identity() + theme_minimal() +
-              labs(title = "Intención de Voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
+              labs(title = "Intención de voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
               annotate("text", label = candidates$candidato, vjust = 0, hjust = 0, x = 0, y = candidates$y + 0.3, size = 5, colour = "#8b878d") +
               theme(
                 axis.title.y = element_blank(),
@@ -601,49 +601,33 @@ cajaResume <- function(DB, x){
 }
 
 gglevantamiento <- function(BD) {
-  data <- BD %>% select(modoLevantamiento)
-  Graph <- ggplot(data, aes(x = modoLevantamiento, fill = modoLevantamiento)) + 
-           geom_bar(position = "dodge") + 
-           theme_minimal() +
-           labs(title = "Modo de Levantamiento") +
-           theme(
-            axis.title.y = element_blank(),
-            axis.title.x = element_blank(),
-            text = element_text(family = "Avenir Next", size = 20),
-            plot.title = element_text(size = 22,
-                                colour =  "#13384D",
-                                hjust = 0, face="bold"),
-            axis.text.y = element_text(color = "#41657A"),
-            axis.text.x = element_text(color = "#41657A"),
-            axis.line.x = element_blank(),
-            panel.grid.major.y = element_blank(),
-            legend.title = element_blank(),
-            legend.position = "none",
-            panel.grid = element_blank())
-           
-  return(Graph)
-}
-
-ggMarcoMuestral <- function(BD) {
-  data <- BD %>% select(marcoMuestral) %>% tibble()
+  data <- BD %>%
+          select(modoLevantamiento) %>% 
+          mutate(n = 1) %>% 
+          group_by(modoLevantamiento) %>% 
+          summarise(across(n, sum)) %>%
+          tibble(x = 1:3)
   
-  Graph <- ggplot(barras, aes(x = 0, y = y, xend = votacion, yend = y, fill = colorHex, colour = colorHex))+
-    
-  Graph <- ggplot(data, aes(x = marcoMuestral, fill = marcoMuestral)) + 
-    geom_segment(lineend = "round", linejoin = "round", size = 9.5, arrow = arrow(length = unit(.0001, "inches")))  +
-    annotate("text", hjust = 1, label = Annotations$label, x = Annotations$votacion, y = Annotations$y, size = 6, colour = "white") +
-    scale_color_identity() + theme_minimal() +
-    labs(title = "Intención de Voto", subtitle = "(2020)", caption = "", x = "Porcentaje de voto", y = "candidatos") +
-    annotate("text", label = candidates$candidato, vjust = 0, hjust = 0, x = 0, y = candidates$y + 0.3, size = 5, colour = "#8b878d") +
+  Annotations <- tibble(data %>% select(modoLevantamiento), x = 1:3)
+  
+  Graph <- ggplot(data, aes(x = x, y = 0, xend = x, yend = n, fill = modoLevantamiento, colour = modoLevantamiento, label = modoLevantamiento))+
+    scale_y_continuous(name = "Stopping distance", limits = c(-1, max(data$n) + 1)) +  
+    geom_segment(lineend = "round", linejoin = "round", size = 30, arrow = arrow(length = unit(.0001, "inches"))) +
+    annotate("text", hjust = 0.5, vjust = 0.5, label = Annotations$modoLevantamiento, x = Annotations$x, y = -1, size = 5, colour = "#13384D") +
+    # geom_fit_text(position = "dodge", grow = FALSE, reflow = TRUE, 
+    #               place = "left", color = "white") +
+    scale_color_manual(values = c("#9C607D", "#69353F", "#C4C798")) +
+    labs(title = "Modo de levantamiento", subtitle = "(2020)", caption = "") +
+    theme_minimal() +
     theme(
       axis.title.y = element_blank(),
-      axis.title.x = element_text(color = "#8b878d"),
+      axis.title.x = element_blank(),
       text = element_text(family = "Avenir Next", size = 20),
       plot.title = element_text(size = 22,
                                 colour =  "#13384D",
                                 hjust = 0, face = "bold"),
-      axis.text.y = element_blank(),
-      axis.text.x = element_text(family = "Avenir Next", size = 15),
+      axis.text.y = element_text(family = "Avenir Next", size = 15),
+      axis.text.x = element_blank(),
       axis.line.x = element_blank(),
       panel.grid.major.y = element_blank(),
       legend.title = element_blank(),
@@ -651,22 +635,76 @@ ggMarcoMuestral <- function(BD) {
       panel.grid.major.x = element_blank(),
       panel.grid = element_blank()
     )
+  
+  return(Graph)
+}
+
+ggbarrasLevantamiento <- function(DB) {
+
+   data <- DB %>% select("modoLevantamiento") %>%
+     mutate(n = 1) %>%
+     group_by(modoLevantamiento) %>%
+     summarise(across(n, sum))
+
+
+  Graph <- ggplot(data, aes(x = modoLevantamiento, y = n,
+                            fill = modoLevantamiento,
+                            label = modoLevantamiento))+
+    geom_bar(stat = "identity") +
+    geom_bar_text(position = "stack", reflow = TRUE, grow = TRUE, contrast = TRUE) +
+    scale_fill_manual(values = c("#9C607D", "#69353F", "#C4C798")) +
+    labs(title = "Modo de levantamiento", subtitle = "(2020)", caption = "") +
     theme_minimal() +
-    labs(title = "Marco Muestral") +
     theme(
       axis.title.y = element_blank(),
       axis.title.x = element_blank(),
       text = element_text(family = "Avenir Next", size = 20),
       plot.title = element_text(size = 22,
                                 colour =  "#13384D",
-                                hjust = 0, face="bold"),
-      axis.text.y = element_text(color = "#41657A"),
-      axis.text.x = element_text(color = "#41657A"),
+                                hjust = 0, face = "bold"),
+      axis.text.y = element_text(family = "Avenir Next", size = 15),
+      axis.text.x = element_blank(),
       axis.line.x = element_blank(),
       panel.grid.major.y = element_blank(),
       legend.title = element_blank(),
       legend.position = "none",
-      panel.grid = element_blank())
-  
+      panel.grid.major.x = element_blank(),
+      panel.grid = element_blank()
+    )
+
   return(Graph)
+}
+
+
+WordCldTV <- function(BD){
+  # Cuidar que no haya na
+
+  word <- select(BD, marcoMuestral) %>% na.omit() # Pregunta
+  #titulo <- "Marco Muestral"
+
+  # Frecuencias
+  palabras <- word %>%
+    tidytext::unnest_tokens(input = marcoMuestral, output = palabra, token = "words") %>%
+    count(palabra)
+
+  # Graficar
+
+  wrdcld <- ggwordcloud(palabras$palabra, freq = 1,
+                        #scale = c(4, 0.5),
+                        max.words = 30, color = palabras$palabra,
+                        random.order = TRUE, random.color = FALSE) +
+    scale_size_area(max_size = 20) +
+    scale_color_brewer(palette = "Paired", direction = -1)+
+    theme_minimal() +
+    labs(title = "Modo de levantamiento", subtitle = "(2020)", caption = "") +
+    theme(
+      text = element_text(family = "Avenir Next", size = 20),
+      plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+      axis.text.y = element_text(family = "Avenir Next", size = 15),
+    )
+
+
+  return(wrdcld)
 }
