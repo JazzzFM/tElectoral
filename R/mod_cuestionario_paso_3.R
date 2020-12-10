@@ -24,16 +24,16 @@ mod_cuestionario_paso_3_ui <- function(id){
 #' @noRd 
 mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario = NULL, parent_session){
   ns <- session$ns
-  #listaPreguntas <- reactiveValues(preguntas = NULL)
+  listaPreguntas <- reactiveValues(preguntas = c())
   output$outPreguntas <- renderUI({
     if(!is.null(cuestionario$paso1)){
       lapply(seq_along(cuestionario$titulos), function(i) {
-        mod_cuestionario_bloques_ui(ns(glue::glue("cuestionario_bloques_ui_{i}")), bloque = cuestionario$titulos[i])
+        mod_cuestionario_bloques_ui(ns(glue::glue("cuestionario_bloques_ui_{i}")), bloque = cuestionario$titulos[i], i)
       })
     }
   })
   observe({
-    seq_along(cuestionario$titulos) %>% map(~callModule(mod_cuestionario_bloques_server,
+    listaPreguntas$preguntas <- seq_along(cuestionario$titulos) %>% map(~callModule(mod_cuestionario_bloques_server,
                                                                                     glue::glue("cuestionario_bloques_ui_{.x}"),
                                                                                     bloque = cuestionario$titulos[.x],
                                                                                     parent_session = parent_session,
@@ -42,7 +42,7 @@ mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario 
   })
   
   observeEvent(input$guardar, {
-    print("paso3")
+    browser()
   })
 }
     

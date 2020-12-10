@@ -16,6 +16,8 @@ mod_cuestionario_paso_4_ui <- function(id){
                  p("Aquí irá gráfico de reporte")
           ),
           column(width = 12,
+                 textInput(inputId = ns("correo"), label = "Correo al que se enviará análisis", placeholder="ejemplo@dominio.com")),
+          column(width = 12,
                  textAreaInput(inputId = ns("observacionesGenerales"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
           )
         ),

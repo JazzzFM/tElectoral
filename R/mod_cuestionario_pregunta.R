@@ -153,7 +153,7 @@ mod_cuestionario_pregunta_server <- function(input, output, session, valores = N
         updateTextAreaInput(session = parent_session, inputId = ns("obsSupuestosImplicitos"), value = valores$obsSupuestosImplicitos)
         updateNumericInput(session = parent_session, inputId = ns("numDobleBarril"), value = valores$numDobleBarril)
         updateTextAreaInput(session = parent_session, inputId = ns("obsDobleBarril"), value = valores$obsDobleBarril)
-        updateNumericInput(session = parent_sssion, inputId = ns("numSinBalanceRedaccion"), value = valores$numSinBalanceRedaccion)
+        updateNumericInput(session = parent_session, inputId = ns("numSinBalanceRedaccion"), value = valores$numSinBalanceRedaccion)
         updateTextAreaInput(session = parent_session, inputId = ns("obsSinBalanceRedaccion"), value = valores$obsSinBalanceRedaccion)
         updateNumericInput(session = parent_session, inputId = ns("numNoMutuamenteExcluyentes"), value = valores$numNoMutuamenteExcluyentes)
         updateTextAreaInput(session = parent_session, inputId = ns("obsNoMutuamenteExcluyentes"), value = valores$obsNoMutuamenteExcluyentes)

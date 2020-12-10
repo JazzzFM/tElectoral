@@ -12,10 +12,10 @@ mod_lugaresGira_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
-      class = "mt-25",
+      class = "mt-25 lugaresGiraContainer",
       column(width = 12,
              class = "col-lg-6",
-             tags$style(HTML('table.dataTable tbody tr.selected {background: var(--gradient-tr-selected) !important; background-attachment: fixed !important; color: #fff} table.dataTable tbody tr.selected td {background-color: transparent !important}')),
+             tags$style(HTML('table.dataTable tbody tr.selected {background: var(--gradient-tr-selected) !important; background-attachment: fixed !important; color: #333} table.dataTable tbody tr.selected td {background-color: transparent !important}')),
              DT::DTOutput(ns("recomendaciones"))
       ),
       column(
@@ -25,7 +25,7 @@ mod_lugaresGira_ui <- function(id){
           collapsible = T,
           width = 12,
           fluidRow(
-            column(width = 12,
+            column(width = 12, class="infoExtraLugaresGira",
                    class = "text-justify",
                    h3("Información de gira"),
                    h4("Responsable"),
@@ -37,21 +37,19 @@ mod_lugaresGira_ui <- function(id){
                      column(width = 6, p(paste0("Lugar de inicio: "), textOutput(ns("lugarInicio"))), p(paste0("Fecha de inicio: "), textOutput(ns("fechaInicio"))), p(paste0("Hora de inicio: "), textOutput(ns("horaInicio")))),
                      column(width = 6, p(paste0("Lugar de destino: "), textOutput(ns("lugarFinal"))), p(paste0("Fecha de finalización: "), textOutput(ns("fechaFinal"))), p(paste0("Hora de finalización: "), textOutput(ns("horaFinal")))),
                    )
-            ),
-            column(width = 12,
-                   h4("Información extra"),
-                   uiOutput(ns("info"))
             )
           )
         ),
         shinydashboardPlus::boxPlus(
           collapsible = T,
           width = 12,
-          fluidRow(
-            column(
-              width = 12,
-              leafletOutput(ns("mapa")),
-            ),
+          tabsetPanel(id = "tabsMapaInfoExtra", 
+              tabPanel(title = "Mapa (rutas)", 
+                       leafletOutput(ns("mapa")),
+               ),
+              tabPanel(title = "Información extra",
+                       uiOutput(ns("info"))
+               )
           )
         )
       )

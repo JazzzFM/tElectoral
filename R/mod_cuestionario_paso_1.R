@@ -32,7 +32,7 @@ mod_cuestionario_paso_1_ui <- function(id){
                  pickerInput(inputId = ns("operacionalizacion"), label = "¿Se operacionalizan todos los objetivos de investigación en los bloques del cuestionario?", choices = c("Seleccione" = "" , "Sí, completos", "Sí, parcialmente", "No"))
           ),
           column(width = 6,
-                 textAreaInput(inputId = ns("observacionOpBloquesCuestionario"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+                 textAreaInput(inputId = ns("obsOperacionalizacion"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
           ),
           column(width = 6,
                  pickerInput(inputId = ns("poblacionObjetivo"), label = "¿Hay filtros que permitan identificar correctamente a la población objetivo?", choices = c("Seleccione" = "" , "Sí, completos", "Sí, parcialmente", "No"))
@@ -73,6 +73,7 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
         obsGenerales = "",
         correo = ""
       )
+      print(cuestionario$paso1)
     }
     shinyjs::enable(input$GuardarPaso1)
   })

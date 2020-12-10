@@ -11,9 +11,8 @@ mod_cuestionario_paso_5_ui <- function(id){
   ns <- NS(id)
   tagList(
     h3("Cuestionario registrado con éxito"),
-    p("Puede descargar la documentación generada de este cuestionario o enviarlo para su análisis"),
-    actionButton(inputId = ns("descargarDoc"), label = "Descargar"),
-    actionButton(inputId = ns("enviar"), label = "Enviar")
+    p("Puede descargar la documentación generada de este cuestionario."),
+    actionButton(inputId = ns("descargarDoc"), label = "Descargar")
   )
 }
     
