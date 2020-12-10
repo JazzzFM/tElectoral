@@ -13,7 +13,7 @@ mod_investigacionAnalisis_ui <- function(id){
   ns <- NS(id)
   tagList(
     # Letreros
-    fluidRow(class="analisisValueBoxes",
+    fluidRow(class = "analisisValueBoxes",
       valueBoxOutput(ns("caja1")),
       valueBoxOutput(ns("caja2")),
       valueBoxOutput(ns("caja3"))
@@ -34,7 +34,7 @@ mod_investigacionAnalisis_ui <- function(id){
              plotOutput(ns("gPdt"))
              ))
     ),
-    h3("Resultados Diseño Muestral"),
+    h3("Resultados diseño muestral"),
     tags$hr(),
     fluidRow(
       column(width = 6, class="shadowBox",
@@ -44,13 +44,76 @@ mod_investigacionAnalisis_ui <- function(id){
       column(width = 6, class="shadowBox",
              shinycssloaders::withSpinner(
                plotOutput(ns("marcoMuestral"))
+             )),
+      column(width = 6,
+             div(class="topBoxInfo bordered-white ft-sm",
+                shinycssloaders::withSpinner( 
+                  plotOutput(outputId = ns("aleatoria"))
+                )
+             )),
+      column(width = 6,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner( 
+                   plotOutput(outputId = ns("noAleatoria"))
+                 )
              ))
-      # column(width = 12, 
-      #        div(class="topBoxInfo bordered-white ft-sm",
-      #            plotOutput(outputId = ns("pGauge")),
-      #            p("Calificación promedio")
-      #        ))
-    )
+    ),
+    fluidRow(class="analisisValueBoxes",
+             valueBoxOutput(ns("maxEntrevistas")),
+             valueBoxOutput(ns("modaEntrevistas")),
+             valueBoxOutput(ns("minEntrevistas"))
+    ),
+    fluidRow(
+    column(width = 4,
+           div(class="topBoxInfo bordered-white ft-sm",
+               shinycssloaders::withSpinner(
+                 plotOutput(outputId = ns("poliEtapa"))
+               )
+           )),
+    column(width = 4,
+           div(class="topBoxInfo bordered-white ft-sm",
+               shinycssloaders::withSpinner(
+                 plotOutput(outputId = ns("Estratificada"))
+               )
+           )),
+    column(width = 4,
+           div(class="topBoxInfo bordered-white ft-sm",
+               shinycssloaders::withSpinner(
+                 plotOutput(outputId = ns("Conglomerados"))
+               )
+           )),
+    column(width = 12,
+           div(class="topBoxInfo bordered-white ft-sm",
+               shinycssloaders::withSpinner(
+                 plotOutput(outputId = ns("unidadMuestral"))
+               )
+           ))
+    ),
+    fluidRow(class="analisisValueBoxes",
+             valueBoxOutput(ns("maxMargenError")),
+             valueBoxOutput(ns("modaMargenError")),
+             valueBoxOutput(ns("minMargenError"))
+    ),
+    fluidRow(
+      column(width = 4,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner(
+                   plotOutput(outputId = ns("minNivelConfianza"))
+                 )
+             )),
+      column(width = 4,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner(
+                   plotOutput(outputId = ns("modaNivelConfianza"))
+                 )
+             )),
+      column(width = 4,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner(
+                   plotOutput(outputId = ns("maxNivelConfianza"))
+                 )
+             ))
+      )
   )
 }
 
@@ -62,25 +125,25 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   #Letreros
   output$caja1 <- renderValueBox({
     #DB_MichEncuesta %>% nrow() %>% 
-    leerBd(pool, formGeneralBd) %>% collect() %>% nrow() %>% 
-      valueBox(subtitle = "Encuestas Realizadas", color = "light-blue", width = 12)
+      bd$encuestas %>% collect() %>% nrow() %>% 
+      valueBox(subtitle = "Encuestas realizadas", color = "light-blue", width = 12)
   })
   output$caja2 <- renderValueBox({
     start <- datetime <- ymd_hms(now("GMT"))
     end <- ymd_hms("2021-06-06 5:21:00", tz = "GMT")
     d <- as.numeric(round(end - start)) 
-    d %>% valueBox(subtitle = "Días para la Elección", color = "light-blue", width = 12)
+    d %>% valueBox(subtitle = "Días para la elección", color = "light-blue", width = 12)
   })
   output$caja3 <- renderValueBox({
     Sys.setlocale(locale = "es_MX.utf8")
     #DB_MichEncuesta %>% select(fecha_final) %>% tail(1) 
-    leerBd(pool, formIntVotoBd) %>%
+    bd$listadoIntVoto %>%
     collect() %>%
     pull(fechaEncuesta) %>%
     tail(1) %>% 
     as.Date() %>% format("%d de %b, %Y") %>% 
-    valueBox(subtitle = "Fecha de Última Encuesta",
-               icon = icon("calendar-o"), color = "light-blue")
+    valueBox(subtitle = "Fecha de última encuesta",
+             icon = icon("calendar-o"), color = "light-blue")
   })
   # Probabilidad de triunfo
   # Pendiente a donde quedar
@@ -123,21 +186,126 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   output$levantamiento <- renderPlot({
     # Función
     #gglevantamiento(bd$listadoDisMuestral)
-    ggbarrasLevantamiento(bd$listadoDisMuestral)
+    ggbarrasLevantamiento(bd$listadoDisMuestral %>% collect())
   })
   
   output$marcoMuestral <- renderPlot({
     # Función
-    WordCldTV(bd$listadoDisMuestral)
+    WordCldTV(bd$listadoDisMuestral %>% collect())
+  })
+
+  output$aleatoria <- renderPlot({
+    ggAleatoria(bd$listadoDisMuestral %>%
+                  collect())
   })
   
-  # output$pGauge <- renderPlot({
-  #   # bd <- tibble(x = sample(0:10, size = 20, replace = T))
-  #   promedioGauge(bd$evaluacionEventos, calificacion = expectativas)
-  # })
+  output$noAleatoria <- renderPlot({
+    ggNoaleatoria(bd$listadoDisMuestral %>% 
+                    collect())
+  })
+  
+  output$maxEntrevistas <- renderValueBox({
+    valueBox(
+      bd$listadoDisMuestral %>% 
+      collect() %>%
+      pull(numeroEntrevistas) %>%
+      max(),
+      "Máximo de encuestas",
+      icon = icon("line-chart")
+    )
+  })
+  
+  output$modaEntrevistas <- renderValueBox({
+    valueBox(
+        bd$listadoDisMuestral%>% 
+        collect() %>%
+        pull(numeroEntrevistas) %>%
+        getmoda(),
+      "Moda de encuestas",
+      icon = icon("bar-chart")
+    )
+  })
+  
+  output$minEntrevistas <- renderValueBox({
+    valueBox(
+        bd$listadoDisMuestral%>% 
+        collect() %>%
+        pull(numeroEntrevistas) %>%
+        min(),
+      "Mínimo de encuestas",
+      icon = icon("sort-amount-desc")
+    )
+  })
+  
+  output$poliEtapa <- renderPlot({
+    ggPoliEtapa(bd$listadoDisMuestral %>% collect())
+  })
+  
+  output$Estratificada <- renderPlot({
+    ggEstratificada(bd$listadoDisMuestral %>% collect())
+  })
+  
+  output$Conglomerados <- renderPlot({
+    ggConglomerados(bd$listadoDisMuestral %>% collect())
+  })
+
+  output$unidadMuestral <- renderPlot({
+    ggUnidadMuestral(bd$listadoDisMuestral %>% collect())
+  })
+
+  output$maxMargenError <- renderValueBox({
+    valueBox(
+      paste0(paste0("±", 
+               bd$listadoDisMuestral %>% 
+               collect() %>%
+               pull(margenError) %>%
+               max()), "%"), 
+      "Máximo margen de error",
+      icon = icon("line-chart")
+    )
+  })
+  
+  output$modaMargenError <- renderValueBox({
+    valueBox(
+      paste0(paste0("±",
+        bd$listadoDisMuestral %>% 
+        collect() %>%
+        pull(margenError) %>%
+        getmoda()), "%"),
+      "Margen de error frecuente",
+      icon = icon("bar-chart")
+    )
+  })
+  
+  output$minMargenError <- renderValueBox({
+    valueBox(
+      paste0(paste0("±",
+        bd$listadoDisMuestral %>% 
+        collect() %>%
+        pull(margenError) %>%
+        min()), "%"),
+      "Mínimo margen de error",
+      icon = icon("sort-amount-desc")
+    )
+  })
+  
+  output$minNivelConfianza <- renderPlot({
+    ggMinNivelConfianza(bd$listadoDisMuestral %>%
+                  collect())
+  })
+  
+  output$modaNivelConfianza <- renderPlot({
+    ggModaNivelConfianza(bd$listadoDisMuestral %>%
+                  collect())
+  })
+  
+  output$maxNivelConfianza <- renderPlot({
+    ggMaxNivelConfianza(bd$listadoDisMuestral %>%
+                  collect())
+  })
   
 }
-## To be copied in the UI
+  ## To be copied in the UI
 # 
 
 ## To be copied in the server
