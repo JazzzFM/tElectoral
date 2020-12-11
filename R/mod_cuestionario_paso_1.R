@@ -51,7 +51,7 @@ mod_cuestionario_paso_1_ui <- function(id){
 #' cuestionario_paso_1 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario = c()){
+mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario = c(), usuario, idFormGeneral){
   ns <- session$ns
 
   observeEvent(input$GuardarPaso1, {
@@ -61,7 +61,9 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
       shinyalert::shinyalert("Incompleto", "Favor de llenar todas las entradas.")
     }else{
       # Tibble
+      fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
       cuestionario$paso1 <- tibble::tibble(
+        idFormGeneral = idFormGeneral$val,
         urlArchivo = "adjunto",
         nivelClaridad = input$nivelClaridad,
         obsNivelClaridad = input$obsNivelClaridad,
@@ -71,7 +73,10 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
         obsPoblacionObjetivo = input$obsPoblacionObjetivo,
         cantidadBloques = 0,
         obsGenerales = "",
-        correo = ""
+        correo = "",
+        fechaAlta = fA,
+        usuarioCrea = usuario$user,
+        activo = 1
       )
       print(cuestionario$paso1)
     }

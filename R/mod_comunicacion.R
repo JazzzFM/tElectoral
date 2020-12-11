@@ -43,12 +43,12 @@ mod_comunicacion_server <- function(input, output, session, bd, usuario, parent_
   ns <- session$ns
   cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso3 = c(), paso4 = NULL)
   # Paso 1
-  callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario)
+  callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario, usuario, idFormGeneral)
   # Paso 2
   callModule(mod_cuestionario_paso_2_server, "cuestionario_paso_2_ui_1", cuestionario, parent_session)
   callModule(mod_cuestionario_paso_3_server, "cuestionario_paso_3_ui_1", cuestionario, parent_session)
   callModule(mod_cuestionario_paso_4_server, "cuestionario_paso_4_ui_1", cuestionario, parent_session)
-  callModule(mod_cuestionario_paso_5_server, "cuestionario_paso_5_ui_1", parent_session)
+  callModule(mod_cuestionario_paso_5_server, "cuestionario_paso_5_ui_1", parent_session, showListadoForm)
   observeEvent(input$atras,{
     showListadoForm$val <- 1
   })
