@@ -260,7 +260,7 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
                collect() %>%
                pull(margenError) %>%
                max()), "%"), 
-      "Máximo margen de error",
+      "Margen de error máximo",
       icon = icon("line-chart")
     )
   })
@@ -284,7 +284,7 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
         collect() %>%
         pull(margenError) %>%
         min()), "%"),
-      "Mínimo margen de error",
+      "Margen de error mínimo",
       icon = icon("sort-amount-desc")
     )
   })

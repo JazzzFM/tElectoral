@@ -393,6 +393,21 @@ procesamientoPollofPolls <- function(){
            votacion_min = round(min*100),
            votacion_max = round(max*100),
            votacion_copy = votacion)
+   
+  filtro <- DBI::dbGetQuery(pool,"SELECT p.nombrePartido, c.colorHex, r.resultado
+                              FROM tElectoralTest_partidoCandidato as p
+                              JOIN tElectoralTest_coloresOficiales c
+                                ON p.idPartido = c.idPartido
+                              JOIN tElectoralTest_investigacion_intencionVotoRegistro as r
+                                ON p.nombrePartido = r.partido;") %>% 
+     mutate(votacion = as.double(resultado)/100)%>% 
+     group_by(nombrePartido, colorHex) %>%
+     summarise(votacion = mean(votacion)*100)%>%
+     arrange(-votacion) %>% 
+     head(5) %>% 
+     pull(nombrePartido)
+  
+  DB <- DB %>% filter(candidato %in% filtro) 
                                            
    return(DB)
 }
@@ -406,6 +421,8 @@ hPollofPolls3 <- function(DB) {
   hcoptslang$thousandsSep <- c(",")
   options(highcharter.lang = hcoptslang)
   
+  colores <- DB %>% select(candidato, color) 
+  
   # Tooltip
   tt <- tooltip_table(c("{point.series.name}: "),
                       c("{point.votacion}%"))
@@ -413,14 +430,14 @@ hPollofPolls3 <- function(DB) {
   # Gráfica
   
   Graph <- DB %>% 
-    hchart(hcaes(x = fecha,  low = votacion - min, high = votacion + max, group = candidato),
+    hchart(hcaes(x = fecha,  low = votacion - min, high = votacion + max, group = candidato, fill = color, color = color),
            type = "arearange", enableMouseTracking = T, fillOpacity = 0.15) %>% 
+    hc_colors(colors) %>% 
     hc_yAxis(min = 0, max = 100) %>% 
     hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
     hc_add_series(data = DB,
-                  hcaes(x = fecha, y = votacion, group = candidato),
+                  hcaes(x = fecha, y = votacion, group = candidato, fill = color, color = color),
                   type = "line") %>% 
-    hc_colors(colors = DB$color) %>% 
     hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
     hc_xAxis(crosshair = T,
              labels = list(step = 2, style = list(fontSize = "18px",color = "#13384D")),
@@ -943,7 +960,7 @@ ggMinNivelConfianza <- function(BD){
     scale_x_continuous(limits = c(-5,2)) +
     scale_y_continuous(limits = c(0, 10))+
     theme_minimal() +
-    labs(title = "Mínimo nivel de confianza", subtitle = "(2020)", caption = "") +
+    labs(title = "Nivel de confianza mínimo", subtitle = "(2020)", caption = "") +
     theme(panel.grid = element_blank(),
           axis.text = element_blank(),
           axis.title = element_blank(),
@@ -985,7 +1002,7 @@ ggModaNivelConfianza <- function(BD){
     scale_x_continuous(limits = c(-5,2)) +
     scale_y_continuous(limits = c(0, 10))+
     theme_minimal() +
-    labs(title = "Mínimo nivel de confianza", subtitle = "(2020)", caption = "") +
+    labs(title = "Nivel de confianza Frecuente", subtitle = "(2020)", caption = "") +
     theme(panel.grid = element_blank(),
           axis.text = element_blank(),
           axis.title = element_blank(),
@@ -1025,7 +1042,7 @@ ggMaxNivelConfianza <- function(BD){
     scale_x_continuous(limits = c(-5,2)) +
     scale_y_continuous(limits = c(0, 10))+
     theme_minimal() +
-    labs(title = "Mínimo nivel de confianza", subtitle = "(2020)", caption = "") +
+    labs(title = "Nivel de confianza máximo", subtitle = "(2020)", caption = "") +
     theme(panel.grid = element_blank(),
           axis.text = element_blank(),
           axis.title = element_blank(),
