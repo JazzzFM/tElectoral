@@ -715,7 +715,7 @@ WordCldTV <- function(BD){
     scale_size_area(max_size = 20) +
     scale_color_brewer(palette = "Paired", direction = -1)+
     theme_minimal() +
-    labs(title = "Modo de levantamiento", subtitle = "(2020)", caption = "") +
+    labs(title = "Marco Muestral", subtitle = "(2020)", caption = "") +
     theme(
       text = element_text(family = "Avenir Next", size = 20),
       plot.title = element_text(size = 22,
@@ -1004,7 +1004,7 @@ ggModaNivelConfianza <- function(BD){
     scale_x_continuous(limits = c(-5,2)) +
     scale_y_continuous(limits = c(0, 10))+
     theme_minimal() +
-    labs(title = "Nivel de confianza Frecuente", subtitle = "(2020)", caption = "") +
+    labs(title = "Nivel de confianza frecuente", subtitle = "(2020)", caption = "") +
     theme(panel.grid = element_blank(),
           axis.text = element_blank(),
           axis.title = element_blank(),
