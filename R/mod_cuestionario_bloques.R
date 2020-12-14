@@ -7,12 +7,12 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_cuestionario_bloques_ui <- function(id, bloque){
+mod_cuestionario_bloques_ui <- function(id, bloque, index){
   ns <- NS(id)
   tagList(
     fluidRow(class="two-columns",
       p(class="text-center",bloque),
-      actionButton(inputId=ns("editar"), label = "", icon = icon("pencil"), class="btn-primary")
+      HTML(input_btns(inputId = ns("editar"), label = "", icon = "pencil", users = index, status = "primary"))
     )
   )
 }
@@ -23,21 +23,7 @@ mod_cuestionario_bloques_ui <- function(id, bloque){
 
 mod_cuestionario_bloques_server <- function(input, output, session, bloque = NULL, parent_session = NULL, cuestionario, index){
   ns <- session$ns
-  observeEvent(input$addPregunta,{
-    
-    showModal(modalDialog(title = "Pregunta",
-                          mod_cuestionario_pregunta_ui(ns(glue::glue("cuestionario_pregunta_ui_{index}"))),
-                          footer = actionButton(ns("agregar"),"Agregar"),
-                          easyClose = T
-    )
-    )
-  })
-  callModule(mod_cuestionario_pregunta_server, glue::glue("cuestionario_pregunta_ui_1"), valores = NULL, parent_session = parent_session)
-  observeEvent(input$agregar,{
-    removeModal()
-    cuestionario$paso3[index] <- callModule(mod_cuestionario_pregunta_server, glue::glue("cuestionario_pregunta_ui_{index}"), valores = NULL, parent_session = parent_session)()
-    
-  })
+  preguntas <- reactiveValues()
   observeEvent(input$editar,{
     showModal(modalDialog(title = glue::glue("Preguntas del bloque {bloque}"),
                           mod_cuestionario_pregunta_ui(ns(glue::glue("cuestionario_pregunta_ui_{input$editar}"))),
@@ -49,13 +35,15 @@ mod_cuestionario_bloques_server <- function(input, output, session, bloque = NUL
   })
   observeEvent(input$editarModal,{
     removeModal()
-    cuestionario$paso3[index] <- callModule(mod_cuestionario_pregunta_server, glue::glue("cuestionario_pregunta_ui_{index}"), valores = NULL, parent_session = parent_session)()
+    evt <- callModule(mod_cuestionario_pregunta_server, glue::glue("cuestionario_pregunta_ui_{index}"), valores = NULL, parent_session = parent_session)
+    preguntas[[as.character(index)]] <- evt()
+    browser()
   })
-  # ev <- reactive({
-  #   seq_len(index-1) %>% map(~preguntas[[as.character(.x)]]() %>% mutate(bloque = bloque)) %>% do.call(rbind,.) %>% na.omit()
-  # })
-  # 
-  # return(ev)
+  ev <- reactive({
+    seq_len(index-1) %>% map(~preguntas[[as.character(.x)]] %>% mutate(bloque = bloque)) %>% do.call(rbind,.) %>% na.omit()
+  })
+
+  return(ev)
 }
     
 ## To be copied in the UI

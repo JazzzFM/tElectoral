@@ -75,6 +75,17 @@ mod_investigacionListadoCuestionario_server <- function(input, output, session, 
     showListadoForm$val <- 2
     readOnly$val <- F
   })
+  observeEvent(input$eliminar, {
+    shinyalert::shinyalert(title = "Advertencia", 
+                           text = glue::glue("¿Está seguro que desea eliminar esta encuesta? No podrá recuperarla."),
+                           showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
+                           confirmButtonText = "Sí", 
+                           callbackR = function(x) if(x) {
+                             c1 <- glue::glue("idCuestionario = {input$eliminar}")
+                             disableBd(pool = pool, nombre = formCuestionarioBd, condition = c1)
+                             gargoyle::trigger("cuestionario")
+                           })
+  })
 }
     
 ## To be copied in the UI

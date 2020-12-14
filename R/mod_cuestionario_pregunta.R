@@ -113,12 +113,12 @@ No aplica: Cuando las respuestas son unipolares.', `ref-id` = ns("BalanceSRespue
 #' cuestionario_pregunta Server Function
 #'
 #' @noRd 
-mod_cuestionario_pregunta_server <- function(input, output, session, valores = NULL, parent_session = NULL){
+mod_cuestionario_pregunta_server <- function(input, output, session, valores = NULL, parent_session = NULL, bloque){
   ns <- session$ns
   out <- reactive({
     tibble(
       idCuestionario = 0,
-      nombre = "",
+      nombre = bloque,
       numTotalPreguntasBloque = input$numTotalPreguntasBloque,
       numDeseabilidadSocial = input$numDeseabilidadSocial,
       obsDeseabilidadSocial = input$obsDeseabilidadSocial,
@@ -135,10 +135,7 @@ mod_cuestionario_pregunta_server <- function(input, output, session, valores = N
       numDiezOpciones = input$numDiezOpciones,
       obsDiezOpciones = input$obsDiezOpciones,
       numCategoriaNeutral = input$numCategoriaNeutral,
-      obsCategoriaNeutral = input$obsCategoriaNeutral,
-      fechaAlta = "",
-      usuarioCrea = "",
-      activo = 1
+      obsCategoriaNeutral = input$obsCategoriaNeutral
       )
   })
   
@@ -153,7 +150,7 @@ mod_cuestionario_pregunta_server <- function(input, output, session, valores = N
         updateTextAreaInput(session = parent_session, inputId = ns("obsSupuestosImplicitos"), value = valores$obsSupuestosImplicitos)
         updateNumericInput(session = parent_session, inputId = ns("numDobleBarril"), value = valores$numDobleBarril)
         updateTextAreaInput(session = parent_session, inputId = ns("obsDobleBarril"), value = valores$obsDobleBarril)
-        updateNumericInput(session = parent_sssion, inputId = ns("numSinBalanceRedaccion"), value = valores$numSinBalanceRedaccion)
+        updateNumericInput(session = parent_session, inputId = ns("numSinBalanceRedaccion"), value = valores$numSinBalanceRedaccion)
         updateTextAreaInput(session = parent_session, inputId = ns("obsSinBalanceRedaccion"), value = valores$obsSinBalanceRedaccion)
         updateNumericInput(session = parent_session, inputId = ns("numNoMutuamenteExcluyentes"), value = valores$numNoMutuamenteExcluyentes)
         updateTextAreaInput(session = parent_session, inputId = ns("obsNoMutuamenteExcluyentes"), value = valores$obsNoMutuamenteExcluyentes)

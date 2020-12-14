@@ -11,18 +11,20 @@ mod_cuestionario_paso_5_ui <- function(id){
   ns <- NS(id)
   tagList(
     h3("Cuestionario registrado con éxito"),
-    p("Puede descargar la documentación generada de este cuestionario o enviarlo para su análisis"),
-    actionButton(inputId = ns("descargarDoc"), label = "Descargar"),
-    actionButton(inputId = ns("enviar"), label = "Enviar")
+    p("Puede descargar la documentación generada de este cuestionario."),
+    actionButton(inputId = ns("descargarDoc"), label = "Descargar", class="btn-primary"),
+    actionButton(inputId = ns("irListado"), label = "Ir a listado", class="btn-primary")
   )
 }
     
 #' cuestionario_paso_5 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_5_server <- function(input, output, session, parent_session = NULL){
+mod_cuestionario_paso_5_server <- function(input, output, session, parent_session = NULL, showListadoForm){
   ns <- session$ns
- 
+  observeEvent(input$irListado, {
+    showListadoForm$val <- 1 # Se regresa al listado
+  })
 }
     
 ## To be copied in the UI

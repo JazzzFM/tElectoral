@@ -32,7 +32,7 @@ mod_cuestionario_paso_1_ui <- function(id){
                  pickerInput(inputId = ns("operacionalizacion"), label = "¿Se operacionalizan todos los objetivos de investigación en los bloques del cuestionario?", choices = c("Seleccione" = "" , "Sí, completos", "Sí, parcialmente", "No"))
           ),
           column(width = 6,
-                 textAreaInput(inputId = ns("observacionOpBloquesCuestionario"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
+                 textAreaInput(inputId = ns("obsOperacionalizacion"), label = "Observaciones", value = "", rows = 5, placeholder = "(Opcional)")
           ),
           column(width = 6,
                  pickerInput(inputId = ns("poblacionObjetivo"), label = "¿Hay filtros que permitan identificar correctamente a la población objetivo?", choices = c("Seleccione" = "" , "Sí, completos", "Sí, parcialmente", "No"))
@@ -51,7 +51,7 @@ mod_cuestionario_paso_1_ui <- function(id){
 #' cuestionario_paso_1 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario = c()){
+mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario = c(), usuario, idFormGeneral){
   ns <- session$ns
 
   observeEvent(input$GuardarPaso1, {
@@ -61,7 +61,9 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
       shinyalert::shinyalert("Incompleto", "Favor de llenar todas las entradas.")
     }else{
       # Tibble
+      fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
       cuestionario$paso1 <- tibble::tibble(
+        idFormGeneral = idFormGeneral$val,
         urlArchivo = "adjunto",
         nivelClaridad = input$nivelClaridad,
         obsNivelClaridad = input$obsNivelClaridad,
@@ -71,8 +73,12 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
         obsPoblacionObjetivo = input$obsPoblacionObjetivo,
         cantidadBloques = 0,
         obsGenerales = "",
-        correo = ""
+        correo = "",
+        fechaAlta = fA,
+        usuarioCrea = usuario$user,
+        activo = 1
       )
+      print(cuestionario$paso1)
     }
     shinyjs::enable(input$GuardarPaso1)
   })

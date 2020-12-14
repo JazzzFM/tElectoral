@@ -13,47 +13,51 @@ mod_giraPaso1_ui <- function(id){
   tagList(
     h3("Instancia de gira"),
     p("A continuación, llene los campos para completar el paso 1"),
-    fluidRow(
-      column(width = 12,
-             textInput(inputId = ns("Responsable"), label = "Responsable" , placeholder = "...") )
-    ),
-    fluidRow(
-      column(width = 12,
-             textAreaInput(inputId = ns("Descripcion"), label = "Descripcion" , placeholder = "...", rows = 5))
-    ),
-    fluidRow(
-      column(width = 4,
-             selectizeInput(inputId = ns("LugarInicio"), label = "Lugar de inicio", choices = c("Seleccione un lugar" = "", DB_Mich2 %>% select(CABECERA_MUNICIPAL) %>% pull(CABECERA_MUNICIPAL)) )
-      ),
-      column(width = 4,
-             dateInput(inputId = ns("FechaInicio"), label = "Fecha de inicio", format = "dd/mm/yyyy", language = "es", value = Sys.Date(), min = Sys.Date() )
-      ),
-      column(width = 4,
-             selectizeInput(inputId = ns("HorarioInicio"), label = "Hora de inicio", choices =  c("Seleccione hora" = "", seq(
-               from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
-               to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
-               by="30 min"
-             ) %>% format(.,"%R"))
-            )
-      )
-    ),
-    fluidRow(
-      column(width = 4,
-             selectizeInput(inputId = ns("LugarFinal"), label = "Lugar de destino", choices = c("Seleccione un lugar" = "", DB_Mich2 %>% select(CABECERA_MUNICIPAL) %>% pull(CABECERA_MUNICIPAL)) )
-      ),
-      column(width = 4,
-             dateInput(inputId = ns("FechaFinal"), label = "Fecha de finalización", format = "dd/mm/yyyy", language = "es", value = Sys.Date(), min = Sys.Date() )
-      ),
-      column(width = 4,
-             selectizeInput(inputId = ns("HorarioFinal"), label = "Hora de finalización", choices = c("Seleccione hora" = "", seq(
-               from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
-               to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
-               by="30 min"
-             ) %>% format(.,"%R"))
-             )
-      )
-    ),
-    actionButton(inputId = ns("guardar"), "Guardar", class = "btn-primary")
+    hr(),
+    div(class="shadowForm",
+        fluidRow(
+          column(width = 12,
+                 textInput(inputId = ns("Responsable"), label = "Responsable" , placeholder = "...") )
+        ),
+        fluidRow(
+          column(width = 12,
+                 textAreaInput(inputId = ns("Descripcion"), label = "Descripcion" , placeholder = "...", rows = 5))
+        ),
+        fluidRow(
+          column(width = 4,
+                 selectizeInput(inputId = ns("LugarInicio"), label = "Lugar de inicio", choices = c("Seleccione un lugar" = "", DB_Mich2 %>% select(CABECERA_MUNICIPAL) %>% pull(CABECERA_MUNICIPAL)) )
+          ),
+          column(width = 4,
+                 dateInput(inputId = ns("FechaInicio"), label = "Fecha de inicio", format = "dd/mm/yyyy", language = "es", value = Sys.Date(), min = Sys.Date() )
+          ),
+          column(width = 4,
+                 selectizeInput(inputId = ns("HorarioInicio"), label = "Hora de inicio", choices =  c("Seleccione hora" = "", seq(
+                   from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
+                   to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
+                   by="30 min"
+                 ) %>% format(.,"%R"))
+                 )
+          )
+        ),
+        fluidRow(
+          column(width = 4,
+                 selectizeInput(inputId = ns("LugarFinal"), label = "Lugar de destino", choices = c("Seleccione un lugar" = "", DB_Mich2 %>% select(CABECERA_MUNICIPAL) %>% pull(CABECERA_MUNICIPAL)) )
+          ),
+          column(width = 4,
+                 dateInput(inputId = ns("FechaFinal"), label = "Fecha de finalización", format = "dd/mm/yyyy", language = "es", value = Sys.Date(), min = Sys.Date() )
+          ),
+          column(width = 4,
+                 selectizeInput(inputId = ns("HorarioFinal"), label = "Hora de finalización", choices = c("Seleccione hora" = "", seq(
+                   from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
+                   to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
+                   by="30 min"
+                 ) %>% format(.,"%R"))
+                 )
+          )
+        ),
+        hr(),
+        actionButton(inputId = ns("guardar"), "Guardar", class = "btn-primary")   
+    )
   )
 }
 

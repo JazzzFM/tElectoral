@@ -218,11 +218,6 @@ DBI::dbExecute(pool, "CREATE TABLE tElectoralTest_investigacion_cuestionario_pre
   obsDiezOpciones VARCHAR(300),
   numCategoriaNeutral INT,
   obsCategoriaNeutral VARCHAR(300),
-  fechaAlta DATETIME,
-  fechaEdicion DATETIME,
-  usuarioCrea VARCHAR(100),
-  usuarioEdicion VARCHAR(100),
-  activo TINYINT,
   CONSTRAINT FK_preguntaxbloque_cuestionario FOREIGN KEY (idCuestionario) REFERENCES tElectoralTest_investigacion_cuestionario(idCuestionario)
 );" )
 
