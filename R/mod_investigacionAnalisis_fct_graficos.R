@@ -444,8 +444,8 @@ hPollofPolls3 <- function(DB) {
              title = list(text = "Fecha", style = list( fontSize = "16px", color = "#41657A"))) %>%
     hc_plotOptions(line = list(colorByPoint = F, showInLegend = T),
                    arearange = list(lineWidth = 0, colorByPoint = F)) %>%
-    hc_tooltip(sort = F,
-               shared = T,
+    hc_tooltip(sort = T,
+               shared = F,
                borderWidth= 0,
                split = T,
                pointFormat = tt,
