@@ -432,12 +432,13 @@ hPollofPolls3 <- function(DB) {
   Graph <- DB %>% 
     hchart(hcaes(x = fecha,  low = votacion - min, high = votacion + max, group = candidato, fill = color, color = color),
            type = "arearange", enableMouseTracking = T, fillOpacity = 0.15) %>% 
-    hc_colors(colors) %>% 
+    hc_colors(DB$color) %>% 
     hc_yAxis(min = 0, max = 100) %>% 
     hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
     hc_add_series(data = DB,
                   hcaes(x = fecha, y = votacion, group = candidato, fill = color, color = color),
                   type = "line") %>% 
+    hc_colors(DB$color) %>% 
     hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
     hc_xAxis(crosshair = T,
              labels = list(step = 2, style = list(fontSize = "18px",color = "#13384D")),
@@ -453,7 +454,9 @@ hPollofPolls3 <- function(DB) {
                style = list(fontSize = "16px", color = "#41657A"),
                useHTML = TRUE) %>%
     hc_legend(enabled = T) %>%
-    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"), zoomType = "x") 
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"), zoomType = "x") %>% 
+    hc_colors(DB$color) %>% 
+      
   
   return(Graph)
 }
