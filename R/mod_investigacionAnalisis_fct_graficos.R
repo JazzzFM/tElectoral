@@ -421,8 +421,7 @@ hPollofPolls3 <- function(DB) {
   hcoptslang$thousandsSep <- c(",")
   options(highcharter.lang = hcoptslang)
   
-  colores <- DB %>% select(candidato, color) 
-  
+
   # Tooltip
   tt <- tooltip_table(c("{point.series.name}: "),
                       c("{point.votacion}%"))
@@ -455,7 +454,7 @@ hPollofPolls3 <- function(DB) {
                useHTML = TRUE) %>%
     hc_legend(enabled = T) %>%
     hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"), zoomType = "x") %>% 
-    hc_colors(DB$color) %>% 
+    hc_colors(DB$color)
       
   
   return(Graph)
