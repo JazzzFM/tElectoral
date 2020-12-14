@@ -15,7 +15,7 @@ mod_giraPaso3_ui <- function(id){
     h3("Asignación de eventos"),
     p("Asigne eventos a los lugares que ha escogido en el paso 2"),
     uiOutput(ns("outEventos")),
-    actionButton(ns("guardar"), "Guardar", class = "btn-definitive")
+    actionButton(ns("guardar"), "Guardar", class = "btn-primary")
   )
 }
 

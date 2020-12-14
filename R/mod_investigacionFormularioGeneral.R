@@ -10,6 +10,11 @@
 mod_investigacionFormularioGeneral_ui <- function(id){
   ns <- NS(id)
   tagList(
+    fluidRow(
+      column(width = 6,
+             actionButton(inputId = ns("atras"), label = "Regresar al listado de encuestas", class ="btn-default")
+      )
+    ),
     h3("Formulario general de encuestas"),
     hr(),
     div(class="shadowForm",
@@ -31,7 +36,7 @@ mod_investigacionFormularioGeneral_ui <- function(id){
           )
         ),
         hr(),
-        actionButton(inputId = ns("guardar"), "Guardar", class = "btn btn-primary")
+        uiOutput(ns("outGuardar"), style = "width: 100%")
       )
   )
 }
@@ -39,8 +44,23 @@ mod_investigacionFormularioGeneral_ui <- function(id){
 #' investigacionFormularioGeneral Server Function
 #'
 #' @noRd 
-mod_investigacionFormularioGeneral_server <- function(input, output, session, bd, usuario, parent_session, showForm = NULL){
+mod_investigacionFormularioGeneral_server <- function(input, output, session, bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL){
   ns <- session$ns
+  
+  output$outGuardar <- renderUI({
+    if(readOnly$val == FALSE){
+      tagList(
+        fluidRow( class ="padding15-25",
+                  actionButton(inputId = ns("guardar"), "Guardar", class = "btn-primary")
+        )
+      )
+    }
+  })
+  
+  observeEvent(input$atras,{
+    showListadoForm$val <- 1
+  })
+  
   observeEvent(input$guardar, {
     if(validarFormularioGeneral(input$nombre, input$casaEncuestadora, input$poblacionObjetivo, input$fechaInicio, input$fechaFin)){
       fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
@@ -56,18 +76,21 @@ mod_investigacionFormularioGeneral_server <- function(input, output, session, bd
         usuarioEdicion = NULL,
         activo = 1
       )
-      tryCatch(
-      expr = {
-        insertBd(pool, formGeneralBd, bd = formGeneral)
-        shinyalert::shinyalert(title = "Los datos se subieron correctamente.")
-        },
-      error = function(e){    
-        shinyalert::shinyalert(title = "Los datos no se subieron, intente más tarde o revise su conexión..")
-      },
-      warning = function(w){    
-        shinyalert::shinyalert(title = "Revise su conexión.")
-      }
-    )
+      insertBd(pool, formGeneralBd, bd = formGeneral)
+      showListadoForm$val <- 1 # Se regresa al listado
+      gargoyle::trigger("encuestasGeneral")
+    }
+  })
+  
+  infoEncuesta <- reactiveVal(NULL)
+  observe({
+    if(idFormGeneral$val != 0){
+      infoEncuesta(bd$encuestas %>% filter(activo == 1 & idFormGeneral == !! idFormGeneral$val) %>% collect())
+      updateTextInput(session = parent_session, inputId = ns("nombre"), value = infoEncuesta()$nombre)
+      updateTextInput(session = parent_session, inputId = ns("casaEncuestadora"), value = infoEncuesta()$casaEncuestadora)
+      updateTextInput(session = parent_session, inputId = ns("poblacionObjetivo"), value = infoEncuesta()$poblacionObjetivo)
+      updateDateInput(session = parent_session, inputId = ns("fechaInicio"), value = infoEncuesta()$fechaInicio)
+      updateDateInput(session = parent_session, inputId = ns("fechaFin"), value = infoEncuesta()$fechaFin)
     }
   })
 }
