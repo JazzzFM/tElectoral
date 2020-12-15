@@ -22,7 +22,7 @@ mod_cuestionario_paso_3_ui <- function(id){
 #' cuestionario_paso_3 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario = NULL, parent_session){
+mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario = NULL, bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL){
   ns <- session$ns
   listaPreguntas <- reactiveValues()
   output$outPreguntas <- renderUI({
@@ -38,14 +38,15 @@ mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario 
       })
     }
   })
-  # observe({
-  #   listaPreguntas$preguntas <- seq_along(cuestionario$titulos) %>% map(~callModule(mod_cuestionario_bloques_server,
-  #                                                                                   glue::glue("cuestionario_bloques_ui_{.x}"),
-  #                                                                                   bloque = cuestionario$titulos[.x],
-  #                                                                                   parent_session = parent_session,
-  #                                                                                   cuestionario,
-  #                                                                                   .x))
-  # })
+  observe({
+    if(!is.null(cuestionario$paso1$idCuestionario)){
+      # Se añaden tibbles a listaPreguntas
+      for(x in 1:cuestionario$paso1$cantidadBloques){
+        item <- cuestionario$paso3[x,]
+        listaPreguntas[[as.character(x)]] <- item
+      }
+    }
+  })
   actualValue <- reactiveValues(val = 0)
   observeEvent(input$editar,{
     
@@ -56,7 +57,7 @@ mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario 
     )
     )
     actualValue$val <- input$editar
-    callModule(mod_cuestionario_pregunta_server, glue::glue("cuestionario_pregunta_ui_{as.numeric(input$editar)}"), valores = cuestionario$paso3[as.numeric(input$editar)], parent_session = parent_session, bloque = cuestionario$titulos[as.numeric(input$editar)])
+    callModule(mod_cuestionario_pregunta_server, glue::glue("cuestionario_pregunta_ui_{as.numeric(input$editar)}"), valores = listaPreguntas[[as.character(input$editar)]], parent_session = parent_session, bloque = cuestionario$titulos[as.numeric(input$editar)])
   })
   observeEvent(input$editarModal,{
     

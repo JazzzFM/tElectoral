@@ -1,7 +1,7 @@
 leerBd <- function(pool,nombre){
   out <- tryCatch(
     {
-      tbl(pool,nombre) %>% filter(activo == 1)
+      tbl(pool,nombre) #%>% filter(activo == 1)
     },
     error=function(ex) {
       shinyalert::shinyalert(title = "¡Ha ocurrido algo!",

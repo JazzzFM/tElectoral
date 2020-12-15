@@ -39,7 +39,7 @@ mod_cuestionario_paso_2_ui <- function(id){
 #' cuestionario_paso_2 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_2_server <- function(input, output, session, cuestionario = NULL, parent_session){
+mod_cuestionario_paso_2_server <- function(input, output, session, cuestionario = NULL, bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL){
   ns <- session$ns
    observeEvent(input$guardarPaso2,{
      # Guardar títulos
@@ -69,6 +69,23 @@ mod_cuestionario_paso_2_server <- function(input, output, session, cuestionario 
           ui = column(class="NombreBloque",
                       width = 6,
                       textInput(inputId = ns(paste0("NombreBloque-", item)), placeholder = "...", label = paste0("Título de bloque no. ", item))
+          )
+        )
+      }
+    }
+  })
+  
+  observe({
+    if(!is.null(cuestionario$paso1$idCuestionario)){
+      updateNumericInput(inputId = ns("CantidadBloques"), session = parent_session, value = cuestionario$paso1$cantidadBloques)
+      
+      for (item in 1:cuestionario$paso1$cantidadBloques) {
+        insertUI(
+          selector = '.NombreBloquesContainer',
+          where = "beforeEnd",
+          ui = column(class="NombreBloque",
+                      width = 6,
+                      textInput(inputId = ns(paste0("NombreBloque-", item)), placeholder = "...", label = paste0("Título de bloque no. ", item), value = cuestionario$titulos[item])
           )
         )
       }
