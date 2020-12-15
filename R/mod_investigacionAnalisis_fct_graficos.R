@@ -393,6 +393,21 @@ procesamientoPollofPolls <- function(){
            votacion_min = round(min*100),
            votacion_max = round(max*100),
            votacion_copy = votacion)
+   
+  filtro <- DBI::dbGetQuery(pool,"SELECT p.nombrePartido, c.colorHex, r.resultado
+                              FROM tElectoralTest_partidoCandidato as p
+                              JOIN tElectoralTest_coloresOficiales c
+                                ON p.idPartido = c.idPartido
+                              JOIN tElectoralTest_investigacion_intencionVotoRegistro as r
+                                ON p.nombrePartido = r.partido;") %>% 
+     mutate(votacion = as.double(resultado)/100)%>% 
+     group_by(nombrePartido, colorHex) %>%
+     summarise(votacion = mean(votacion)*100)%>%
+     arrange(-votacion) %>% 
+     head(5) %>% 
+     pull(nombrePartido)
+  
+  DB <- DB %>% filter(candidato %in% filtro) 
                                            
    return(DB)
 }
@@ -406,6 +421,7 @@ hPollofPolls3 <- function(DB) {
   hcoptslang$thousandsSep <- c(",")
   options(highcharter.lang = hcoptslang)
   
+
   # Tooltip
   tt <- tooltip_table(c("{point.series.name}: "),
                       c("{point.votacion}%"))
@@ -413,22 +429,23 @@ hPollofPolls3 <- function(DB) {
   # Gráfica
   
   Graph <- DB %>% 
-    hchart(hcaes(x = fecha,  low = votacion - min, high = votacion + max, group = candidato),
+    hchart(hcaes(x = fecha,  low = votacion - min, high = votacion + max, group = candidato, fill = color, color = color),
            type = "arearange", enableMouseTracking = T, fillOpacity = 0.15) %>% 
+    hc_colors(DB$color) %>% 
     hc_yAxis(min = 0, max = 100) %>% 
     hc_title(text = "<b>Intención de voto estimada por fecha</b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
     hc_add_series(data = DB,
-                  hcaes(x = fecha, y = votacion, group = candidato),
+                  hcaes(x = fecha, y = votacion, group = candidato, fill = color, color = color),
                   type = "line") %>% 
-    hc_colors(colors = DB$color) %>% 
+    hc_colors(DB$color) %>% 
     hc_yAxis(title = list(text = "Estimación", style = list( fontSize = "16px", color = "#41657A")), labels = list(format = "{value}%") , style = list(fontSize = "18px",color = "#13384D")) %>%
     hc_xAxis(crosshair = T,
              labels = list(step = 2, style = list(fontSize = "18px",color = "#13384D")),
              title = list(text = "Fecha", style = list( fontSize = "16px", color = "#41657A"))) %>%
     hc_plotOptions(line = list(colorByPoint = F, showInLegend = T),
                    arearange = list(lineWidth = 0, colorByPoint = F)) %>%
-    hc_tooltip(sort = F,
-               shared = T,
+    hc_tooltip(sort = T,
+               shared = F,
                borderWidth= 0,
                split = T,
                pointFormat = tt,
@@ -436,7 +453,9 @@ hPollofPolls3 <- function(DB) {
                style = list(fontSize = "16px", color = "#41657A"),
                useHTML = TRUE) %>%
     hc_legend(enabled = T) %>%
-    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"), zoomType = "x") 
+    hc_chart(style = list(fontColor = "#1C313D", fontFamily= "Avenir Next"), zoomType = "x") %>% 
+    hc_colors(DB$color)
+      
   
   return(Graph)
 }
@@ -696,7 +715,7 @@ WordCldTV <- function(BD){
     scale_size_area(max_size = 20) +
     scale_color_brewer(palette = "Paired", direction = -1)+
     theme_minimal() +
-    labs(title = "Modo de levantamiento", subtitle = "(2020)", caption = "") +
+    labs(title = "Marco Muestral", subtitle = "(2020)", caption = "") +
     theme(
       text = element_text(family = "Avenir Next", size = 20),
       plot.title = element_text(size = 22,
@@ -707,4 +726,337 @@ WordCldTV <- function(BD){
 
 
   return(wrdcld)
+}
+
+ggAleatoria <- function(BD){
+  
+  aux <- BD %>% 
+         select(aleatoria) %>% 
+         filter(aleatoria == "Sí") %>% 
+         count() %>% 
+         mutate(color= case_when(n >= 6 ~"#2E8087", T ~"#C7EBF0"))
+  
+  Graph <- aux %>% ggplot() +
+    annotate(x=1, xend=1, y=0, yend=10, size=10*1.1, color = aux$color,
+             geom = "segment", alpha=.5)+
+    geom_segment(aes(x = 1, y = 0, xend = 1, yend = n),
+                 color = aux$color,
+                 lineend = "round", linejoin = "round",
+                 size =  10, arrow = arrow(length = unit(0, "inches"))  ) +
+    geom_text(aes(label = round(n, digits = 1)), color = aux$color,
+              x=-5, y=5, size=60/.pt, fontface="bold")+
+    coord_polar(theta = "y") +
+    scale_x_continuous(limits = c(-5,2)) +
+    scale_y_continuous(limits = c(0, 10))+
+    theme_minimal() +
+    labs(title = "Aleatorias", subtitle = "(2020)", caption = "") +
+    theme(panel.grid = element_blank(),
+          axis.text = element_blank(),
+          axis.title = element_blank(),
+          text = element_text(family = "Avenir Next", size = 20),
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
+                                    hjust = 0, face="bold"),
+          axis.line.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none"
+          
+    )
+  return(Graph)
+}
+
+ggNoaleatoria <- function(BD){
+  
+  aux <- BD %>% 
+    select(aleatoria) %>% 
+    filter(aleatoria == "No") %>% 
+    count() %>% 
+    mutate(color= case_when(n >= 6 ~"#2E8087", T ~"#8C606E"))
+  
+  Graph <- aux %>% ggplot() +
+    annotate(x=1, xend=1, y=0, yend=10, size=10*1.1, color = aux$color,
+             geom = "segment", alpha=.5)+
+    geom_segment(aes(x = 1, y = 0, xend = 1, yend = n),
+                 color = aux$color,
+                 lineend = "round", linejoin = "round",
+                 size =  10, arrow = arrow(length = unit(0, "inches"))  ) +
+    geom_text(aes(label = round(n, digits = 1)), color = aux$color,
+              x=-5, y=5, size=60/.pt, fontface="bold")+
+    coord_polar(theta = "y") +
+    scale_x_continuous(limits = c(-5,2)) +
+    scale_y_continuous(limits = c(0, 10))+
+    theme_minimal() +
+    labs(title = "No aleatorias", subtitle = "(2020)", caption = "") +
+    theme(panel.grid = element_blank(),
+          axis.text = element_blank(),
+          axis.title = element_blank(),
+          text = element_text(family = "Avenir Next", size = 20),
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
+                                    hjust = 0, face="bold"),
+          axis.line.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none"
+    )
+  return(Graph)
+}
+
+getmoda <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+ggEstratificada <- function(BD) {
+  data <- BD %>%
+          select(estratificada, nivielEstratificada) %>%
+          mutate(n = 1) %>%
+          group_by(nivielEstratificada) %>%
+          summarise(across(n, sum))
+          
+  Graph <- ggplot(data, aes(x = nivielEstratificada, y = n, label = nivielEstratificada, fill = nivielEstratificada)) +
+           geom_bar(stat = "identity") +
+           geom_bar_text(position = "stack", reflow = TRUE, grow = FALSE, contrast = TRUE) +
+           labs(title = "Estratificada por niveles", subtitle = "(2020)", caption = "") +
+           theme_minimal() +
+           theme(
+            axis.title.y = element_blank(),
+            axis.title.x = element_blank(),
+            text = element_text(family = "Avenir Next", size = 20),
+            plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+            axis.text.y = element_text(family = "Avenir Next", size = 15),
+            axis.text.x = element_blank(),
+            axis.line.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            legend.title = element_blank(),
+            legend.position = "none",
+            panel.grid.major.x = element_blank(),
+            panel.grid = element_blank()
+          )
+  return(Graph)
+}
+
+ggPoliEtapa <- function(BD) {
+  data <- BD %>%
+    select(poliEtapa, nivelpoliEtapa) %>%
+    mutate(n = 1) %>%
+    group_by(nivelpoliEtapa) %>%
+    summarise(across(n, sum))
+  
+  Graph <- ggplot(data, aes(x = nivelpoliEtapa, y = n, label = nivelpoliEtapa, fill = nivelpoliEtapa)) +
+    geom_bar(stat = "identity") +
+    geom_bar_text(position = "stack", reflow = TRUE, grow = FALSE, contrast = TRUE) +
+    labs(title = "Polietápica por niveles", subtitle = "(2020)", caption = "") +
+    theme_minimal() +
+    theme(
+      axis.title.y = element_blank(),
+      axis.title.x = element_blank(),
+      text = element_text(family = "Avenir Next", size = 20),
+      plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+      axis.text.y = element_text(family = "Avenir Next", size = 15),
+      axis.text.x = element_blank(),
+      axis.line.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      legend.title = element_blank(),
+      legend.position = "none",
+      panel.grid.major.x = element_blank(),
+      panel.grid = element_blank()
+    )
+  return(Graph)
+}
+
+ggConglomerados <- function(BD) {
+  data <- BD %>%
+    select(conglomerados, nivielConglomerados) %>%
+    mutate(n = 1) %>%
+    group_by(nivielConglomerados) %>%
+    summarise(across(n, sum))
+  
+  Graph <- ggplot(data, aes(x = nivielConglomerados, y = n, label = nivielConglomerados, fill = nivielConglomerados)) +
+    geom_bar(stat = "identity") +
+    geom_bar_text(position = "stack", reflow = TRUE, grow = FALSE, contrast = TRUE) +
+    labs(title = "Conglomerados por niveles", subtitle = "(2020)", caption = "") +
+    theme_minimal() +
+    theme(
+      axis.title.y = element_blank(),
+      axis.title.x = element_blank(),
+      text = element_text(family = "Avenir Next", size = 20),
+      plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+      axis.text.y = element_text(family = "Avenir Next", size = 15),
+      axis.text.x = element_blank(),
+      axis.line.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      legend.title = element_blank(),
+      legend.position = "none",
+      panel.grid.major.x = element_blank(),
+      panel.grid = element_blank()
+    )
+  return(Graph)
+}
+
+ggUnidadMuestral <- function(BD) {
+  
+  data <- BD %>% 
+          select(unidadMuestral) %>% 
+          mutate(n = 1) %>% 
+          group_by(unidadMuestral) %>%
+          summarise(across(n, sum))
+  
+  Graph <- ggplot(data, aes(y = n, x = unidadMuestral,
+                           fill = unidadMuestral,
+                           label = unidadMuestral)) +
+            geom_bar(stat = "identity") +
+            coord_polar() +
+            geom_fit_text(position = "stack", place = "topleft", min.size = 0, grow = TRUE, contrast = TRUE) +
+            scale_fill_brewer(palette="Spectral") +
+            ylim(0, NA) +
+            labs(title = "Unidades muestrales", subtitle = "(2020)", caption = "") +
+            theme_minimal() +
+            theme(
+              axis.title.y = element_blank(),
+              axis.title.x = element_blank(),
+              text = element_text(family = "Avenir Next", size = 15),
+              plot.title = element_text(size = 22,
+                                colour =  "#13384D",
+                                hjust = 0, face = "bold"),
+              axis.text.y = element_text(family = "Avenir Next", size = 10),
+              axis.text.x = element_blank(),
+              # axis.line.x = element_blank(),
+             # panel.grid.major.y = element_blank(),
+              legend.title = element_blank(),
+              legend.position = "none",
+              #panel.grid.major.x = element_blank(),
+              #panel.grid = element_blank()
+            )
+  return(Graph)
+}
+
+
+ggMinNivelConfianza <- function(BD){
+  
+  aux_2 <- BD %>% 
+    select(nivelConfianza) %>% min()
+  
+  aux <- BD %>% 
+    select(nivelConfianza) %>% 
+    filter(nivelConfianza == aux_2) %>% 
+    mutate(color= case_when(nivelConfianza >= 6 ~"#2E8087", T ~"#C7EBF0"))
+  
+  Graph <- aux %>% ggplot() +
+    annotate(x=1, xend=1, y=0, yend=10, size=10*1.1, color = aux$color,
+             geom = "segment", alpha=.5)+
+    geom_segment(aes(x = 1, y = 0, xend = 1, yend = nivelConfianza),
+                 color = aux$color,
+                 lineend = "round", linejoin = "round",
+                 size =  10, arrow = arrow(length = unit(0, "inches"))  ) +
+    geom_text(aes(label = paste0(round(nivelConfianza, digits = 1)), "%"), color = aux$color,
+              x=-5, y=5, size=60/.pt, fontface="bold")+
+    coord_polar(theta = "y") +
+    scale_x_continuous(limits = c(-5,2)) +
+    scale_y_continuous(limits = c(0, 10))+
+    theme_minimal() +
+    labs(title = "Nivel de confianza mínimo", subtitle = "(2020)", caption = "") +
+    theme(panel.grid = element_blank(),
+          axis.text = element_blank(),
+          axis.title = element_blank(),
+          text = element_text(family = "Avenir Next", size = 20),
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
+                                    hjust = 0, face="bold"),
+          axis.line.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none"
+          
+    )
+  return(Graph)
+}
+
+ggModaNivelConfianza <- function(BD){
+  
+  aux_2 <- BD  %>% 
+    select(nivelConfianza) %>%
+    pull(nivelConfianza) %>% 
+    getmoda()
+  
+  aux <- BD %>% 
+    select(nivelConfianza) %>% 
+    filter(nivelConfianza == aux_2) %>% 
+    mutate(color= case_when(nivelConfianza >= 6 ~"#2E8087", T ~"#C7EBF0"))
+  
+  Graph <- aux %>% ggplot() +
+    annotate(x=1, xend=1, y=0, yend=10, size=10*1.1, color = aux$color,
+             geom = "segment", alpha=.5)+
+    geom_segment(aes(x = 1, y = 0, xend = 1, yend = nivelConfianza),
+                 color = aux$color,
+                 lineend = "round", linejoin = "round",
+                 size =  10, arrow = arrow(length = unit(0, "inches"))  ) +
+    geom_text(aes(label = paste0(round(nivelConfianza, digits = 1)), "%"), color = aux$color,
+              x=-5, y=5, size=60/.pt, fontface="bold")+
+    coord_polar(theta = "y") +
+    scale_x_continuous(limits = c(-5,2)) +
+    scale_y_continuous(limits = c(0, 10))+
+    theme_minimal() +
+    labs(title = "Nivel de confianza frecuente", subtitle = "(2020)", caption = "") +
+    theme(panel.grid = element_blank(),
+          axis.text = element_blank(),
+          axis.title = element_blank(),
+          text = element_text(family = "Avenir Next", size = 20),
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
+                                    hjust = 0, face="bold"),
+          axis.line.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none"
+          
+    )
+  return(Graph)
+}
+
+ggMaxNivelConfianza <- function(BD){
+  
+  aux_2 <- BD %>% 
+    select(nivelConfianza) %>% max()
+  
+  aux <- BD %>% 
+    select(nivelConfianza) %>% 
+    filter(nivelConfianza == aux_2) %>% 
+    mutate(color= case_when(nivelConfianza >= 6 ~"#2E8087", T ~"#C7EBF0"))
+  
+  Graph <- aux %>% ggplot() +
+    annotate(x=1, xend=1, y=0, yend=10, size=10*1.1, color = aux$color,
+             geom = "segment", alpha=.5)+
+    geom_segment(aes(x = 1, y = 0, xend = 1, yend = nivelConfianza),
+                 color = aux$color,
+                 lineend = "round", linejoin = "round",
+                 size =  10, arrow = arrow(length = unit(0, "inches"))  ) +
+    geom_text(aes(label = paste0(round(nivelConfianza, digits = 1)), "%"), color = aux$color,
+              x=-5, y=5, size=60/.pt, fontface="bold")+
+    coord_polar(theta = "y") +
+    scale_x_continuous(limits = c(-5,2)) +
+    scale_y_continuous(limits = c(0, 10))+
+    theme_minimal() +
+    labs(title = "Nivel de confianza máximo", subtitle = "(2020)", caption = "") +
+    theme(panel.grid = element_blank(),
+          axis.text = element_blank(),
+          axis.title = element_blank(),
+          text = element_text(family = "Avenir Next", size = 20),
+          plot.title = element_text(size = 22,
+                                    colour =  "#13384D",
+                                    hjust = 0, face="bold"),
+          axis.line.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          legend.title = element_blank(),
+          legend.position = "none"
+          
+    )
+  return(Graph)
 }
