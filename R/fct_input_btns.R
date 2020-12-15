@@ -9,11 +9,10 @@ input_btns <- function(inputId, users, tooltip, icon = "", status = "default", l
           "Shiny.setInputValue('%s', '%s',  {priority: 'event'})",
           inputId, x
         ),
-        label,
         icon(icon),
+        label,
         `data-toggle` = "tooltip"
       )
-      
       res <- tagList(res, tags$script(HTML("$('[data-toggle=\"tooltip\"]').tooltip();")))
       doRenderTags(res)
     }

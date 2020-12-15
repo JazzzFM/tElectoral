@@ -21,8 +21,9 @@ mod_lugaresPaso3_ui <- function(id, titulo){
                    closable = F,
                    actionButton(
                      inputId = ns("addEvento"),
-                     "Agregar evento",
-                     class = "btn btn-primary"
+                     "",
+                     class = "btn btn-primary btn-plus",
+                     icon = icon("plus")
                    )
                  ),
                  div(class = "tramo",
@@ -76,7 +77,7 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
                                    eventos[[as.character(uiCount$val)]] <- evt()
                                    insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
                                             ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
-                                              input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "danger"),
+                                              input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "primary"),
                                               input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
                                             ))
                                    )
@@ -91,7 +92,7 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
         eventos[[as.character(uiCount$val)]] <- evt()
         insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
                  ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
-                   input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "danger"),
+                   input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "primary"),
                    input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
                  ))
         )
@@ -136,7 +137,7 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
                                      removeUI(selector = paste0("#evento-", actualEditable$value))
                                      insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
                                               ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",actualEditable$value),HTML(
-                                                input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "danger"),
+                                                input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "primary"),
                                                 input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", eventos[[as.character(actualEditable$value)]]$nombre), label = eventos[[as.character(actualEditable$valuel)]]$nombre)
                                               ))
                                      )
@@ -152,7 +153,7 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
         removeUI(selector = paste0("#evento-", actualEditable$value))
         insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
                  ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",actualEditable$value),HTML(
-                   input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "danger"),
+                   input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "primary"),
                    input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", eventos[[as.character(actualEditable$value)]]$nombre), label = eventos[[as.character(actualEditable$value)]]$nombre)
                  ))
         )

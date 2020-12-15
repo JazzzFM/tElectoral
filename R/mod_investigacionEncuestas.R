@@ -10,24 +10,45 @@
 mod_investigacionEncuestas_ui <- function(id){
   ns <- NS(id)
   tagList(
-      h3("Registro de encuestas"),
-      p("Se muestra el listado de encuestas registradas hasta el momento."),
-      tags$hr(),
-      DT::DTOutput(ns("encuestas"))
+    shinyjs::useShinyjs(),
+    uiOutput(ns("listadoForm"))
     )
 }
     
 #' investigacionEncuestas Server Function
 #'
 #' @noRd 
-mod_investigacionEncuestas_server <- function(input, output, session, bd, parent_session = NULL, showForm = NULL, idFormGeneral){
+mod_investigacionEncuestas_server <- function(input, output, session, bd, usuario, parent_session = NULL, showForm = NULL, idFormGeneral){
   ns <- session$ns
+  showListadoForm <- reactiveValues(val = 1)
+  readOnly <- reactiveValues(val = FALSE)
   
-  seleccion <- reactive(
-    bd$encuestas %>% filter(activo == 1)
-  )
-  
+  output$listadoForm <- renderUI({
+    if(showListadoForm$val == 1){
+      tagList(
+        fluidRow(
+          column(width = 6,
+                 actionButton(ns("crearEncuesta"), "Nueva encuesta", class="btn-primary")  
+          )
+        ),
+        h3("Registro de encuestas"),
+        p("Se muestra el listado de encuestas registradas hasta el momento."),
+        tags$hr(),
+        DT::DTOutput(ns("encuestas"))
+      )
+    }
+    else if(showListadoForm$val == 2){
+      mod_investigacionFormularioGeneral_ui(ns("investigacionFormularioGeneral_ui_1"))
+    }
+  })
+  callModule(mod_investigacionFormularioGeneral_server, "investigacionFormularioGeneral_ui_1", bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly)
+
+  seleccion <- reactiveVal(NULL)
+  observeEvent(c(gargoyle::watch("encuestasGeneral")), {
+    seleccion(bd$encuestas %>% filter(activo == 1) %>% collect()) 
+  })
   output$encuestas <- DT::renderDT({
+    validate(need(!is.null(seleccion()), message = "Cargando datos ..."))
     seleccion() %>% select(idFormGeneral,nombre,casaEncuestadora) %>%
       mutate(FD = input_btns(ns("disMuestral"), idFormGeneral, "Diseño muestral", icon = "pie-chart", status = "primary"),
              FV = input_btns(ns("intVoto"), idFormGeneral, "Intención de voto", icon = "hand-pointer-o", status = "primary"),
@@ -40,7 +61,7 @@ mod_investigacionEncuestas_server <- function(input, output, session, bd, parent
                  lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5
   ),
   escape = F)
-  
+
   observeEvent(input$disMuestral, {
     showForm$val <- 2
     idFormGeneral$val <- input$disMuestral
@@ -57,7 +78,31 @@ mod_investigacionEncuestas_server <- function(input, output, session, bd, parent
     gargoyle::trigger("cuestionario")
   })
   
-  
+  #Editar
+  observeEvent(input$editar,{
+    showListadoForm$val <- 2
+    readOnly$val <- T
+    idFormGeneral$val <- input$editar
+  })
+  observeEvent(input$crearEncuesta,{
+    showListadoForm$val <- 2
+    readOnly$val <- F
+  })
+  observeEvent(input$eliminar, {
+    shinyalert::shinyalert(title = "Advertencia", 
+                           text = glue::glue("¿Está seguro que desea eliminar esta encuesta? No podrá recuperarla."),
+                           showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
+                           confirmButtonText = "Sí", 
+                           callbackR = function(x) if(x) {
+                             c1 <- glue::glue("idFormGeneral = {input$eliminar}")
+                             disableBd(pool = pool, nombre = formGeneralBd, condition = c1)
+                             disableBd(pool = pool, nombre = formDisMuestralBd, condition = c1)
+                             disableBd(pool = pool, nombre = formIntVotoBd, condition = c1)
+                             disableBd(pool = pool, nombre = formIntVotoRegistroBd, condition = c1)
+                             disableBd(pool = pool, nombre = formCuestionarioBd, condition = c1)
+                             gargoyle::trigger("encuestasGeneral")
+                           })
+  })
   
 }
 

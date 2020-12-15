@@ -10,6 +10,7 @@
 mod_investigacionListadoIntVoto_ui <- function(id){
   ns <- NS(id)
   tagList(
+    shinyjs::useShinyjs(),
     uiOutput(ns("listadoForm"))
   )
 }

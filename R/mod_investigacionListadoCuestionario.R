@@ -10,6 +10,7 @@
 mod_investigacionListadoCuestionario_ui <- function(id){
   ns <- NS(id)
   tagList(
+    shinyjs::useShinyjs(),
     uiOutput(ns("listadoForm"))
   )
 }
@@ -74,6 +75,17 @@ mod_investigacionListadoCuestionario_server <- function(input, output, session, 
   observeEvent(input$crearCuestionario,{
     showListadoForm$val <- 2
     readOnly$val <- F
+  })
+  observeEvent(input$eliminar, {
+    shinyalert::shinyalert(title = "Advertencia", 
+                           text = glue::glue("¿Está seguro que desea eliminar esta encuesta? No podrá recuperarla."),
+                           showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
+                           confirmButtonText = "Sí", 
+                           callbackR = function(x) if(x) {
+                             c1 <- glue::glue("idCuestionario = {input$eliminar}")
+                             disableBd(pool = pool, nombre = formCuestionarioBd, condition = c1)
+                             gargoyle::trigger("cuestionario")
+                           })
   })
 }
     

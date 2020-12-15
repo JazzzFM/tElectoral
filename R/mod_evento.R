@@ -11,35 +11,37 @@
 mod_evento_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fluidRow(
-      column(width = 6,
-             textInput(label = "Nombre del evento", placeholder = "...", inputId = ns("nombre"))),
-      column(width = 6,
-             textInput(label = "Dirección donde será el evento", placeholder = "...", inputId = ns("direccion"))),
-      column(width = 12,
-             textAreaInput(label = "Descripción del evento", inputId = ns("descripcion"))),
-      column(width = 6,
-             textInput(label = "Nombre de contacto", placeholder = "...", inputId = ns("contacto"))),
-      column(width = 6,
-             textInput(label = "Teléfono", placeholder = "...", inputId = ns("telefono"))),
-      column(width = 6,
-             textInput(label = "Correo electrónico", placeholder = "...", inputId = ns("correo"))),
-      column(width = 6,
-             dateInput(inputId = ns("fechaEvento"), label = "Fecha de evento", format = "dd/mm/yyyy", language = "es", value = Sys.Date())
-      ),
-      column(width = 6,
-             selectizeInput(inputId = ns("inicioEvento"), label = "Inicio de evento", choices =  c(seq(
-                from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
-                to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
-                by="30 min"
-             ) %>% format(.,"%R")))),
-      column(width = 6,
-             selectizeInput(inputId = ns("finEvento"), label = "Fin de evento", choices =  c(seq(
-                from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
-                to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
-                by="30 min"
-             ) %>% format(.,"%R"))
-             ))
+   div(class="shadowForm",
+       fluidRow(
+          column(width = 6,
+                 textInput(label = "Nombre del evento", placeholder = "...", inputId = ns("nombre"))),
+          column(width = 6,
+                 textInput(label = "Dirección donde será el evento", placeholder = "...", inputId = ns("direccion"))),
+          column(width = 12,
+                 textAreaInput(label = "Descripción del evento", inputId = ns("descripcion"))),
+          column(width = 6,
+                 textInput(label = "Nombre de contacto", placeholder = "...", inputId = ns("contacto"))),
+          column(width = 6,
+                 textInput(label = "Teléfono", placeholder = "...", inputId = ns("telefono"))),
+          column(width = 6,
+                 textInput(label = "Correo electrónico", placeholder = "...", inputId = ns("correo"))),
+          column(width = 6,
+                 dateInput(inputId = ns("fechaEvento"), label = "Fecha de evento", format = "dd/mm/yyyy", language = "es", value = Sys.Date())
+          ),
+          column(width = 6,
+                 selectizeInput(inputId = ns("inicioEvento"), label = "Inicio de evento", choices =  c(seq(
+                    from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
+                    to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
+                    by="30 min"
+                 ) %>% format(.,"%R")))),
+          column(width = 6,
+                 selectizeInput(inputId = ns("finEvento"), label = "Fin de evento", choices =  c(seq(
+                    from=as.POSIXct("2012-1-1 0:00", tz="UTC"),
+                    to=as.POSIXct("2012-1-1 23:00", tz="UTC"),
+                    by="30 min"
+                 ) %>% format(.,"%R"))
+                 ))
+       )
     )
   )
 }

@@ -6,7 +6,7 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   # List the first level callModules here
-  gargoyle::init("intencionVoto","disMuestral","cuestionario")
+  gargoyle::init("encuestasGeneral","intencionVoto","disMuestral","cuestionario")
   # Login
   res_auth <- shinymanager::secure_server(
     check_credentials = shinymanager::check_credentials(db = tibble(user ="admin",
@@ -19,7 +19,7 @@ app_server <- function( input, output, session ) {
     eventos = leerBd(pool,eventosBd) %>% collect(),
     giras = leerBd(pool,girasBd) %>% collect(),
     evaluacionEventos = leerBd(pool,evaluacionEventosBd) %>% collect(),
-    encuestas = leerBd(pool, formGeneralBd) %>% collect(),
+    encuestas = leerBd(pool, formGeneralBd),# %>% collect(),
     listadoDisMuestral = leerBd(pool, formDisMuestralBd) %>% collect(),
     listadoIntVoto = leerBd(pool, formIntVotoBd), #%>% collect(),
     intVotoRegistro = leerBd(pool, formIntVotoRegistroBd)%>% collect(), # Se traen candidatos
@@ -30,7 +30,7 @@ app_server <- function( input, output, session ) {
   callModule(mod_portada_server, "portada_ui_1")
   # Investigación
   callModule(mod_investigacionAnalisis_server, "investigacionAnalisis_ui_1", bd)
-  callModule(mod_investigacionFormularioGeneral_server, "investigacionFormularioGeneral_ui_1", bd, res_auth, parent_session = session)
+  #callModule(mod_investigacionFormularioGeneral_server, "investigacionFormularioGeneral_ui_1", bd, res_auth, parent_session = session)
   callModule(mod_investigacionCompartido_server, "investigacionCompartido_ui_1", bd, res_auth, session)
   # End Investigación
   # Protocolo de cuestionarios
