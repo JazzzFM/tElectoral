@@ -12,7 +12,7 @@ mod_investigacionFormularioDisMuestral_ui <- function(id){
   tagList(
     fluidRow(
       column(width = 6,
-             actionButton(inputId = ns("atras"), label = "Regresar al listado de intención de voto", class ="btn-default")
+             actionButton(inputId = ns("atras"), label = "Regresar al listado de diseño muestral", class ="btn-default")
       )
     ),
     h3("Formulario de diseño muestral "),

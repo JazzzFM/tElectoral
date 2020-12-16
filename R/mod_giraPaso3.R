@@ -68,7 +68,7 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
                  usuarioCrea = usuario$user,
                  activo = 1) %>%
           select(-HorarioInicio,-HorarioFinal) %>% 
-          insertBd(pool, girasBd, bd = .)
+          insertBd(pool, girasBd, bd = ., showMessage = F)
         
         idgiraRec <- tbl(pool, girasBd) %>% filter(fechaAlta == !!fA) %>% pull(idGira)
         
