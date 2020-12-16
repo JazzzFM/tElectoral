@@ -12,11 +12,6 @@ mod_cuestionario_paso_1_ui <- function(id){
   ns <- NS(id)
   tagList(
     hr(),
-    # fluidRow(
-    #   column(width = 12, 
-    #          textInput(inputId = ns("nombreCuestionario"), placeholder = "Ingrese un nombre", label = "Nombre del cuestionario")
-    #   ),
-    # ),
     div(class="shadowForm",
         fluidRow(
           column(width = 12,
@@ -42,7 +37,10 @@ mod_cuestionario_paso_1_ui <- function(id){
           )
         ),
         hr(),
-        actionButton(inputId = ns("GuardarPaso1"), "Guardar paso 1", class = "btn-primary"),
+        fluidRow(
+          uiOutput(ns("outGuardar"), style = "width: 100%")
+        )
+        
     )
     # End bloques del cuestionario
   )
@@ -81,6 +79,17 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
       print(cuestionario$paso1)
     }
     shinyjs::enable(input$GuardarPaso1)
+  })
+  output$outGuardar <- renderUI({
+    if(readOnly$val == FALSE){
+      tagList(
+        fluidRow( class ="padding15-25",
+                  column(width = 6,
+                         actionButton(inputId = ns("GuardarPaso1"), "Guardar paso 1", class = "btn-primary"),
+                  )
+        )
+      )
+    }
   })
   
   observe({
