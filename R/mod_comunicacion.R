@@ -11,7 +11,6 @@
 mod_comunicacion_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinyjs::useShinyjs(),
     fluidRow(
       column(width = 6,
              actionButton(inputId = ns("atras"), label = "Regresar al listado de cuestionarios", class ="btn-default")

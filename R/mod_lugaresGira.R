@@ -120,6 +120,7 @@ mod_lugaresGira_server <- function(input, output, session, gira = NULL, parent_s
       tiempos <- a()[[4]]
       gira$paso2 <- tibble(lugares = temp)
       gira$paso2Tiempos <- tiempos
+      
     }else{
       shinyalert::shinyalert(title = "Debe seleccionar al menos un origen y un destino")
     }
