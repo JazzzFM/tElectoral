@@ -79,7 +79,7 @@ mod_giraPaso3_server <- function(input, output, session, gira = NULL, parent_ses
                  activo = 1) %>% 
           insertBd(pool, eventosBd, bd = .)
         
-        
+          reseted$value <- T
       }else{
         shinyalert::shinyalert(title = "Debe añadir al menos un evento por lugar")
       }

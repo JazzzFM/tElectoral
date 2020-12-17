@@ -119,6 +119,7 @@ golem::add_fct(name = "validarHorarioOcupado" )
 golem::add_fct(name = "validarAlcanceTiempo" )
 golem::add_fct(name = "validarAscendenciaHorario")
 golem::add_fct(name = "validarInfoEvento")
+golem::add_fct(name = "validarLugarAnterior")
 #Formulario
 golem::add_fct(name = "validarEmail" )
 golem::add_fct(name = "validarSoloNumeros" )

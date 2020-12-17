@@ -1,5 +1,4 @@
 validarAlcanceTiempo <- function(evt,eventos,tiempoAntes, lugarAntes, lugar){
-  browser()
   valido <- TRUE
   fechaAnterior <- glue::glue("1985-01-01 00:30") %>% ymd_hm()
   horaFinalAnterior <- glue::glue("1985-01-01 00:30") %>% ymd_hm()
