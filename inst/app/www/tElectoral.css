@@ -1638,9 +1638,9 @@ width: calc(100% / 2) !important;
 /* End Candidatos*/
 
 /* Analisis de investigación */
-.analisisValueBoxes [class*='col-']{
+/*.analisisValueBoxes [class*='col-']{
   float: none;
-}
+}*/
 .shadowBox > * {
     background-color: #fff;
     border-radius: 5px;
