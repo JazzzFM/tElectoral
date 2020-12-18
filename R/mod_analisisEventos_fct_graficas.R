@@ -282,8 +282,8 @@ burbujas <- function(bd, pregunta1, pregunta2){
     geom_point(stat = "identity", alpha= .6)+
     scale_color_identity()+ theme_minimal()+
     scale_size_area(max_size = 70)+
-    labs(x = "Respuesta", y = "Aspecto", 
-         #title = str_wrap("Cantidad de Asistentes y Duración de Evento",30)
+    labs(x = "Respuesta", y = "Aspecto" 
+         #, title = str_wrap("Cantidad de Asistentes y Duración de Evento",30)
          )+
     theme(text = element_text(family = "Avenir Next", size = 20),
           plot.title = element_text(size = 22,
@@ -424,8 +424,8 @@ lolipop_cRecursos <- function(DB, pregunta){
   Graph <- ggplot(cr, aes(x = porcentaje, y = reorder({{ pregunta }}, -n), label = labela, color = n, fill = n)) +
     geom_segment(aes(x = 0, y = {{ pregunta }}, xend = porcentaje, yend = {{ pregunta }})) +
     geom_point(size = 20) + tema_lolipop() +
-    geom_text(color = "white", size = 8) +
-    labs(title = "Calidad de Recursos")
+    geom_text(color = "white", size = 8) 
+    #labs(title = "Calidad de Recursos")
   
   cr <- mutate(labela = {{ pregunta }})
   Graph <- Graph +
@@ -455,7 +455,7 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
     geom_text( aes(label = pct %>%  percent(accuracy = 1), y = pct), 
                color = "white", fontface="bold", size = 8) +
     scale_y_continuous(labels=scales::percent,limits = c(0,max(bd$pct) + .1)) +
-    #labs(title = titulo, x = "", y = "" )+
+    labs(x = "", y = "" ) +
     geom_hline(yintercept = 0, linetype = "solid", size = .4, color = "#BFD7EA")+
     theme_minimal()+
     theme(panel.grid = element_blank(),
