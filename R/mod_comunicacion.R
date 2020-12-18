@@ -39,16 +39,11 @@ mod_comunicacion_ui <- function(id){
 #' comunicacion Server Function
 #'
 #' @noRd 
-mod_comunicacion_server <- function(input, output, session, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario){
+mod_comunicacion_server <- function(input, output, session, bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL){
   ns <- session$ns
-  cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso3 = c(), paso4 = NULL)
-  # Paso 1
-  callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario, usuario, idFormGeneral)
-  # Paso 2
-  callModule(mod_cuestionario_paso_2_server, "cuestionario_paso_2_ui_1", cuestionario, parent_session)
-  callModule(mod_cuestionario_paso_3_server, "cuestionario_paso_3_ui_1", cuestionario, parent_session)
-  callModule(mod_cuestionario_paso_4_server, "cuestionario_paso_4_ui_1", cuestionario, parent_session)
-  callModule(mod_cuestionario_paso_5_server, "cuestionario_paso_5_ui_1", parent_session, showListadoForm)
+  
+  cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso3 = c())
+  
   observeEvent(input$atras,{
     showListadoForm$val <- 1
   })
@@ -58,7 +53,26 @@ mod_comunicacion_server <- function(input, output, session, bd, usuario, parent_
   hideTab(inputId = "TabsCuestionario", target = "paso4", session = parent_session)
   hideTab(inputId = "TabsCuestionario", target = "paso5", session = parent_session)
   
+  infoCuestionario <- reactiveVal(NULL)
+  infoPreguntas <- reactiveVal(NULL)
   observe({
+    
+    if(as.numeric(idCuestionario$val) != 0){
+      
+      # Se obtiene info del cuestionario y sus preguntas
+      infoCuestionario(bd$listadoCuestionario %>% filter(activo == 1 & idFormGeneral == !! idFormGeneral$val & idCuestionario == !! idCuestionario$val) %>% collect())
+      infoPreguntas(bd$cuestionarioPreguntasXBloque %>% filter(idCuestionario == !! idCuestionario$val) %>% collect())
+      
+      # Se añaden títulos al reactiveValues
+      for(x in 1:infoCuestionario()$cantidadBloques){
+        item <- infoPreguntas()[x,]
+        cuestionario$titulos[x] = item$nombre
+      }
+      cuestionario$paso1 <- infoCuestionario()
+      cuestionario$paso3 <- infoPreguntas()
+      
+    }
+    
     if(!is.null(cuestionario$paso1)){
       updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso2", parent_session)
     }
@@ -74,6 +88,12 @@ mod_comunicacion_server <- function(input, output, session, bd, usuario, parent_
         updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso5", parent_session)
     }
   })
+  callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
+  callModule(mod_cuestionario_paso_2_server, "cuestionario_paso_2_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
+  callModule(mod_cuestionario_paso_3_server, "cuestionario_paso_3_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
+  callModule(mod_cuestionario_paso_4_server, "cuestionario_paso_4_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
+  callModule(mod_cuestionario_paso_5_server, "cuestionario_paso_5_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
+ 
 }
 
 ## To be copied in the UI

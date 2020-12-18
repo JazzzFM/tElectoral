@@ -1451,24 +1451,39 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
 }
 
 /* Analisis gira */
-
+#shiny-tab-analisisEventos h3 {
+    font-size: 1.2em;
+}
+#shiny-tab-analisisEventos .dataTables_wrapper{
+ font-size: 0.85em; 
+}
+.calificacionContainer {
+    display: inline-flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+.calificacionContainer .topBoxInfo:nth-of-type(2){
+  margin-top: 120px;
+}
 .topBoxInfo {
   text-align: center;
   line-height: .8;
   height: 100%;
-  padding-top: 55px;
+  padding-top: 15px;
 }
-.topBoxInfo p:first-child {
-  font-size: 4em;
-  background: var(--gradient-button-primary);
+.topBoxInfo .shiny-text-output {
+  font-size: 2em;
+  background: var(--sidebar-font-color);
   color: #fff;
-  width: 165px;
-  height: 165px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 8px auto;
+  font-weight: bold;
 }
 .topBoxInfo.bordered-green p:first-child{
   background-color: #1cbea4;
@@ -1482,7 +1497,7 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
 .topBoxInfo.ft-sm p:first-child{
   font-size: 3em;
 }
-.topBoxInfo.red p:first-child{
+.topBoxInfo.default .shiny-text-output{
   background-color: #c45947;
   border: 5px solid #e39c91;
   color: #fff;
@@ -1623,9 +1638,9 @@ width: calc(100% / 2) !important;
 /* End Candidatos*/
 
 /* Analisis de investigación */
-.analisisValueBoxes [class*='col-']{
+/*.analisisValueBoxes [class*='col-']{
   float: none;
-}
+}*/
 .shadowBox > * {
     background-color: #fff;
     border-radius: 5px;

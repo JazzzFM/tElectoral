@@ -22,7 +22,9 @@ mod_cuestionario_paso_4_ui <- function(id){
           )
         ),
         hr(),
-        actionButton(ns("guardarCuestionario"), "Guardar cuestionario", class="btn btn-primary")
+        fluidRow(
+          uiOutput(ns("outGuardar"), style = "width: 100%")
+        )
     )
   )
 }
@@ -30,10 +32,28 @@ mod_cuestionario_paso_4_ui <- function(id){
 #' cuestionario_paso_4 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario = c(), parent_session = NULL){
+mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario = c(), bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL){
   ns <- session$ns
+  observe({
+    if(!is.null(cuestionario$paso1$idCuestionario)){
+      browser()
+      updateTextInput(inputId = "correo", session = session, value = cuestionario$paso1$correo)
+      updateTextAreaInput(inputId = ns("obsGenerales"),session = session, value = cuestionario$paso1$obsGenerales)
+      shinyjs::hide(selector = paste0("#",ns("guardarCuestionario")))
+    }
+  })
+  output$outGuardar <- renderUI({
+    if(readOnly$val == FALSE){
+      tagList(
+        fluidRow( class ="padding15-25",
+                  column(width = 6,
+                         actionButton(ns("guardarCuestionario"), "Guardar cuestionario", class="btn btn-primary")
+                  )
+        )
+      )
+    }
+  })
   observeEvent(input$guardarCuestionario, {
-    browser()
     cuestionario$paso1$correo <- input$correo
     cuestionario$paso1$obsGenerales <- input$obsGenerales
     

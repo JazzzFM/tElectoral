@@ -20,7 +20,7 @@ mod_cuestionario_paso_5_ui <- function(id){
 #' cuestionario_paso_5 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_5_server <- function(input, output, session, parent_session = NULL, showListadoForm){
+mod_cuestionario_paso_5_server <- function(input, output, session, cuestionario = c(), bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL){
   ns <- session$ns
   observeEvent(input$irListado, {
     showListadoForm$val <- 1 # Se regresa al listado

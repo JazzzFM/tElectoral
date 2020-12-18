@@ -3,19 +3,21 @@ validarAlcanceTiempo <- function(evt,eventos,tiempoAntes, lugarAntes, lugar){
   fechaAnterior <- glue::glue("1985-01-01 00:30") %>% ymd_hm()
   horaFinalAnterior <- glue::glue("1985-01-01 00:30") %>% ymd_hm()
   for(i in seq_along(eventos)){
-    if(!is.null(eventos[[i]]$inicioEvento)){
-      tmp <- eventos[[i]]
-      
-      if(tmp$lugar == lugarAntes){
-        # Se reasigna fecha mayor
-        if(tmp$fechaEvento >= fechaAnterior){
-          fechaAnterior <- tmp$fechaEvento
-        }
-        # Se reasigna hora final mayor
-        if(tmp$finEvento >= horaFinalAnterior){
-          horaFinalAnterior <- tmp$finEvento
-        }
-      } 
+    if(!is.null(eventos[[i]])){
+      tabla <- eventos[[i]]
+      for(x in 1:length(eventos[[i]]$inicioEvento)){ # Se considera a inicioEvento para contar filas
+        row <- tabla[x,]
+        if(row$lugar == lugarAntes){
+          # Se reasigna fecha mayor
+          if(row$fechaEvento >= fechaAnterior){
+            fechaAnterior <- row$fechaEvento
+          }
+          # Se reasigna hora final mayor
+          if(row$finEvento >= horaFinalAnterior){
+            horaFinalAnterior <- row$finEvento
+          }
+        } 
+      }
     }
   }
   # Obtener horario positivo
