@@ -121,7 +121,7 @@ lineaCalificacion <- function(bd, fecha, calificacion, lugar, asistentes){
                                    c(0, '#F8737D'),
                                    c(1, '#FFF')   ) ),
                                crisp=F, lineWidth = 1, marker = list(radius =0))) %>% 
-    hc_title(text = "<b>Calificación  </b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
+    #hc_title(text = "<b>Calificación  </b>", align = "left", style = list(fontSize = "22px", color = "#13384D")) %>% 
     hc_tooltip(borderWidth =0,shadow = F,
                headerFormat = '<span style="font-size: 20px">{point.key}</span><br/>',
                useHTML = TRUE,
@@ -167,7 +167,7 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
 
       Graph <- ggradar(bd_1,  base.size = 15, font.radar = "sans", 
                        values.radar = c("0%", "50%", "100%")) + 
-      labs(title = titulo) +
+      #labs(title = titulo) +
       theme(plot.background = element_rect(fill = "white", color = "white"))
   }else{
 
@@ -179,7 +179,7 @@ distRadar <- function(bd, pregunta, otro, x, titulo =""){
                      background.circle.colour = "#DFE5EB", 
                      gridline.max.linetype = "solid", 
                      values.radar = c("0%","50%")) +
-      labs(title = titulo) +
+      #labs(title = titulo) +
       # theme(plot.background = element_rect(fill = "white", color = "white")) +
       theme_minimal()+
       theme(plot.background = element_rect(fill = "white", color = "white"),
@@ -250,7 +250,7 @@ barras_animo <- function(DB, pregunta, Otro, x){
   Graph <- ggplot(frec, aes(x = reorder(pregunta_2, -n), y = n)) +
     scale_y_continuous(labels = scales::percent) + tema_ggplot() +
     geom_bar(fill='#55C1FF', color = "#55C1FF", width = 0.7, alpha = 0.5, stat = "identity") +
-    labs(title = "En general, ¿cómo describiría el ánimo de los asistentes?", x = "", y = "") +
+    #labs(title = "En general, ¿cómo describiría el ánimo de los asistentes?", x = "", y = "") +
     tema_barras_animo()
   
   return(Graph)
@@ -282,7 +282,9 @@ burbujas <- function(bd, pregunta1, pregunta2){
     geom_point(stat = "identity", alpha= .6)+
     scale_color_identity()+ theme_minimal()+
     scale_size_area(max_size = 70)+
-    labs(x = "Respuesta", y = "Aspecto", title = str_wrap("Cantidad de Asistentes y Duración de Evento", 30))+
+    labs(x = "Respuesta", y = "Aspecto" 
+         #, title = str_wrap("Cantidad de Asistentes y Duración de Evento",30)
+         )+
     theme(text = element_text(family = "Avenir Next", size = 20),
           plot.title = element_text(size = 22,
                                     colour =  "#13384D",
@@ -409,7 +411,7 @@ tema_lolipop <- function(){
           legend.position = "none",
           axis.text.x = element_blank(),
           axis.text.y = element_blank(),
-          plot.title = element_text(size = 20)
+          #plot.title = element_text(size = 20)
     )
 }
 
@@ -422,8 +424,8 @@ lolipop_cRecursos <- function(DB, pregunta){
   Graph <- ggplot(cr, aes(x = porcentaje, y = reorder({{ pregunta }}, -n), label = labela, color = n, fill = n)) +
     geom_segment(aes(x = 0, y = {{ pregunta }}, xend = porcentaje, yend = {{ pregunta }})) +
     geom_point(size = 20) + tema_lolipop() +
-    geom_text(color = "white", size = 8) +
-    labs(title = "Calidad de Recursos")
+    geom_text(color = "white", size = 8) 
+    #labs(title = "Calidad de Recursos")
   
   cr <- mutate(labela = {{ pregunta }})
   Graph <- Graph +
@@ -453,7 +455,7 @@ paletaRecursos <- function(bd, pregunta, titulo = ""){
     geom_text( aes(label = pct %>%  percent(accuracy = 1), y = pct), 
                color = "white", fontface="bold", size = 8) +
     scale_y_continuous(labels=scales::percent,limits = c(0,max(bd$pct) + .1)) +
-    labs(title =titulo, x = "", y = "" )+
+    labs(x = "", y = "" ) +
     geom_hline(yintercept = 0, linetype = "solid", size = .4, color = "#BFD7EA")+
     theme_minimal()+
     theme(panel.grid = element_blank(),
