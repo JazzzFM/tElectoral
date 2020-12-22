@@ -56,7 +56,7 @@ mod_investigacionEncuestas_server <- function(input, output, session, bd, usuari
              Editar = input_btns(ns("editar"), idFormGeneral, "Ver", icon = "edit", status = "info"),
              Eliminar = input_btns(ns("eliminar"), idFormGeneral, "Eliminar", icon = "trash-o", status = "danger"),
       ) %>% select(-idFormGeneral)
-  }, selection = 'none',rownames = FALSE,
+  }, selection = 'none',rownames = FALSE, extensions = 'Responsive',
   options = list(language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json',searchPlaceholder = "Buscar..."),
                  lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5
   ),

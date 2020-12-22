@@ -36,7 +36,6 @@ mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario 
   ns <- session$ns
   observe({
     if(!is.null(cuestionario$paso1$idCuestionario)){
-      browser()
       updateTextInput(inputId = "correo", session = session, value = cuestionario$paso1$correo)
       updateTextAreaInput(inputId = ns("obsGenerales"),session = session, value = cuestionario$paso1$obsGenerales)
       shinyjs::hide(selector = paste0("#",ns("guardarCuestionario")))
@@ -67,6 +66,31 @@ mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario 
     }
     
     insertBd(pool, formCuestionarioPreguntasXBloqueBd, bd = cuestionario$paso3)
+    
+    # Antes de mandar Email, se generaría reporte en pdf solamente si correo es diferente de null
+    if(!is.null(input$correo)){
+      #generar pdf gráficas y almacenar
+    }
+    
+    # Se envía por correo
+    if(!is.null(input$correo)){
+      browser()
+      email <- emayili::envelope(
+        to = "jassselvas@gmail.com",
+        from = "servicios.creativasoftline@gmail.com",
+        subject = "This is a plain text message!",
+        text = html("<h1>Hola correo</h1>")
+      )
+      
+      #email %>% emayili::attachment(here::here(cuestionario$paso1$urlArchivo))
+      smpt <- emayili::server(host = "smtp.gmail.com",
+                     port = 587,
+                     username = "servicios.creativasoftline@gmail.com",
+                     password = "serviciosLJJJJEFA")
+      smpt(email, verbose = TRUE)
+      print(email, details = TRUE)
+    }
+    
     gargoyle::trigger("cuestionario")
   })
 }

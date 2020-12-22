@@ -39,7 +39,7 @@ mod_evaluacionGira_server <- function(input, output, session, parent_session = N
       mutate(Evaluar = input_btns(ns("evaluar"), idEvento, "Evaluar", icon = "edit", status = "primary"),
              Ver  = input_btns(ns("ver"), idEvento, "Ver", icon = "eye", status = "info")
       ) %>% select(-idEvento)
-  }, selection = 'none',rownames = FALSE,
+  }, selection = 'none',rownames = FALSE, extensions = 'Responsive',
   options = list(language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json',searchPlaceholder = "Buscar..."),
                  lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5
   ),

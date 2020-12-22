@@ -58,6 +58,8 @@ usethis::use_package("gargoyle")
 usethis::use_package("shinycssloaders")
 usethis::use_package("tidytext")
 usethis::use_package("ggwordcloud")
+usethis::use_package("here")
+usethis::use_package("emayili")
 ## Add modules ----
 ## Create a module infrastructure in R/
 # Portada

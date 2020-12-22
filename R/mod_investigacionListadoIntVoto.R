@@ -58,7 +58,7 @@ mod_investigacionListadoIntVoto_server <- function(input, output, session, bd, u
              Ver = input_btns(ns("ver"), idIntencionVoto, "Ver", icon = "eye", status = "info"),
              Eliminar = input_btns(ns("eliminar"), idIntencionVoto, "Eliminar", icon = "trash-o", status = "danger"),
       ) %>% select(-idIntencionVoto, -fechaAlta)
-  }, selection = 'none',rownames = FALSE,
+  }, selection = 'none',rownames = FALSE, extensions = 'Responsive',
   options = list(language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json',searchPlaceholder = "Buscar..."),
                  lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5
   ),

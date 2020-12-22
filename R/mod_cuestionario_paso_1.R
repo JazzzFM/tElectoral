@@ -15,7 +15,7 @@ mod_cuestionario_paso_1_ui <- function(id){
     div(class="shadowForm",
         fluidRow(
           column(width = 12,
-                 fileInput(inputId = ns("urlArchivo"), label = "Adjunte en PDF el archivo sujeto a análisis", accept = "application/pdf",buttonLabel = icon("search"))
+                 fileInput(inputId = ns("urlArchivo"), label = "Adjunte en PDF el archivo sujeto a análisis", accept = "*",buttonLabel = icon("search"))
           ),
           column(width = 6,
                  pickerInput(inputId = ns("nivelClaridad"), label = "¿Cuál es el nivel de claridad de los objetivos de investigación?", choices = c("Seleccione" = "" , "Alta", "Intermedio", "Bajo", "No hay"))
@@ -49,9 +49,16 @@ mod_cuestionario_paso_1_ui <- function(id){
 #' cuestionario_paso_1 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario = c(), bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL){
+mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario = c(), bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL, deleteFile = NULL){
   ns <- session$ns
-
+  
+  observeEvent(input$urlArchivo, {
+    inFile <- input$urlArchivo
+    if (is.null(inFile))
+      return()
+    file.copy(inFile$datapath, here::here(glue::glue("inst/app/www/documentos/{inFile$name}")) )
+  })
+  
   observeEvent(input$GuardarPaso1, {
     shinyjs::disable(input$GuardarPaso1)
     check <- c("nivelClaridad",  "operacionalizacion",  "poblacionObjetivo") %>% mandatory(input = input)
@@ -60,9 +67,13 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
     }else{
       # Tibble
       fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
+      cadenaArchivo <- ""
+      if (!is.null(input$urlArchivo)){
+        cadenaArchivo <- glue::glue("inst/app/www/documentos/{input$urlArchivo$name}")
+      }
       cuestionario$paso1 <- tibble::tibble(
         idFormGeneral = idFormGeneral$val,
-        urlArchivo = "adjunto",
+        urlArchivo = cadenaArchivo,
         nivelClaridad = input$nivelClaridad,
         obsNivelClaridad = input$obsNivelClaridad,
         operacionalizacion = input$operacionalizacion,
@@ -80,6 +91,7 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
     }
     shinyjs::enable(input$GuardarPaso1)
   })
+  
   output$outGuardar <- renderUI({
     if(readOnly$val == FALSE){
       tagList(
@@ -101,6 +113,14 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
       updateTextAreaInput(inputId = ns("obsNivelClaridad"), session = parent_session, value = cuestionario$paso1$obsNivelClaridad)
       updateTextAreaInput(inputId = ns("obsOperacionalizacion"), session = parent_session, value = cuestionario$paso1$obsOperacionalizacion)
       updateTextAreaInput(inputId = ns("obsPoblacionObjetivo"), session = parent_session, value = cuestionario$paso1$obsPoblacionObjetivo)
+    }
+    
+    if(deleteFile$val == T){
+      inFile <- input$urlArchivo
+      if (!is.null(inFile)){
+        file.remove(here::here(glue::glue("inst/app/www/documentos/{inFile$name}")))
+      }
+      deleteFile$val <- F
     }
   })
 }
