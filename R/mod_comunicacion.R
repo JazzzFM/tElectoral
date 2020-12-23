@@ -11,7 +11,6 @@
 mod_comunicacion_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinyjs::useShinyjs(),
     fluidRow(
       column(width = 6,
              actionButton(inputId = ns("atras"), label = "Regresar al listado de cuestionarios", class ="btn-default")
@@ -92,7 +91,7 @@ mod_comunicacion_server <- function(input, output, session, bd, usuario ,parent_
   callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
   callModule(mod_cuestionario_paso_2_server, "cuestionario_paso_2_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
   callModule(mod_cuestionario_paso_3_server, "cuestionario_paso_3_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
-  callModule(mod_cuestionario_paso_4_server, "cuestionario_paso_4_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
+  callModule(mod_cuestionario_paso_4_server, "cuestionario_paso_4_ui_1", cuestionario, bd, usuario, showListadoForm, idFormGeneral, readOnly, idCuestionario)
   callModule(mod_cuestionario_paso_5_server, "cuestionario_paso_5_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
  
 }

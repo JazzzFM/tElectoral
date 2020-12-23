@@ -11,7 +11,6 @@
 mod_investigacionCompartido_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinyjs::useShinyjs(),
     uiOutput(ns("investigacionContainer"))
   )
 }

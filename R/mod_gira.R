@@ -27,7 +27,6 @@ mod_gira_ui <- function(id){
   }
   "
   tagList(
-    useShinyjs(),
     extendShinyjs(text = jscode, functions = c("disableTab", "enableTab")),
     shinyjs::hidden(actionButton(inputId = ns("volverEmpezar"), "Volver a empezar", class = "btn-primary pull-right")),
     tabsetPanel(

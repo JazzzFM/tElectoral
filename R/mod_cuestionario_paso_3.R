@@ -11,7 +11,6 @@
 mod_cuestionario_paso_3_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinyjs::useShinyjs(),
     h3("Creación de preguntas"),
     p("De click en Agregar pregunta para añadir una pregunta a un bloque."),
     uiOutput(ns("outPreguntas")),

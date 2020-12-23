@@ -16,7 +16,6 @@ mod_investigacionFormularioIntVoto_ui <- function(id){
       )
     ),
     h3("Formulario de intención de voto"),
-    useShinyjs(),
     div(class="shadowForm",
         fluidRow(
           column(12, 

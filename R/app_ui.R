@@ -4,7 +4,6 @@
 #'     DO NOT REMOVE.
 #' @import shiny shinydashboard
 #' @noRd
-#' @ggplot2
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources

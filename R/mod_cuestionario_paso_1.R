@@ -85,6 +85,7 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
   
   observe({
     if(!is.null(cuestionario$paso1$idCuestionario)){
+      shinyjs::hide(id = "GuardarPaso1")
       updatePickerInput(inputId = ns("nivelClaridad"), session = parent_session, selected = cuestionario$paso1$nivelClaridad)
       updatePickerInput(inputId = ns("operacionalizacion"), session = parent_session, selected = cuestionario$paso1$operacionalizacion)
       updatePickerInput(inputId = ns("poblacionObjetivo"), session = parent_session, selected = cuestionario$paso1$poblacionObjetivo)
