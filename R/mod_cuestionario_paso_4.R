@@ -22,7 +22,9 @@ mod_cuestionario_paso_4_ui <- function(id){
           )
         ),
         hr(),
-        actionButton(ns("guardarCuestionario"), "Guardar cuestionario", class="btn btn-primary")
+        fluidRow(
+          uiOutput(ns("outGuardar"), style = "width: 100%")
+        )
     )
   )
 }
@@ -35,11 +37,26 @@ mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario 
   observeEvent(cuestionario$paso1,{
     if(!is.null(cuestionario$paso1$idCuestionario)){
       updateTextInput(inputId = "correo", session = session, value = cuestionario$paso1$correo)
+<<<<<<< HEAD
       updateTextAreaInput(inputId = "obsGenerales", session = session, value = cuestionario$paso1$obsGenerales)
       shinyjs::hide(selector = paste0("#", ns("guardarCuestionario")))
+=======
+      updateTextAreaInput(inputId = ns("obsGenerales"),session = session, value = cuestionario$paso1$obsGenerales)
+      shinyjs::hide(selector = paste0("#",ns("guardarCuestionario")))
     }
   })
-  
+  output$outGuardar <- renderUI({
+    if(readOnly$val == FALSE){
+      tagList(
+        fluidRow( class ="padding15-25",
+                  column(width = 6,
+                         actionButton(ns("guardarCuestionario"), "Guardar cuestionario", class="btn btn-primary")
+                  )
+        )
+      )
+>>>>>>> 75800f525f7e76f3ac853642536e02e18b04575f
+    }
+  })
   observeEvent(input$guardarCuestionario, {
     cuestionario$paso1$correo <- input$correo
     cuestionario$paso1$obsGenerales <- input$obsGenerales
@@ -54,6 +71,35 @@ mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario 
     }
     
     insertBd(pool, formCuestionarioPreguntasXBloqueBd, bd = cuestionario$paso3)
+    
+    # Antes de mandar Email, se generaría reporte en pdf solamente si correo es diferente de null
+    if(!is.null(input$correo)){
+      #generar pdf gráficas y almacenar
+    }
+    
+    # Se envía por correo
+    if(!is.null(input$correo)){
+      browser()
+      email <- emayili::envelope(
+        to = "emiliomorones@gmail.com",
+        from = "datos@morant.com.mx",
+        subject = "This is a plain text message!",
+        html = "
+        <h1 style='color: red; font-weight: normal; font-style: italic'>Hola correo</h1>
+        <img style='width: 350px; height: 350px' src='https://andi.morant.com.mx/gravProb/5'/>
+        "
+      )
+      
+      #email <- email %>% emayili::attachment(path = here::here("inst/app/www/documentos/word-2020-12-2217-00-57-admin.docx"))
+      email <- email %>% emayili::attachment(path = here::here(cuestionario$paso1$urlArchivo))
+      smtp <- emayili::server(host = "smtpout.secureserver.net",
+                              port = 587,
+                              username = "datos@morant.com.mx",
+                              password = "Tcl13xhFdnp2")
+      smtp(email, verbose = T)
+      print(email, details = TRUE)
+    }
+    
     gargoyle::trigger("cuestionario")
   })
 }

@@ -113,9 +113,49 @@ mod_investigacionAnalisis_ui <- function(id){
                    plotOutput(outputId = ns("maxNivelConfianza"))
                  )
              ))
-      )
-  )
-}
+      ),
+    h3("Resultados formulario de cuestionarios"),
+    fluidRow(
+      column(width = 4,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner(
+                   plotOutput(outputId = ns("claridadObjetivos"))
+                 )
+             )),
+      column(width = 4,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner(
+                   plotOutput(outputId = ns("operacionalizacion"))
+                 )
+             )),
+      column(width = 4,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner(
+                   plotOutput(outputId = ns("poblacionObjetivo"))
+                      )
+                 ))
+      ),
+    fluidRow(
+      column(width = 4,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner(
+                   plotOutput(outputId = ns("minCantidadBloques"))
+                 )
+             )),
+      column(width = 4,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner(
+                   plotOutput(outputId = ns("modaCantidadBloques"))
+                 )
+             )),
+      column(width = 4,
+             div(class="topBoxInfo bordered-white ft-sm",
+                 shinycssloaders::withSpinner(
+                   plotOutput(outputId = ns("maxCantidadBloques"))
+                 )
+             ))
+    )
+)}
 
 #' investigacionAnalisis Server Function
 #'
@@ -302,6 +342,36 @@ mod_investigacionAnalisis_server <- function(input, output, session, bd){
   output$maxNivelConfianza <- renderPlot({
     ggMaxNivelConfianza(bd$listadoDisMuestral %>%
                   collect())
+  })
+  
+  output$claridadObjetivos <- renderPlot({
+    DB <- procesamiento("nivelClaridad") 
+    ggClaridadObjetivos(DB)
+  })
+  
+  output$operacionalizacion <- renderPlot({
+    DB <- procesamiento("operacionalizacion") 
+    ggOperacionalizacion(DB)
+  })
+  
+  output$poblacionObjetivo <- renderPlot({
+    DB <- procesamiento("poblacionObjetivo") 
+    ggPoblacionObjetivo(DB)
+  })
+  
+  output$minCantidadBloques <- renderPlot({
+    procesamiento("cantidadBloques") %>% 
+      ggCantidadBloquesMin()
+  })
+  
+  output$modaCantidadBloques <- renderPlot({
+    procesamiento("cantidadBloques") %>% 
+      ggCantidadBloquesModa()
+  })
+  
+  output$maxCantidadBloques <- renderPlot({
+    procesamiento("cantidadBloques") %>% 
+      ggCantidadBloquesMax()
   })
   
 }
