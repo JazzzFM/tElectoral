@@ -37,10 +37,6 @@ mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario 
   observeEvent(cuestionario$paso1,{
     if(!is.null(cuestionario$paso1$idCuestionario)){
       updateTextInput(inputId = "correo", session = session, value = cuestionario$paso1$correo)
-<<<<<<< HEAD
-      updateTextAreaInput(inputId = "obsGenerales", session = session, value = cuestionario$paso1$obsGenerales)
-      shinyjs::hide(selector = paste0("#", ns("guardarCuestionario")))
-=======
       updateTextAreaInput(inputId = ns("obsGenerales"),session = session, value = cuestionario$paso1$obsGenerales)
       shinyjs::hide(selector = paste0("#",ns("guardarCuestionario")))
     }
@@ -54,7 +50,6 @@ mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario 
                   )
         )
       )
->>>>>>> 75800f525f7e76f3ac853642536e02e18b04575f
     }
   })
   observeEvent(input$guardarCuestionario, {
