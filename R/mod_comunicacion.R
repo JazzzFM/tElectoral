@@ -43,8 +43,9 @@ mod_comunicacion_server <- function(input, output, session, bd, usuario ,parent_
   ns <- session$ns
   
   cuestionario <- reactiveValues(titulos = c(), paso1 = NULL, paso3 = c())
-  
+  deleteFile <- reactiveValues(val = F)
   observeEvent(input$atras,{
+    deleteFile$val <- T
     showListadoForm$val <- 1
   })
   
@@ -88,7 +89,7 @@ mod_comunicacion_server <- function(input, output, session, bd, usuario ,parent_
         updateTabsetPanel(inputId = "tabsCuestionario", selected = "paso5", parent_session)
     }
   })
-  callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
+  callModule(mod_cuestionario_paso_1_server, "cuestionario_paso_1_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario, deleteFile)
   callModule(mod_cuestionario_paso_2_server, "cuestionario_paso_2_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
   callModule(mod_cuestionario_paso_3_server, "cuestionario_paso_3_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)
   callModule(mod_cuestionario_paso_4_server, "cuestionario_paso_4_ui_1", cuestionario, bd, usuario, parent_session, showListadoForm, idFormGeneral, readOnly, idCuestionario)

@@ -57,6 +57,8 @@ usethis::use_package("gargoyle")
 usethis::use_package("shinycssloaders")
 usethis::use_package("tidytext")
 usethis::use_package("ggwordcloud")
+usethis::use_package("here")
+usethis::use_package("emayili")
 ## Add modules ----
 ## Create a module infrastructure in R/
 # Portada
@@ -118,11 +120,13 @@ golem::add_fct(name = "validarHorarioOcupado" )
 golem::add_fct(name = "validarAlcanceTiempo" )
 golem::add_fct(name = "validarAscendenciaHorario")
 golem::add_fct(name = "validarInfoEvento")
+golem::add_fct(name = "validarLugarAnterior")
 #Formulario
 golem::add_fct(name = "validarEmail" )
 golem::add_fct(name = "validarSoloNumeros" )
 golem::add_fct(name = "validarSoloLetras" )
 golem::add_fct(name = "validarVacio" )
+golem::add_fct(name = "crearNombreArchivo" )
 golem::add_fct("pIntervalo")
 golem::add_fct("pool")
 golem::add_fct("leerBd")

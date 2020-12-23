@@ -15,7 +15,10 @@ mod_cuestionario_paso_3_ui <- function(id){
     h3("Creación de preguntas"),
     p("De click en Agregar pregunta para añadir una pregunta a un bloque."),
     uiOutput(ns("outPreguntas")),
-    actionButton(ns("guardar"), "Guardar")
+    hr(),
+    fluidRow(
+      uiOutput(ns("outGuardar"), style = "width: 100%")
+    )
   )
 }
     
@@ -47,6 +50,18 @@ mod_cuestionario_paso_3_server <- function(input, output, session, cuestionario 
       }
     }
   })
+  output$outGuardar <- renderUI({
+    if(readOnly$val == FALSE){
+      tagList(
+        fluidRow( class ="padding15-25",
+                  column(width = 6,
+                         actionButton(ns("guardar"), "Guardar")
+                  )
+        )
+      )
+    }
+  })
+  
   actualValue <- reactiveValues(val = 0)
   observeEvent(input$editar,{
     

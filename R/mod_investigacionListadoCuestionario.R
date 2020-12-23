@@ -54,10 +54,12 @@ mod_investigacionListadoCuestionario_server <- function(input, output, session, 
     validate(need(!is.null(seleccion()), message = "Cargando datos ..."))
     seleccion() %>% select(idCuestionario,nivelClaridad,cantidadBloques, correo, obsGenerales, fechaAlta) %>%
       mutate(FechaAlta= as_date(fechaAlta),
+             PDFSujetoPrueba = input_btns(ns("pdfSujetoPrueba"), idCuestionario, "PDF", icon = "file-pdf-o", status = "info"),
+             PDFAnalisis = input_btns(ns("pdfAnalisis"), idCuestionario, "PDF", icon = "line-chart", status = "info"),
              Ver = input_btns(ns("ver"), idCuestionario, "Ver", icon = "eye", status = "info"),
              Eliminar = input_btns(ns("eliminar"), idCuestionario, "Eliminar", icon = "trash-o", status = "danger"),
       ) %>% select(-idCuestionario, -fechaAlta)
-  }, selection = 'none',rownames = FALSE,
+  }, selection = 'none',rownames = FALSE, extensions = 'Responsive',
   options = list(language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json',searchPlaceholder = "Buscar..."),
                  lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5
   ),

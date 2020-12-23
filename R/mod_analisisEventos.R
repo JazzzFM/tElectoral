@@ -20,34 +20,40 @@ mod_analisisEventos_ui <- function(id){
   ns <- NS(id)
   # Gráfico de Calificación Promedio
   tagList(
-    h3(style="text-align:center", "Evaluación general de la gira"),
     fluidRow(
-      column(width = 12,
+      column(width = 5,
              fluidRow(
-               column(width = 12, 
-                      div(class="topBoxInfo bordered-white ft-sm",
-                          plotOutput(outputId = ns("pGauge")),
-                          p("Calificación promedio")
+                 column(width = 12,
+                        div(class="shadowForm",
+                            h3(style="text-align:center", "Evaluación general de la gira"),
+                            div(class="topBoxInfo bordered-white ft-sm",
+                                plotOutput(outputId = ns("pGauge"))
+                            )
+                        )
+                 )
+             )
+       ),
+      column(width = 7,
+             fluidRow(
+               column(width = 12,
+                      div(class="shadowForm",
+                          h3(style="text-align:center", "Clasificación promedio"),
+                          div(class="calificacionContainer",
+                              div(class="topBoxInfo default",
+                                  textOutput(ns('numEventos')),
+                                  p("Eventos")
+                              ),
+                              div(class="topBoxInfo default",
+                                  textOutput(ns('eventosPct')),
+                                  p("Municipios visitados")
+                              ),
+                              div(class="topBoxInfo default",
+                                  textOutput(ns('numIncidentes')),
+                                  p("Incidentes")
+                              )
+                          )
                       )
-               ),
-               column(width = 4, 
-                      div(class="topBoxInfo bordered-green",
-                          p(HTML(glue::glue("{textOutput(ns('numEventos'))}"))),
-                          p("Eventos")
-                      )
-               ),
-               column(width = 4, 
-                      div(class="topBoxInfo default",
-                          p(HTML(glue::glue("{textOutput(ns('eventosPct'))}"))),
-                          p("Municipios visitados")
-                      )
-               ),
-               column(width = 4, 
-                      div(class="topBoxInfo red",
-                          p(HTML(glue::glue("{textOutput(ns('numIncidentes'))}"))),
-                          p("Incidentes")
-                      )
-               ),
+                )
              )
        )
     ),
@@ -57,25 +63,37 @@ mod_analisisEventos_ui <- function(id){
                  DT::DTOutput(ns("tableMun"))
              )
       ),
-      column(width = 6, plotOutput(ns("eAnimo")))
+      column(width = 6, 
+             div(class="shadowForm",
+                 plotOutput(ns("eAnimo"))
+             )
+       )
     ),
     # Gráfico de Estado de Ánimo
     fluidRow(
       column(width = 12,
-             highchartOutput(ns("lCalif"))
+             div(class="shadowForm",
+                 highchartOutput(ns("lCalif"))
+             )
       )
     ),
     fluidRow(
       column(width = 6,
-             plotOutput(ns("cRecursos"))),
+             div(class="shadowForm",
+                 plotOutput(ns("cRecursos"))
+             )
+       ),
       column(width = 6,
-             plotOutput(ns("nAsistentes")))
+             div(class="shadowForm",
+                 plotOutput(ns("nAsistentes"))
+            )
+       )
     ),
     fluidRow(
       column(width = 12,
              fluidRow(
                column(width = 12, 
-                      div(class="topBoxInfo bordered-white ft-sm",
+                      div(class="topBoxInfo bordered-white ft-sm shadowForm",
                           h3(style="text-align:center", "Número de Eventos Realizados y en Proceso"),
                           leafletOutput(ns("llmapa")))
                     ))
@@ -111,7 +129,7 @@ mod_analisisEventos_server <- function(input, output, session, bd){
    }, escape = F, options = list(dom = 't'))
   
   output$eAnimo <- renderPlot({
-    distRadar(bd$evaluacionEventos, pregunta = actitud, otro = actitudOtro, x = 0, titulo = "Ánimo de los Asistentes") 
+    distRadar(bd$evaluacionEventos, pregunta = actitud, otro = actitudOtro, x = 0, titulo = "Ánimo de los asistentes") 
   })
   
   output$cRecursos <- renderPlot({

@@ -16,6 +16,7 @@ mod_lugaresPaso3_ui <- function(id, titulo){
              div(class = "tramoContainer",
                  shinydashboardPlus::boxPlus(
                    title = titulo,
+                   id=ns("lugar"),
                    collapsible = T,
                    width = 12,
                    closable = F,
@@ -62,7 +63,10 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
     evt <- callModule(mod_evento_server, glue::glue("evento_ui_{uiCount$val}"), parent_session = parent_session, valores = NULL, paso1 = paso1, editar = as.logical(F), index = as.numeric(uiCount$val), lugar = lugar)
     if(validarInfoEvento(evt())){
       allValido <- TRUE
-      allValido <- validarHorarioOcupado(evt, todosEventos %>% map(~.x())) # Retorna false si está ocupado
+      if(index != 1)
+        allValido <- validarLugarAnterior(todosEventos %>% map(~.x()), index)
+      if(allValido)
+        allValido <- validarHorarioOcupado(evt, todosEventos %>% map(~.x())) # Retorna false si está ocupado
       if(allValido)
         allValido <- validarAscendenciaHorario(evt, todosEventos %>% map(~.x())) # Retorna false si después de tantas fechas, hay una fecha menor a ellas
       if(index != 1 && allValido){
@@ -76,7 +80,7 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
                                  callbackR = function(x) if(x) {
                                    eventos[[as.character(uiCount$val)]] <- evt()
                                    insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
-                                            ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
+                                            ui = div(class= "ButtonWDeleteAddon", id= glue::glue("evento-{uiCount$val}-{ns('lugar')}"),HTML(
                                               input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "primary"),
                                               input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
                                             ))
@@ -91,7 +95,7 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
       if(allValido == T){
         eventos[[as.character(uiCount$val)]] <- evt()
         insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
-                 ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",uiCount$val),HTML(
+                 ui = div(class= "ButtonWDeleteAddon", id= glue::glue("evento-{uiCount$val}-{ns('lugar')}"),HTML(
                    input_btns(ns("eliminar"), users = uiCount$val, tooltip = paste0("Eliminar: ",eventos[[as.character(uiCount$val)]]$nombre), icon ="trash-o", status = "primary"),
                    input_btns(ns("editar"), users = uiCount$val, tooltip = paste0("Editar ", eventos[[as.character(uiCount$val)]]$nombre), label = eventos[[as.character(uiCount$val)]]$nombre)
                  ))
@@ -121,7 +125,10 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
     if(validarInfoEvento(evt())){
       allValido <- TRUE
       if(uiCount$val > 1){
-        allValido <- validarHorarioOcupado(evt, todosEventos %>% map(~.x()), actualEditable$value) # Retorna false si está ocupado
+        if(index != 1)
+          allValido <- validarLugarAnterior(todosEventos %>% map(~.x()), index)
+        if(allValido)
+          allValido <- validarHorarioOcupado(evt, todosEventos %>% map(~.x()), actualEditable$value) # Retorna false si está ocupado
         if(allValido)
           allValido <- validarAscendenciaHorario(evt, todosEventos %>% map(~.x()), actualEditable$value) # Retorna false si después de tantas fechas, hay una fecha menor a ellas
         if(index != 1 && allValido){
@@ -134,9 +141,9 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
                                    confirmButtonText = "Sí",
                                    callbackR = function(x) if(x) {
                                      eventos[[as.character(actualEditable$value)]] <- evt()
-                                     removeUI(selector = paste0("#evento-", actualEditable$value))
+                                     removeUI(selector = glue::glue("evento-{actualEditable$value}-{ns('lugar')}"))
                                      insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
-                                              ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",actualEditable$value),HTML(
+                                              ui = div(class= "ButtonWDeleteAddon", id=glue::glue("evento-{actualEditable$value}-{ns('lugar')}"),HTML(
                                                 input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "primary"),
                                                 input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", eventos[[as.character(actualEditable$value)]]$nombre), label = eventos[[as.character(actualEditable$valuel)]]$nombre)
                                               ))
@@ -150,9 +157,9 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
       
       if(allValido == T){
         eventos[[as.character(actualEditable$value)]] <- evt()
-        removeUI(selector = paste0("#evento-", actualEditable$value))
+        removeUI(selector = glue::glue("#evento-{actualEditable$value}-{ns('lugar)}"))
         insertUI(selector = glue::glue("#{ns('addEvento')}"),where = "beforeBegin",
-                 ui = div(class= "ButtonWDeleteAddon", id=paste0("evento-",actualEditable$value),HTML(
+                 ui = div(class= "ButtonWDeleteAddon", id=glue::glue("evento-{actualEditable$value}-{ns('lugar')}"),HTML(
                    input_btns(ns("eliminar"), users = actualEditable$value, tooltip = paste0("Eliminar: ",eventos[[as.character(actualEditable$value)]]$nombre), icon ="trash-o", status = "primary"),
                    input_btns(ns("editar"), users = actualEditable$value, tooltip = paste0("Editar ", eventos[[as.character(actualEditable$value)]]$nombre), label = eventos[[as.character(actualEditable$value)]]$nombre)
                  ))
@@ -170,6 +177,8 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
                            showCancelButton = T,showConfirmButton = T,cancelButtonText = "No",
                            confirmButtonText = "Sí", 
                            callbackR = function(x) if(x) {
+                             
+                             browser()
                              eventos[[as.character(input$eliminar)]] <- reactive(tibble(nombre = NA, 
                                                                                         lugar = NA,
                                                                                         direccion = NA,
@@ -181,7 +190,7 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
                                                                                         inicioEvento = NA,
                                                                                         finEvento = NA))()
                              # Se elimina elemento de la ui
-                             removeUI(selector = paste0("#evento-",input$eliminar))
+                             removeUI(selector = glue::glue("#evento-{input$eliminar}-{ns('lugar')}"))
                            })
   })
   ev <- reactive({
