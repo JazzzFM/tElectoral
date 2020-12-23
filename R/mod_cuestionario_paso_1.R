@@ -52,11 +52,16 @@ mod_cuestionario_paso_1_ui <- function(id){
 mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario = c(), bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL, deleteFile = NULL){
   ns <- session$ns
   
+  newFileName <- reactiveValues(val="")
   observeEvent(input$urlArchivo, {
     inFile <- input$urlArchivo
-    if (is.null(inFile))
-      return()
-    file.copy(inFile$datapath, here::here(glue::glue("inst/app/www/documentos/{inFile$name}")) )
+    if (is.null(inFile)){
+      return() 
+    }
+    newName <- crearNombreArchivo(inFile$name, c(as.character(Sys.time()), usuario$user))
+    if(!is.null(newName))
+      file.copy(inFile$datapath, here::here(glue::glue("inst/app/www/documentos/{newName}")) )
+    newFileName$val <- newName
   })
   
   observeEvent(input$GuardarPaso1, {
@@ -69,7 +74,7 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
       fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
       cadenaArchivo <- ""
       if (!is.null(input$urlArchivo)){
-        cadenaArchivo <- glue::glue("inst/app/www/documentos/{input$urlArchivo$name}")
+        cadenaArchivo <- glue::glue("inst/app/www/documentos/{newFileName$val}")
       }
       cuestionario$paso1 <- tibble::tibble(
         idFormGeneral = idFormGeneral$val,
@@ -118,7 +123,7 @@ mod_cuestionario_paso_1_server <- function(input, output, session, cuestionario 
     if(deleteFile$val == T){
       inFile <- input$urlArchivo
       if (!is.null(inFile)){
-        file.remove(here::here(glue::glue("inst/app/www/documentos/{inFile$name}")))
+        file.remove(here::here(glue::glue("inst/app/www/documentos/{newFileName$val}")))
       }
       deleteFile$val <- F
     }

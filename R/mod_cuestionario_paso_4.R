@@ -76,18 +76,22 @@ mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario 
     if(!is.null(input$correo)){
       browser()
       email <- emayili::envelope(
-        to = "jassselvas@gmail.com",
-        from = "servicios.creativasoftline@gmail.com",
+        to = "emiliomorones@gmail.com",
+        from = "datos@morant.com.mx",
         subject = "This is a plain text message!",
-        text = html("<h1>Hola correo</h1>")
+        html = "
+        <h1 style='color: red; font-weight: normal; font-style: italic'>Hola correo</h1>
+        <img style='width: 350px; height: 350px' src='https://andi.morant.com.mx/gravProb/5'/>
+        "
       )
       
-      #email %>% emayili::attachment(here::here(cuestionario$paso1$urlArchivo))
-      smpt <- emayili::server(host = "smtp.gmail.com",
-                     port = 587,
-                     username = "servicios.creativasoftline@gmail.com",
-                     password = "serviciosLJJJJEFA")
-      smpt(email, verbose = TRUE)
+      #email <- email %>% emayili::attachment(path = here::here("inst/app/www/documentos/word-2020-12-2217-00-57-admin.docx"))
+      email <- email %>% emayili::attachment(path = here::here(cuestionario$paso1$urlArchivo))
+      smtp <- emayili::server(host = "smtpout.secureserver.net",
+                              port = 587,
+                              username = "datos@morant.com.mx",
+                              password = "Tcl13xhFdnp2")
+      smtp(email, verbose = T)
       print(email, details = TRUE)
     }
     
