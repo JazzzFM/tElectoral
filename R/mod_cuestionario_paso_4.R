@@ -76,15 +76,15 @@ mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario 
     if(!is.null(input$correo)){
       asunto <- "Reporte de análisis de cuestionario"
       email <- emayili::envelope(
-        #to = input$correo,
-        to = "jassselvas@gmail.com",
+        to = input$correo,
+        #to = "jassselvas@gmail.com",
         from = "datos@morant.com.mx",
         subject = asunto,
         html = obtenerCorreoHTML("REPORTE DE ANÁLISIS", asunto, "Se le adjunta el siguiente documento, que corresponde al reporte de análisis generado del cuestionario.")
       )
       
-      email <- email %>% emayili::attachment(path = here::here("inst/app/www/documentos/word-2020-12-2217-00-57-admin.docx"))
-      #email <- email %>% emayili::attachment(path = here::here(cuestionario$paso1$urlArchivo))
+      #email <- email %>% emayili::attachment(path = here::here("inst/app/www/documentos/word-2020-12-2217-00-57-admin.docx"))
+      email <- email %>% emayili::attachment(path = here::here(cuestionario$paso1$urlArchivo))
       smtp <- emayili::server(host = "smtpout.secureserver.net",
                               port = 587,
                               username = "datos@morant.com.mx",
