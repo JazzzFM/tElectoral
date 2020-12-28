@@ -126,7 +126,7 @@ mod_analisisEventos_server <- function(input, output, session, bd){
     mun <- tibble(CABECERA_MUNICIPAL = sample(size=3, DB_Mich2$CABECERA_MUNICIPAL)) 
     a <- tibble(Municipio = mun$CABECERA_MUNICIPAL, Calificación = c(a = 10, b = 5, c= 8))
      DT::datatable(data = a)
-   }, escape = F, options = list(dom = 't'))
+   }, escape = F, options = list(dom = 't', language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json',searchPlaceholder = "Buscar...")))
   
   output$eAnimo <- renderPlot({
     distRadar(bd$evaluacionEventos, pregunta = actitud, otro = actitudOtro, x = 0, titulo = "Ánimo de los asistentes") 

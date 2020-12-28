@@ -54,11 +54,18 @@ mod_investigacionFormularioGeneral_server <- function(input, output, session, bd
                   actionButton(inputId = ns("guardar"), "Guardar", class = "btn-primary")
         )
       )
+    }else{
+      tagList(
+        fluidRow( class ="padding15-25",
+                  actionButton(inputId = ns("actualizar"), "Actualizar", class = "btn-primary")
+        )
+      )
     }
   })
   
   observeEvent(input$atras,{
     showListadoForm$val <- 1
+    readOnly$val <- FALSE
   })
   
   observeEvent(input$guardar, {
@@ -82,9 +89,29 @@ mod_investigacionFormularioGeneral_server <- function(input, output, session, bd
     }
   })
   
+  observeEvent(input$actualizar, {
+    if(validarFormularioGeneral(input$nombre, input$casaEncuestadora, input$poblacionObjetivo, input$fechaInicio, input$fechaFin)){
+      fA <- lubridate::now(tz = "America/Mexico_City") %>% as.character()
+      formGeneral <- tibble::tibble(
+        nombre = input$nombre,
+        casaEncuestadora = input$casaEncuestadora,
+        poblacionObjetivo = input$poblacionObjetivo,
+        fechaInicio = as.character(input$fechaInicio),
+        fechaFin = as.character(input$fechaFin),
+        fechaEdicion = fA,
+        usuarioEdicion = usuario$user,
+      )
+      condition <- glue::glue("idFormGeneral = {idFormGeneral$val}")
+      updateBd(pool, formGeneralBd, formGeneral, condition)
+      gargoyle::trigger("encuestasGeneral")
+      showListadoForm$val <- 1 # Se regresa al listado
+      readOnly$val <- FALSE
+    }
+  })
+  
   infoEncuesta <- reactiveVal(NULL)
   observe({
-    if(idFormGeneral$val != 0){
+    if(readOnly$val == TRUE){
       infoEncuesta(bd$encuestas %>% filter(activo == 1 & idFormGeneral == !! idFormGeneral$val) %>% collect())
       updateTextInput(session = parent_session, inputId = ns("nombre"), value = infoEncuesta()$nombre)
       updateTextInput(session = parent_session, inputId = ns("casaEncuestadora"), value = infoEncuesta()$casaEncuestadora)

@@ -734,6 +734,8 @@ i.fa-chart-bar::after{
 }
 .small-box h3{
   font-weight: normal !important;
+  white-space: normal;
+  font-size: 28px;
 }
 /*.small-box p:first-child{
   font-size: 2.2em;
@@ -985,12 +987,17 @@ table tbody tr [role="texto"]{
 .dataTables_wrapper .dataTables_filter input{
      border: 1px solid transparent;
     box-shadow: 2px 2px 2px 0px rgba(0,0,0,.3);
-    width: 250px;
+    min-width: 250px;
     padding: 5px 20px;
     border-radius: 30px;
     position: absolute;
     right: 0;
     top: 0;
+}
+@media only screen and (max-width: 748px) and (min-width: 300px){
+  .dataTables_wrapper .dataTables_filter input{
+    min-width: auto;
+  }
 }
 .dataTables_length select{
     border: 1px solid transparent;
@@ -1508,10 +1515,25 @@ table.dataTable th.dt-right, table.dataTable td.dt-right{
   font-size: 3em;
 }
 .topBoxInfo.default .shiny-text-output{
-  background-color: #c45947;
-  border: 5px solid #e39c91;
+  border: none;
   color: #fff;
+  position: relative;
 }
+.topBoxInfo.default .shiny-text-output::before{
+  position: absolute;
+  content: '';
+  width: 90%;
+  height: 90%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  margin: auto;
+  border-radius: 50%;
+  border: 3px solid #fff;
+}
+
 .topBoxInfo p:nth-of-type(2) {
   font-size: 2em;
 }
@@ -1780,6 +1802,7 @@ margin: auto;
     top: 0;
     bottom: auto !important;
     display: flex;
+    position: absolute !important;
 }
 .container-fab button{
     margin: 0 !important;
