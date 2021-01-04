@@ -178,7 +178,6 @@ mod_lugaresPaso3_server <- function(input, output, session, lugar, lugarAntes, p
                            confirmButtonText = "Sí", 
                            callbackR = function(x) if(x) {
                              
-                             browser()
                              eventos[[as.character(input$eliminar)]] <- reactive(tibble(nombre = NA, 
                                                                                         lugar = NA,
                                                                                         direccion = NA,

@@ -37,7 +37,6 @@ mod_cuestionario_bloques_server <- function(input, output, session, bloque = NUL
     removeModal()
     evt <- callModule(mod_cuestionario_pregunta_server, glue::glue("cuestionario_pregunta_ui_{index}"), valores = NULL, parent_session = parent_session)
     preguntas[[as.character(index)]] <- evt()
-    browser()
   })
   ev <- reactive({
     seq_len(index-1) %>% map(~preguntas[[as.character(.x)]] %>% mutate(bloque = bloque)) %>% do.call(rbind,.) %>% na.omit()
