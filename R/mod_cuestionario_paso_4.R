@@ -32,9 +32,9 @@ mod_cuestionario_paso_4_ui <- function(id){
 #' cuestionario_paso_4 Server Function
 #'
 #' @noRd 
-mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario = c(), bd, usuario ,parent_session = NULL, showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL){
+mod_cuestionario_paso_4_server <- function(input, output, session, cuestionario = c(), bd, usuario , showListadoForm = NULL, idFormGeneral = NULL, readOnly = NULL, idCuestionario = NULL){
   ns <- session$ns
-  observe({
+  observeEvent(cuestionario$paso1,{
     if(!is.null(cuestionario$paso1$idCuestionario)){
       updateTextInput(inputId = "correo", session = session, value = cuestionario$paso1$correo)
       updateTextAreaInput(inputId = ns("obsGenerales"),session = session, value = cuestionario$paso1$obsGenerales)

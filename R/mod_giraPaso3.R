@@ -11,7 +11,6 @@
 mod_giraPaso3_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinyjs::useShinyjs(),
     h3("Asignación de eventos"),
     p("Asigne eventos a los lugares que ha escogido en el paso 2"),
     uiOutput(ns("outEventos")),
